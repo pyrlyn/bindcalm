@@ -1,0 +1,6 @@
+- T1. Verify the GUI flows with permissions granted
+- T2. Config-file parsers for hotkey tools
+- T3. Reduce Services false positives
+- T4. "Which shortcut wins" model
+- T5. Watch mode
+- T6. Stable code signature
