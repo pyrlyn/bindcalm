@@ -1,17 +1,17 @@
-/* ShortcutClash design tokens (generated from tokens.json values). */
+/* ShortcutClash design tokens v2 (3D glass). Values mirror tokens.json. */
 :root {
-  --sc-font-sans: -apple-system, 'SF Pro Text', 'SF Pro Display', Inter, system-ui, sans-serif;
+  --sc-font-sans: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
   --sc-font-rounded: ui-rounded, 'SF Pro Rounded', -apple-system, sans-serif;
   --sc-font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
-  --sc-type-largeTitle: 700 34px/40px var(--sc-font-rounded);
-  --sc-type-title: 600 22px/28px var(--sc-font-sans);
-  --sc-type-combo: 600 17px/22px var(--sc-font-rounded);
-  --sc-type-headline: 600 15px/20px var(--sc-font-sans);
+  --sc-type-title: 600 20px/24px var(--sc-font-sans);
+  --sc-type-headline: 600 16px/22px var(--sc-font-sans);
   --sc-type-body: 400 14px/20px var(--sc-font-sans);
   --sc-type-callout: 500 13px/18px var(--sc-font-sans);
   --sc-type-caption: 400 12px/16px var(--sc-font-sans);
   --sc-type-badge: 600 11px/14px var(--sc-font-sans);
-  --sc-type-mono: 400 11px/16px var(--sc-font-mono);
+  --sc-type-keycap-large: 600 32px/40px var(--sc-font-sans);
+  --sc-type-mono: 400 11px/16px var(--sc-font-sans);
+  --sc-type-owner-name: 600 16px/22px var(--sc-font-sans);
   --sc-space-0: 0px;
   --sc-space-4: 4px;
   --sc-space-8: 8px;
@@ -22,24 +22,27 @@
   --sc-space-40: 40px;
   --sc-space-48: 48px;
   --sc-space-64: 64px;
-  --sc-radius-xs: 6px;
-  --sc-radius-sm: 8px;
-  --sc-radius-md: 10px;
-  --sc-radius-lg: 12px;
-  --sc-radius-xl: 16px;
-  --sc-radius-window: 16px;
-  --sc-radius-pill: 999px;
-  --sc-blur-sm: 12px;
-  --sc-blur-md: 16px;
+  --sc-radius-badge: 999px;
+  --sc-radius-keycap-sm: 10px;
+  --sc-radius-input: 14px;
+  --sc-radius-row: 18px;
+  --sc-radius-card: 20px;
+  --sc-radius-bar: 22px;
+  --sc-radius-slab: 28px;
+  --sc-radius-orb: 48px;
+  --sc-blur-keycap: 18px;
   --sc-blur-input: 20px;
-  --sc-blur-lg: 28px;
-  --sc-blur-window: 40px;
-  --sc-blur-ambient: 140px;
-  --sc-shadow-e1: 0 2px 8px var(--sc-glass-shadow);
-  --sc-shadow-e2: 0 4px 12px var(--sc-glass-shadow);
-  --sc-shadow-e3: 0 8px 24px var(--sc-glass-shadow);
-  --sc-shadow-e4: 0 24px 64px var(--sc-glass-shadow);
-  --sc-highlight-inset: inset 0 1px 0 var(--sc-glass-highlight);
+  --sc-blur-input-focus: 30px;
+  --sc-blur-card: 28px;
+  --sc-blur-bar: 30px;
+  --sc-blur-slab: 36px;
+  --sc-blur-sidebar: 40px;
+  --sc-blur-ambient: 110px;
+  --sc-depth-keycap-small: 3px;
+  --sc-depth-keycap: 5px;
+  --sc-depth-card: 5px;
+  --sc-depth-bar: 6px;
+  --sc-depth-slab: 8px;
   --sc-dur-press: 80ms;
   --sc-dur-focus: 120ms;
   --sc-dur-hover: 140ms;
@@ -49,118 +52,177 @@
   --sc-dur-release: 280ms;
   --sc-ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --sc-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
-  --sc-theme-transition: 240ms;
   color-scheme: light dark;
 }
 
-/* Light is the base; dark follows the system unless the attribute overrides it. */
+/* Light is the base; dark follows the system unless data-theme overrides it. */
 :root, :root[data-theme="light"] {
-  --sc-bg: #E8EDF4;
-  --sc-fg: #0E1522;
-  --sc-muted: #4B5870;
-  --sc-accent: #1F4FD1;
+  --sc-bg: #EAF1FA;
+  --sc-blob1: #47D3E6;
+  --sc-blob2: #5B8CFF;
+  --sc-blob3: #FF8A78;
+  --sc-blob4: #FFC24A;
+  --sc-fg: #0B1220;
+  --sc-muted: #41506A;
+  --sc-accent: #1B47C7;
   --sc-on-accent: #FFFFFF;
   --sc-danger: #B3261E;
+  --sc-danger-fill: #C7352B;
   --sc-on-danger: #FFFFFF;
-  --sc-ok: #0B6F79;
-  --sc-warn: #8A5A00;
-  --sc-glass-surface: rgba(255,255,255,0.64);
-  --sc-glass-strong: rgba(255,255,255,0.80);
-  --sc-glass-input: rgba(255,255,255,0.55);
-  --sc-glass-input-hover: rgba(255,255,255,0.85);
-  --sc-glass-selected: rgba(31,79,209,0.10);
-  --sc-glass-border: rgba(255,255,255,0.85);
-  --sc-hairline: rgba(14,21,34,0.08);
-  --sc-glass-highlight: rgba(255,255,255,1);
-  --sc-glass-shadow: rgba(30,45,80,0.16);
-  --sc-focus-ring: rgba(31,79,209,0.55);
-  --sc-ambient-accent: #7FA6FF;
-  --sc-ambient-ok: #7ADBE0;
-  --sc-opaque: #F6F8FB;
+  --sc-ok: #0A6670;
+  --sc-warn: #7D5200;
+  --sc-glass-fill: rgba(255,255,255,0.66);
+  --sc-glass-strong: rgba(255,255,255,0.78);
+  --sc-glass-input: rgba(255,255,255,0.58);
+  --sc-glass-sheen: rgba(255,255,255,0.30);
+  --sc-glass-border-top: rgba(255,255,255,1);
+  --sc-glass-border-bottom: rgba(70,100,170,0.28);
+  --sc-glass-edge: rgba(40,70,140,0.14);
+  --sc-shadow-near: rgba(30,50,110,0.22);
+  --sc-shadow-far: rgba(30,50,110,0.30);
+  --sc-hairline: rgba(14,30,70,0.10);
+  --sc-selected: rgba(27,71,199,0.12);
+  --sc-keycap-top: rgba(255,255,255,0.98);
+  --sc-keycap-bottom: rgba(255,255,255,0.62);
+  --sc-keycap-wall: rgba(40,70,140,0.30);
+  --sc-keycap-primary-top: #3563E0;
+  --sc-keycap-primary-bottom: #1F4FD1;
+  --sc-keycap-primary-wall: #102C80;
+  --sc-focus-ring: rgba(27,71,199,0.75);
+  --sc-glow: rgba(40,90,240,0.50);
+  --sc-opaque: #F4F7FC;
   --sc-opaque-raised: #FFFFFF;
-  --sc-opaque-border: #C9D2DF;
-  --sc-ambient-accent-opacity: 0.35;
-  --sc-ambient-ok-opacity: 0.35;
+  --sc-opaque-border: #C4CFE0;
+  --sc-blob-opacity: 0.8;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --sc-bg: #0A0D12;
-    --sc-fg: #F2F4F8;
-    --sc-muted: #A3ACBB;
-    --sc-accent: #7DA8FF;
-    --sc-on-accent: #06122B;
-    --sc-danger: #FF7A75;
+    --sc-bg: #060914;
+    --sc-blob1: #0B93B5;
+    --sc-blob2: #2D55E6;
+    --sc-blob3: #D8453B;
+    --sc-blob4: #C27B0A;
+    --sc-fg: #F5F8FC;
+    --sc-muted: #C6CFDD;
+    --sc-accent: #B8D2FF;
+    --sc-on-accent: #07122B;
+    --sc-danger: #FFBDB6;
+    --sc-danger-fill: #FF7A6E;
     --sc-on-danger: #2A0806;
-    --sc-ok: #5CD9E0;
-    --sc-warn: #F2B84B;
-    --sc-glass-surface: rgba(255,255,255,0.08);
-    --sc-glass-strong: rgba(255,255,255,0.12);
-    --sc-glass-input: rgba(255,255,255,0.07);
-    --sc-glass-input-hover: rgba(255,255,255,0.12);
-    --sc-glass-selected: rgba(125,168,255,0.16);
-    --sc-glass-border: rgba(255,255,255,0.14);
-    --sc-hairline: rgba(255,255,255,0.07);
-    --sc-glass-highlight: rgba(255,255,255,0.30);
-    --sc-glass-shadow: rgba(0,0,0,0.50);
-    --sc-focus-ring: rgba(125,168,255,0.70);
-    --sc-ambient-accent: #2F6BFF;
-    --sc-ambient-ok: #19B8C4;
-    --sc-opaque: #161B24;
-    --sc-opaque-raised: #1E2430;
-    --sc-opaque-border: #323A49;
-    --sc-ambient-accent-opacity: 0.16;
-    --sc-ambient-ok-opacity: 0.12;
+    --sc-ok: #78EEF0;
+    --sc-warn: #FFD27A;
+    --sc-glass-fill: rgba(8,13,26,0.50);
+    --sc-glass-strong: rgba(8,13,26,0.62);
+    --sc-glass-input: rgba(8,13,26,0.44);
+    --sc-glass-sheen: rgba(255,255,255,0.10);
+    --sc-glass-border-top: rgba(255,255,255,0.55);
+    --sc-glass-border-bottom: rgba(255,255,255,0.08);
+    --sc-glass-edge: rgba(255,255,255,0.07);
+    --sc-shadow-near: rgba(0,0,0,0.35);
+    --sc-shadow-far: rgba(0,0,0,0.55);
+    --sc-hairline: rgba(255,255,255,0.10);
+    --sc-selected: rgba(175,203,255,0.18);
+    --sc-keycap-top: rgba(255,255,255,0.34);
+    --sc-keycap-bottom: rgba(255,255,255,0.10);
+    --sc-keycap-wall: rgba(0,0,0,0.38);
+    --sc-keycap-primary-top: #C4D8FF;
+    --sc-keycap-primary-bottom: #7DA6FF;
+    --sc-keycap-primary-wall: #3A60C0;
+    --sc-focus-ring: rgba(175,203,255,0.85);
+    --sc-glow: rgba(125,166,255,0.60);
+    --sc-opaque: #121A2B;
+    --sc-opaque-raised: #1A2438;
+    --sc-opaque-border: #364560;
+    --sc-blob-opacity: 0.8;
   }
 }
 
 :root[data-theme="dark"] {
-  --sc-bg: #0A0D12;
-  --sc-fg: #F2F4F8;
-  --sc-muted: #A3ACBB;
-  --sc-accent: #7DA8FF;
-  --sc-on-accent: #06122B;
-  --sc-danger: #FF7A75;
+  --sc-bg: #060914;
+  --sc-blob1: #0B93B5;
+  --sc-blob2: #2D55E6;
+  --sc-blob3: #D8453B;
+  --sc-blob4: #C27B0A;
+  --sc-fg: #F5F8FC;
+  --sc-muted: #C6CFDD;
+  --sc-accent: #B8D2FF;
+  --sc-on-accent: #07122B;
+  --sc-danger: #FFBDB6;
+  --sc-danger-fill: #FF7A6E;
   --sc-on-danger: #2A0806;
-  --sc-ok: #5CD9E0;
-  --sc-warn: #F2B84B;
-  --sc-glass-surface: rgba(255,255,255,0.08);
-  --sc-glass-strong: rgba(255,255,255,0.12);
-  --sc-glass-input: rgba(255,255,255,0.07);
-  --sc-glass-input-hover: rgba(255,255,255,0.12);
-  --sc-glass-selected: rgba(125,168,255,0.16);
-  --sc-glass-border: rgba(255,255,255,0.14);
-  --sc-hairline: rgba(255,255,255,0.07);
-  --sc-glass-highlight: rgba(255,255,255,0.30);
-  --sc-glass-shadow: rgba(0,0,0,0.50);
-  --sc-focus-ring: rgba(125,168,255,0.70);
-  --sc-ambient-accent: #2F6BFF;
-  --sc-ambient-ok: #19B8C4;
-  --sc-opaque: #161B24;
-  --sc-opaque-raised: #1E2430;
-  --sc-opaque-border: #323A49;
-  --sc-ambient-accent-opacity: 0.16;
-  --sc-ambient-ok-opacity: 0.12;
+  --sc-ok: #78EEF0;
+  --sc-warn: #FFD27A;
+  --sc-glass-fill: rgba(8,13,26,0.50);
+  --sc-glass-strong: rgba(8,13,26,0.62);
+  --sc-glass-input: rgba(8,13,26,0.44);
+  --sc-glass-sheen: rgba(255,255,255,0.10);
+  --sc-glass-border-top: rgba(255,255,255,0.55);
+  --sc-glass-border-bottom: rgba(255,255,255,0.08);
+  --sc-glass-edge: rgba(255,255,255,0.07);
+  --sc-shadow-near: rgba(0,0,0,0.35);
+  --sc-shadow-far: rgba(0,0,0,0.55);
+  --sc-hairline: rgba(255,255,255,0.10);
+  --sc-selected: rgba(175,203,255,0.18);
+  --sc-keycap-top: rgba(255,255,255,0.34);
+  --sc-keycap-bottom: rgba(255,255,255,0.10);
+  --sc-keycap-wall: rgba(0,0,0,0.38);
+  --sc-keycap-primary-top: #C4D8FF;
+  --sc-keycap-primary-bottom: #7DA6FF;
+  --sc-keycap-primary-wall: #3A60C0;
+  --sc-focus-ring: rgba(175,203,255,0.85);
+  --sc-glow: rgba(125,166,255,0.60);
+  --sc-opaque: #121A2B;
+  --sc-opaque-raised: #1A2438;
+  --sc-opaque-border: #364560;
+  --sc-blob-opacity: 0.8;
 }
 
-/* Glass recipe. */
-.sc-glass {
-  background: var(--sc-glass-surface);
-  border: 1px solid var(--sc-glass-border);
-  border-radius: var(--sc-radius-xl);
-  box-shadow: var(--sc-highlight-inset), var(--sc-shadow-e3);
-  -webkit-backdrop-filter: blur(var(--sc-blur-lg)) saturate(1.4);
-  backdrop-filter: blur(var(--sc-blur-lg)) saturate(1.4);
+/* Slab recipe (thick bevelled glass). Needs an .sc-slab__edge sibling behind it for the thickness wall. */
+.sc-slab {
+  position: relative;
+  background:
+    linear-gradient(to bottom, var(--sc-glass-sheen), rgba(255,255,255,0.02) 55%, rgba(255,255,255,0)),
+    var(--sc-glass-fill);
+  border: 1.5px solid transparent;
+  border-radius: var(--sc-radius-slab);
+  background-clip: padding-box, padding-box;
+  box-shadow:
+    inset 0 2px 0 var(--sc-glass-border-top),
+    inset 0 -3px 6px var(--sc-shadow-near),
+    inset 0 0 10px rgba(255,255,255,0.18),
+    0 10px 20px var(--sc-shadow-near),
+    0 var(--sc-depth-slab) 0 var(--sc-glass-edge),
+    0 36px 64px var(--sc-shadow-far);
+  -webkit-backdrop-filter: blur(var(--sc-blur-slab)) saturate(1.5);
+  backdrop-filter: blur(var(--sc-blur-slab)) saturate(1.5);
 }
 
-/* Reduce transparency: opaque fallback, no blur, no ambient blobs. */
+/* Keycap recipe. */
+.sc-keycap {
+  height: 40px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center;
+  color: var(--sc-fg); font: var(--sc-type-callout); border-radius: 14px;
+  background: linear-gradient(to bottom, var(--sc-keycap-top), var(--sc-keycap-bottom));
+  box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.85), inset 0 -2px 4px var(--sc-shadow-near), inset 0 0 3px rgba(255,255,255,0.45),
+              0 var(--sc-depth-keycap) 0 var(--sc-keycap-wall), 0 8px 8px var(--sc-shadow-near);
+  -webkit-backdrop-filter: blur(var(--sc-blur-keycap)); backdrop-filter: blur(var(--sc-blur-keycap));
+  transition: transform var(--sc-dur-hover) var(--sc-ease-standard), box-shadow var(--sc-dur-hover) var(--sc-ease-standard);
+}
+.sc-keycap:hover { transform: translateY(-2px); box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.95), 0 7px 0 var(--sc-keycap-wall), 0 12px 16px var(--sc-shadow-near), 0 0 22px var(--sc-glow); }
+.sc-keycap:active { transform: translateY(4px); transition-duration: var(--sc-dur-press); transition-timing-function: var(--sc-ease-accelerate);
+  box-shadow: inset 0 3px 5px rgba(0,0,0,0.35), 0 1px 0 var(--sc-keycap-wall), 0 1px 3px var(--sc-shadow-near); }
+.sc-keycap:focus-visible { outline: 2px solid var(--sc-focus-ring); outline-offset: 4px; }
+.sc-keycap:disabled { opacity: 0.4; }
+
+/* Reduce transparency: opaque fallback, no blur, no ambient blobs, no glare. */
 @media (prefers-reduced-transparency: reduce) {
-  :root { --sc-reduce-transparency: 1; }
-  .sc-glass { background: var(--sc-opaque); border-color: var(--sc-opaque-border); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: var(--sc-shadow-e1); }
+  .sc-slab { background: var(--sc-opaque); border-color: var(--sc-opaque-border); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .sc-keycap { background: var(--sc-opaque-raised); -webkit-backdrop-filter: none; backdrop-filter: none; }
 }
-:root[data-transparency="reduced"] .sc-glass { background: var(--sc-opaque); border-color: var(--sc-opaque-border); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: var(--sc-shadow-e1); }
+:root[data-transparency="reduced"] .sc-slab { background: var(--sc-opaque); border-color: var(--sc-opaque-border); -webkit-backdrop-filter: none; backdrop-filter: none; }
 
-/* Reduce motion: no lift/scale/spring, no theme crossfade. */
+/* Reduce motion: no lift, no sink, no spring, no theme crossfade. */
 @media (prefers-reduced-motion: reduce) {
-  :root { --sc-dur-press: 0ms; --sc-dur-focus: 0ms; --sc-dur-hover: 0ms; --sc-dur-input-focus: 0ms; --sc-dur-switch: 0ms; --sc-dur-theme: 0ms; --sc-dur-release: 0ms; --sc-theme-transition: 0ms; }
+  :root { --sc-dur-press: 0ms; --sc-dur-focus: 0ms; --sc-dur-hover: 0ms; --sc-dur-input-focus: 0ms; --sc-dur-switch: 0ms; --sc-dur-theme: 0ms; --sc-dur-release: 0ms; }
+  .sc-keycap:hover, .sc-keycap:active { transform: none; }
 }

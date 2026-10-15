@@ -1,31 +1,32 @@
-# ShortcutClash design
+# ShortcutClash design package (v2, 3D glass)
 
-Design package for the ShortcutClash main window: frosted glass with slight 3D depth, calm and
-Apple-inspired, restrained color, light and dark themes. This folder is **design only**. Nothing in
-`Sources/` has been changed or migrated.
+English-only design handoff for the ShortcutClash macOS app. It replaces the earlier v1 package.
 
 | File | What it is |
 |---|---|
-| [`STYLE-GUIDE.md`](STYLE-GUIDE.md) | The style and the design system: color, type, spacing, radii, elevation, blur, motion, themes, component states. |
-| [`DESIGN-FOR-AGENTS.md`](DESIGN-FOR-AGENTS.md) | Self-contained implementation spec for an agent: pixel layout, glass recipe, state tables, fallbacks, do/don't, acceptance checklist, mapping to the SwiftUI code. Start here if you are going to build it. |
-| [`tokens.json`](tokens.json) | All tokens (both themes). Source of truth for values. |
-| [`tokens.css`](tokens.css) | Same values as CSS custom properties (`prefers-color-scheme` plus `data-theme` override, reduced-motion and reduced-transparency fallbacks). |
-| [`screens/`](screens) | PNG exports: `main-dark.png`, `main-light.png`, `empty-dark.png`, `empty-light.png` (1280×800). |
+| [STYLE-GUIDE.md](STYLE-GUIDE.md) | Human-readable style guide: concept, 3D construction, color, type, spacing, motion, states, accessibility, contrast table |
+| [DESIGN-FOR-AGENTS.md](DESIGN-FOR-AGENTS.md) | Exact pixel and value spec for implementers and coding agents, with a checklist and SwiftUI mapping |
+| [tokens.json](tokens.json) | Tokens for light and dark themes, plus type, space, radius, blur, depth, motion |
+| [tokens.css](tokens.css) | Same tokens as CSS variables, with slab and keycap recipes and reduced-motion / reduced-transparency handling |
+| [screens/](screens) | PNG exports of every Figma screen (below) |
+
+## Screens
+
+| PNG | Content |
+|---|---|
+| screens/main-dark.png, screens/main-light.png | Main screen with conflicts (1440x900) |
+| screens/no-conflicts-dark.png, screens/no-conflicts-light.png | Main screen with no conflicts (EmptyState) |
+| screens/empty-states-dark.png, screens/empty-states-light.png | All seven EmptyState variants plus the pattern note |
+| screens/components-dark.png, screens/components-light.png | Components and states: keycaps, input, switch, row, badges, bead, selects |
 
 ## Figma
 
-File: <https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v>
+File: https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v/ShortcutClash (file key `0ReL88zpUMqzQBGEklkq9v`).
 
-- Screens page, section "ShortcutClash — main screen (glass)": [section](https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v?node-id=74-33759)
-  - [main, dark](https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v?node-id=74-33760) · [main, light](https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v?node-id=74-33885)
-  - [empty, dark](https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v?node-id=74-34010) · [empty, light](https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v?node-id=74-34090)
-- Components page, section "ShortcutClash — glass components": [section](https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v?node-id=76-33814) (dark panel `76:33815`, light panel `76:33975`).
+- Screens page, section "ShortcutClash v2 - 3D glass - English - light + dark": main dark `83:33760`, main light `83:33977`, no-conflicts dark `83:34194`, light `83:34350`, empty states dark `83:34510`, light `83:34640`.
+- Components page, section "ShortcutClash v2 - 3D glass components - states - light + dark": dark `83:34828`, light `83:35150`.
+- The older design is kept in sections labelled "v1 (superseded)". Do not implement from it.
 
 ## Scope
 
-One main screen: the **conflict list first** (real conflicts on top, detail on the right), with the
-detection-method settings kept visible but quiet in the sidebar footer. The labels are Russian, as in
-the app. The sample data (Spotlight, Alfred, Rectangle, Magnet, counts) is illustrative.
-
-![main dark](screens/main-dark.png)
-![main light](screens/main-light.png)
+One main screen (conflict list first, detail on the right) plus its empty states. Hotkey-method settings are not a separate screen here; see DESIGN-FOR-AGENTS.md, section "Methods and settings". This package does not change app code (`Sources/`); implementation is a separate step. Figma uses Inter as a stand-in for SF Pro.
