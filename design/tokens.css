@@ -1,0 +1,166 @@
+/* ShortcutClash design tokens (generated from tokens.json values). */
+:root {
+  --sc-font-sans: -apple-system, 'SF Pro Text', 'SF Pro Display', Inter, system-ui, sans-serif;
+  --sc-font-rounded: ui-rounded, 'SF Pro Rounded', -apple-system, sans-serif;
+  --sc-font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+  --sc-type-largeTitle: 700 34px/40px var(--sc-font-rounded);
+  --sc-type-title: 600 22px/28px var(--sc-font-sans);
+  --sc-type-combo: 600 17px/22px var(--sc-font-rounded);
+  --sc-type-headline: 600 15px/20px var(--sc-font-sans);
+  --sc-type-body: 400 14px/20px var(--sc-font-sans);
+  --sc-type-callout: 500 13px/18px var(--sc-font-sans);
+  --sc-type-caption: 400 12px/16px var(--sc-font-sans);
+  --sc-type-badge: 600 11px/14px var(--sc-font-sans);
+  --sc-type-mono: 400 11px/16px var(--sc-font-mono);
+  --sc-space-0: 0px;
+  --sc-space-4: 4px;
+  --sc-space-8: 8px;
+  --sc-space-12: 12px;
+  --sc-space-16: 16px;
+  --sc-space-24: 24px;
+  --sc-space-32: 32px;
+  --sc-space-40: 40px;
+  --sc-space-48: 48px;
+  --sc-space-64: 64px;
+  --sc-radius-xs: 6px;
+  --sc-radius-sm: 8px;
+  --sc-radius-md: 10px;
+  --sc-radius-lg: 12px;
+  --sc-radius-xl: 16px;
+  --sc-radius-window: 16px;
+  --sc-radius-pill: 999px;
+  --sc-blur-sm: 12px;
+  --sc-blur-md: 16px;
+  --sc-blur-input: 20px;
+  --sc-blur-lg: 28px;
+  --sc-blur-window: 40px;
+  --sc-blur-ambient: 140px;
+  --sc-shadow-e1: 0 2px 8px var(--sc-glass-shadow);
+  --sc-shadow-e2: 0 4px 12px var(--sc-glass-shadow);
+  --sc-shadow-e3: 0 8px 24px var(--sc-glass-shadow);
+  --sc-shadow-e4: 0 24px 64px var(--sc-glass-shadow);
+  --sc-highlight-inset: inset 0 1px 0 var(--sc-glass-highlight);
+  --sc-dur-press: 80ms;
+  --sc-dur-focus: 120ms;
+  --sc-dur-hover: 140ms;
+  --sc-dur-input-focus: 160ms;
+  --sc-dur-switch: 180ms;
+  --sc-dur-theme: 240ms;
+  --sc-dur-release: 280ms;
+  --sc-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --sc-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --sc-theme-transition: 240ms;
+  color-scheme: light dark;
+}
+
+/* Light is the base; dark follows the system unless the attribute overrides it. */
+:root, :root[data-theme="light"] {
+  --sc-bg: #E8EDF4;
+  --sc-fg: #0E1522;
+  --sc-muted: #4B5870;
+  --sc-accent: #1F4FD1;
+  --sc-on-accent: #FFFFFF;
+  --sc-danger: #B3261E;
+  --sc-on-danger: #FFFFFF;
+  --sc-ok: #0B6F79;
+  --sc-warn: #8A5A00;
+  --sc-glass-surface: rgba(255,255,255,0.64);
+  --sc-glass-strong: rgba(255,255,255,0.80);
+  --sc-glass-input: rgba(255,255,255,0.55);
+  --sc-glass-input-hover: rgba(255,255,255,0.85);
+  --sc-glass-selected: rgba(31,79,209,0.10);
+  --sc-glass-border: rgba(255,255,255,0.85);
+  --sc-hairline: rgba(14,21,34,0.08);
+  --sc-glass-highlight: rgba(255,255,255,1);
+  --sc-glass-shadow: rgba(30,45,80,0.16);
+  --sc-focus-ring: rgba(31,79,209,0.55);
+  --sc-ambient-accent: #7FA6FF;
+  --sc-ambient-ok: #7ADBE0;
+  --sc-opaque: #F6F8FB;
+  --sc-opaque-raised: #FFFFFF;
+  --sc-opaque-border: #C9D2DF;
+  --sc-ambient-accent-opacity: 0.35;
+  --sc-ambient-ok-opacity: 0.35;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sc-bg: #0A0D12;
+    --sc-fg: #F2F4F8;
+    --sc-muted: #A3ACBB;
+    --sc-accent: #7DA8FF;
+    --sc-on-accent: #06122B;
+    --sc-danger: #FF7A75;
+    --sc-on-danger: #2A0806;
+    --sc-ok: #5CD9E0;
+    --sc-warn: #F2B84B;
+    --sc-glass-surface: rgba(255,255,255,0.08);
+    --sc-glass-strong: rgba(255,255,255,0.12);
+    --sc-glass-input: rgba(255,255,255,0.07);
+    --sc-glass-input-hover: rgba(255,255,255,0.12);
+    --sc-glass-selected: rgba(125,168,255,0.16);
+    --sc-glass-border: rgba(255,255,255,0.14);
+    --sc-hairline: rgba(255,255,255,0.07);
+    --sc-glass-highlight: rgba(255,255,255,0.30);
+    --sc-glass-shadow: rgba(0,0,0,0.50);
+    --sc-focus-ring: rgba(125,168,255,0.70);
+    --sc-ambient-accent: #2F6BFF;
+    --sc-ambient-ok: #19B8C4;
+    --sc-opaque: #161B24;
+    --sc-opaque-raised: #1E2430;
+    --sc-opaque-border: #323A49;
+    --sc-ambient-accent-opacity: 0.16;
+    --sc-ambient-ok-opacity: 0.12;
+  }
+}
+
+:root[data-theme="dark"] {
+  --sc-bg: #0A0D12;
+  --sc-fg: #F2F4F8;
+  --sc-muted: #A3ACBB;
+  --sc-accent: #7DA8FF;
+  --sc-on-accent: #06122B;
+  --sc-danger: #FF7A75;
+  --sc-on-danger: #2A0806;
+  --sc-ok: #5CD9E0;
+  --sc-warn: #F2B84B;
+  --sc-glass-surface: rgba(255,255,255,0.08);
+  --sc-glass-strong: rgba(255,255,255,0.12);
+  --sc-glass-input: rgba(255,255,255,0.07);
+  --sc-glass-input-hover: rgba(255,255,255,0.12);
+  --sc-glass-selected: rgba(125,168,255,0.16);
+  --sc-glass-border: rgba(255,255,255,0.14);
+  --sc-hairline: rgba(255,255,255,0.07);
+  --sc-glass-highlight: rgba(255,255,255,0.30);
+  --sc-glass-shadow: rgba(0,0,0,0.50);
+  --sc-focus-ring: rgba(125,168,255,0.70);
+  --sc-ambient-accent: #2F6BFF;
+  --sc-ambient-ok: #19B8C4;
+  --sc-opaque: #161B24;
+  --sc-opaque-raised: #1E2430;
+  --sc-opaque-border: #323A49;
+  --sc-ambient-accent-opacity: 0.16;
+  --sc-ambient-ok-opacity: 0.12;
+}
+
+/* Glass recipe. */
+.sc-glass {
+  background: var(--sc-glass-surface);
+  border: 1px solid var(--sc-glass-border);
+  border-radius: var(--sc-radius-xl);
+  box-shadow: var(--sc-highlight-inset), var(--sc-shadow-e3);
+  -webkit-backdrop-filter: blur(var(--sc-blur-lg)) saturate(1.4);
+  backdrop-filter: blur(var(--sc-blur-lg)) saturate(1.4);
+}
+
+/* Reduce transparency: opaque fallback, no blur, no ambient blobs. */
+@media (prefers-reduced-transparency: reduce) {
+  :root { --sc-reduce-transparency: 1; }
+  .sc-glass { background: var(--sc-opaque); border-color: var(--sc-opaque-border); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: var(--sc-shadow-e1); }
+}
+:root[data-transparency="reduced"] .sc-glass { background: var(--sc-opaque); border-color: var(--sc-opaque-border); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: var(--sc-shadow-e1); }
+
+/* Reduce motion: no lift/scale/spring, no theme crossfade. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --sc-dur-press: 0ms; --sc-dur-focus: 0ms; --sc-dur-hover: 0ms; --sc-dur-input-focus: 0ms; --sc-dur-switch: 0ms; --sc-dur-theme: 0ms; --sc-dur-release: 0ms; --sc-theme-transition: 0ms; }
+}
