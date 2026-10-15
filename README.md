@@ -1,8 +1,9 @@
 # ShortcutClash
 
 A macOS app that collects keyboard shortcuts from every source it can reach — system symbolic hotkeys,
-running apps' menus, Services, custom App Shortcuts, third-party preference files, Carbon hotkey
-probing and live key capture — groups them by physical key combination and highlights real conflicts.
+running apps' menus, Services, custom App Shortcuts, third-party preference files and config files
+(Karabiner-Elements, skhd, Hammerspoon, BetterTouchTool, Keyboard Maestro, Alfred, Raycast), Carbon
+hotkey probing and live key capture — groups them by physical key combination and highlights real conflicts.
 
 - Swift 6 toolchain, SwiftUI, Apple frameworks only (no third-party dependencies).
 - macOS 14+, Apple Silicon. Built and verified on macOS 27.0.1 with Xcode 27.0 / Swift 6.4.
@@ -90,6 +91,13 @@ choice is persisted) and every shortcut shows which method(s) found it.
 | 9 | `carbonProbe` | `RegisterEventHotKey` probing of ~1,000 candidate combos | heuristic | — |
 | 10 | `nsEventMonitor` | Global + local `NSEvent` key monitors (record mode) | heuristic | Accessibility (global) |
 | 11 | `cgEventTap` | Listen-only session `CGEvent` tap (record mode) | heuristic | Input Monitoring |
+| 12 | `karabiner` | `~/.config/karabiner/karabiner.json` complex modifications | partial | — |
+| 13 | `skhd` | `~/.config/skhd/skhdrc` or `~/.skhdrc` | partial | — |
+| 14 | `hammerspoon` | `hs.hotkey.bind` / `hs.hotkey.new` in `~/.hammerspoon` | partial | — |
+| 15 | `betterTouchTool` | `.bttpreset` keyboard triggers | partial | — |
+| 16 | `keyboardMaestro` | `Keyboard Maestro Macros.plist` hotkey triggers | partial | — |
+| 17 | `alfred` | Workflow `info.plist` hotkeys and the launcher hotkey | partial | — |
+| 18 | `raycast` | `hotkey` / `shortcut` fields in Raycast JSON and plist | partial | — |
 | + | Layout analysis | TIS + `UCKeyTranslate` per enabled layout | — | — |
 
 ### 1. Symbolic hotkeys plist
@@ -143,9 +151,40 @@ mask guessed by magnitude), symbolic-style `parameters` triples (e.g. Siri), and
 a stored value says nothing about whether it is currently registered (the app may not run, or the
 feature may be off) — such claims are downgraded to heuristic and annotated; libraries are also used
 for in-app shortcuts, so a bare ⌘+key is classified as in-app; stale keys from uninstalled apps
-appear; apps that store hotkeys elsewhere (databases, JSON in Application Support, e.g. Alfred,
-Raycast, Keyboard Maestro) are not covered. Reading other apps' containers can show the macOS
-"access data from other apps" prompt, so method 7 is opt-in.
+appear. Preference domains that have a dedicated config-file strategy (Raycast, BetterTouchTool,
+Keyboard Maestro, Alfred) are skipped here so they are not reported twice. Reading other apps'
+containers can show the macOS "access data from other apps" prompt, so method 7 is opt-in.
+
+### 12–18. Third-party config files
+
+Each tool is its own strategy and its own toggle. The parsers are pure and covered by fixture tests;
+the strategy only locates the file under the user's home directory and returns nothing when the tool
+is not installed. A file that exists but cannot be parsed marks that strategy unavailable instead of
+failing the scan. Claims are partial: the config can be present while the tool is not running.
+
+- **Karabiner-Elements** reads complex modifications of the selected profile (the first profile if
+  none is selected). A manipulator counts when `from.key_code` has a shortcut modifier or is an F-key.
+  Simple one-key remaps are not shortcut claims. Karabiner is a HID remapper, so it sits above every
+  other hook.
+- **skhd** prefers `~/.config/skhd/skhdrc` and otherwise reads `~/.skhdrc`. `hyper` is ⌃⌥⇧⌘, `meh` is
+  ⌃⌥⇧, `delete` is forward delete, and `0xNN` is a virtual key code. Blacklist blocks, mode
+  declarations and the inside of a per-app process map are skipped. The binding itself is kept.
+- **Hammerspoon** reads literal `hs.hotkey.bind` / `hs.hotkey.new` calls in `~/.hammerspoon` Lua files,
+  skipping `Spoons`. Bindings assembled from variables are invisible. Comments are not reported.
+- **BetterTouchTool** reads `.bttpreset` JSON (and `bttdata2` when it is JSON or a plist). Keyboard
+  triggers use Cocoa modifier flags. `BT.G` is global; any other app group is in-app. The live SQLite
+  database is not opened.
+- **Keyboard Maestro** reads hotkey triggers from `Keyboard Maestro Macros.plist`. Modifiers are Carbon
+  bits. A deactivated group or inactive macro is kept and marked disabled. `Targeting = Included` is
+  in-app.
+- **Alfred** reads `alfred.workflow.trigger.hotkey` objects (Cocoa `hotmod`, including the extra
+  device-dependent bits Alfred stores) and `{key, mod, string}` dictionaries under `hotkey/prefs.plist`.
+  Only the default `Alfred.alfredpreferences` location is used, not a synced copy. A disabled workflow
+  is marked disabled; an empty hotkey is skipped.
+- **Raycast** walks JSON and plist files under `~/.config/raycast` (not installed extension source),
+  `~/Library/Application Support/com.raycast.macos` and `com.raycast.macos.plist` for `hotkey` /
+  `shortcut` fields (a string such as `option+space`, or `{keyCode, modifiers}`). Shortcuts that
+  Raycast keeps only in its private database are not visible.
 
 ### 8. Accessibility menus
 
