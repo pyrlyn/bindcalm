@@ -7,7 +7,7 @@ hotkey probing and live key capture — groups them by physical key combination 
 
 - Swift 6 toolchain, SwiftUI, Apple frameworks only (no third-party dependencies).
 - macOS 14+, Apple Silicon. Built and verified on macOS 27.0.1 with Xcode 27.0 / Swift 6.4.
-- **The UI is in Russian.** Code, comments and docs are in English.
+- **The UI is in English.** Code, comments and docs are in English.
 - Implementation plan and milestones: [PLAN.md](PLAN.md).
 
 ## Build and run
@@ -41,7 +41,7 @@ Every detection method is an independent strategy behind one protocol:
 ```swift
 public protocol HotKeyDiscoveryStrategy: Sendable {
     var id: DiscoveryMethod { get }
-    var displayName: String { get }          // Russian, shown in the UI
+    var displayName: String { get }          // English, shown in the UI
     var summary: String { get }
     var defaultEnabled: Bool { get }
     var requiredPermission: PermissionKind? { get }

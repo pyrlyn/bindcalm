@@ -34,9 +34,9 @@ public enum DiscoveryError: Error, Sendable, CustomStringConvertible {
 /// cross-method reasoning happens later in `ConflictAnalyzer` / `LayoutAnalyzer`.
 public protocol HotKeyDiscoveryStrategy: Sendable {
     var id: DiscoveryMethod { get }
-    /// Russian, shown in the UI.
+    /// English, shown in the UI.
     var displayName: String { get }
-    /// Russian one-liner explaining what the method reads and how far to trust it.
+    /// English one-liner explaining what the method reads and how far to trust it.
     var summary: String { get }
     var defaultEnabled: Bool { get }
     var requiredPermission: PermissionKind? { get }

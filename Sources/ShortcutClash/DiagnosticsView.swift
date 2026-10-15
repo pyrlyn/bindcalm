@@ -3,74 +3,95 @@ import SwiftUI
 
 struct DiagnosticsView: View {
     @EnvironmentObject private var model: AppModel
-    @Environment(\.dismiss) private var dismiss
     private let symbols = PrivateSymbols.probeAll()
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Диагностика").font(.title2.bold())
-                Spacer()
-                Button("Закрыть") { dismiss() }.keyboardShortcut(.cancelAction)
-            }
+        VStack(spacing: 0) {
+            SheetHeader(title: "Diagnostics") { EmptyView() }
             ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    GroupBox("Разрешения") {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Универсальный доступ: \(model.permissions.accessibility ? "есть" : "нет")")
-                            Text("Мониторинг ввода: \(model.permissions.inputMonitoring ? "есть" : "нет")")
-                            Text("Защищённый ввод (Secure Input): \(model.permissions.secureInput ? "включён" : "выключен")")
-                            Text("Приложение подписано ad-hoc: после пересборки macOS может считать его новым и сбросить разрешения.")
-                                .font(.caption).foregroundStyle(.secondary)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                VStack(alignment: .leading, spacing: 16) {
+                    card("Permissions") {
+                        statusRow("Accessibility", model.permissions.accessibility ? "Granted" : "Not granted",
+                                  model.permissions.accessibility ? .ok : .warn)
+                        statusRow("Input Monitoring", model.permissions.inputMonitoring ? "Granted" : "Not granted",
+                                  model.permissions.inputMonitoring ? .ok : .warn)
+                        statusRow("Secure Input", model.permissions.secureInput ? "On" : "Off",
+                                  model.permissions.secureInput ? .warn : .ok)
+                        Text("The app is signed ad hoc: after a rebuild macOS may treat it as a new app and reset these permissions.")
+                            .font(.system(size: 12)).foregroundStyle(Theme.muted)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                    GroupBox("Раскладки клавиатуры") {
-                        VStack(alignment: .leading, spacing: 4) {
-                            ForEach(model.layouts.layouts) { layout in
-                                Text("\(layout.name)\(layout.isCurrent ? " — текущая" : "") · \(layout.id)").font(.callout)
+                    card("Keyboard layouts") {
+                        ForEach(model.layouts.layouts) { layout in
+                            HStack(spacing: 8) {
+                                Text(layout.name + (layout.isCurrent ? " — current" : ""))
+                                    .font(.system(size: 13)).foregroundStyle(Theme.fg)
+                                Spacer(minLength: 8)
+                                Text(layout.id).font(.system(size: 12, design: .monospaced)).foregroundStyle(Theme.muted)
                             }
-                            Text("Автопереключение источника ввода по документу: \(perDocumentText)")
-                                .font(.caption).foregroundStyle(.secondary)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("Automatic input source switching per document: \(perDocumentText)")
+                            .font(.system(size: 12)).foregroundStyle(Theme.muted)
                     }
-                    GroupBox("Приватные и недокументированные символы (dlsym)") {
-                        Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 4) {
+                    card("Private and undocumented symbols (dlsym)") {
+                        Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 8) {
                             ForEach(symbols, id: \.name) { symbol in
                                 GridRow {
-                                    Image(systemName: symbol.found ? "checkmark.circle.fill" : "xmark.circle")
-                                        .foregroundStyle(symbol.found ? .green : .secondary)
-                                    Text(symbol.name).font(.caption.monospaced())
-                                    Text(symbol.image ?? "—").font(.caption).foregroundStyle(.secondary)
+                                    StatusDot(tone: symbol.found ? .ok : .muted)
+                                    Text(symbol.name).font(.system(size: 12, design: .monospaced)).foregroundStyle(Theme.fg)
+                                    Text(symbol.image ?? "—").font(.system(size: 12)).foregroundStyle(Theme.muted)
+                                        .lineLimit(1).truncationMode(.middle)
                                 }
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    GroupBox("Результаты методов") {
-                        VStack(alignment: .leading, spacing: 4) {
-                            ForEach(model.results) { result in
-                                Label("\(result.displayName): \(result.state.label), \(result.count), \(result.durationMs) мс"
-                                      + (result.message.map { " — \($0)" } ?? ""), systemImage: result.state.symbol)
-                                    .foregroundStyle(result.state.color)
-                                    .font(.callout)
+                    card("Method results") {
+                        if model.results.isEmpty {
+                            Text("No scan has finished yet.").font(.system(size: 13)).foregroundStyle(Theme.muted)
+                        }
+                        ForEach(model.results) { result in
+                            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                StatusDot(tone: result.state.tone)
+                                Text(result.displayName).font(.system(size: 13)).foregroundStyle(Theme.fg)
+                                Spacer(minLength: 8)
+                                Text("\(result.state.label) · \(result.count) · \(result.durationMs) ms"
+                                     + (result.message.map { " · \($0)" } ?? ""))
+                                    .font(.system(size: 12)).foregroundStyle(result.state.tone.color)
+                                    .multilineTextAlignment(.trailing)
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
+                .padding(20)
             }
         }
-        .padding(16)
         .frame(width: 640, height: 560)
+        .background(Theme.surface)
+    }
+
+    private func card<Content: View>(_ title: String, @ViewBuilder _ content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionCaps(text: title)
+            content()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .softCard(padding: 16)
+    }
+
+    private func statusRow(_ title: String, _ value: String, _ tone: Tone) -> some View {
+        HStack(spacing: 8) {
+            StatusDot(tone: tone)
+            Text(title).font(.system(size: 13)).foregroundStyle(Theme.fg)
+            Spacer(minLength: 8)
+            Text(value).font(.system(size: 13, weight: .semibold)).foregroundStyle(tone.color)
+        }
     }
 
     private var perDocumentText: String {
         switch model.layouts.perDocumentInputSource {
-        case .some(true): return "включено"
-        case .some(false): return "выключено"
-        case .none: return "неизвестно"
+        case .some(true): return "on"
+        case .some(false): return "off"
+        case .none: return "unknown"
         }
     }
 }

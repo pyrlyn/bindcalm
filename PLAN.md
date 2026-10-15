@@ -2,7 +2,7 @@
 
 GitHub: https://github.com/listepo/ShortcutClash
 
-A macOS app (Swift, SwiftUI, Apple frameworks only, Russian UI) that finds keyboard shortcut conflicts
+A macOS app (Swift, SwiftUI, Apple frameworks only, English UI) that finds keyboard shortcut conflicts
 between apps using every available detection method and highlights them.
 
 > This file is both the active-task plan (`plan.md` in the shared rules; macOS file systems are
@@ -74,7 +74,7 @@ ad-hoc signing.
   - `HotKeyOwner` — name, bundle ID, path, kind (`app`, `system`, `allApps`, `unknown`) and a merge key.
   - `DiscoveredHotKey` — combo, owner, method, confidence, scope (`global`/`inApp`/`observed`), action,
     enabled, source, defining character (for layout analysis).
-- **Strategy protocol.** `HotKeyDiscoveryStrategy` (id, Russian display name and summary, default
+- **Strategy protocol.** `HotKeyDiscoveryStrategy` (id, English display name and summary, default
   enabled, required permission, live flag, `discover(in:) async throws`). `StrategyRegistry.all` lists
   them; `DiscoveryContext` carries the layout snapshot, owner resolver and home directory.
 - **Engine.** `ScanEngine.run` executes enabled strategies in a task group, maps `DiscoveryError`
@@ -107,19 +107,15 @@ ad-hoc signing.
 | Live capture | `Live/LiveCapture.swift` | `CGEvent.tapCreate`, `NSEvent` monitors |
 | Private symbol probe | `System/PrivateSymbols.swift` | `dlopen` / `dlsym` / `dladdr` |
 
-### SwiftUI UI (Russian)
+### SwiftUI UI (English, design v3)
 
-- `NavigationSplitView`: sidebar with the grouped list, detail panel per combo.
-- Sidebar: "Только конфликты" toggle, method and app pickers, search (combo, app, bundle ID, action),
-  counters, red badge with the number of active owners for conflicts, globe icon for layout
-  conflicts, grey icon for in-app duplicates, method badges per row, permission bar at the bottom.
-- Detail: combo, status and explanation, "Обнаружено методами", key code/modifiers, character per
-  enabled layout, layout notes, one card per owner (icon, bundle ID, path) with every claim (method,
-  confidence, scope, enabled, selectable source), and live observations for this combo.
-- Toolbar: rescan, start/stop live capture, capture log, request Accessibility, methods popover
-  (per-method toggle persisted in `UserDefaults`, status/count/duration, layout analysis toggle,
-  duplicates toggle), diagnostics sheet (permissions, layouts, symbol probe, strategy results),
-  JSON export.
+- Custom split layout (not `NavigationSplitView`, for pixel fidelity): 52 px translucent toolbar, 400 px translucent sidebar, solid detail pane. Tokens live in `Theme.swift` (dynamic light/dark colours, `AppearanceMode` override stored with `@AppStorage`); controls and the shared `EmptyStateView` live in `Components.swift`.
+- Sidebar: search, "Conflicts only" switch, counters, method and app menus, 68 px rows (combo, owners, method badges, red count bead for conflicts, globe for layout conflicts, grey icon for in-app duplicates), footer with the permission bar, "Detection methods" popover link and "Diagnostics" link.
+- Detail: combo, status and explanation, winner, detecting methods, key code/modifiers, character per layout, layout notes, one card per owner with every claim, live observations for the combo.
+- Toolbar: appearance menu, rescan, live capture sheet (off / waiting / log states), JSON export. Diagnostics sheet: permissions, layouts, symbol probe, strategy results.
+- Empty states (`EmptyStateView`): no conflicts, no matching shortcuts, nothing selected, scanning, permission needed, scan failed, capture off, capture waiting.
+- Reduce Transparency swaps the translucent bars for opaque tokens; Reduce Motion removes hover lift, switch and spinner animation.
+- Preview mode for design review and screenshots: `SHORTCUTCLASH_PREVIEW=<scenario>` (see `PreviewFixtures.swift`) shows fixtures instead of a real scan; `-appearanceMode light|dark` forces the theme.
 
 ### Layout handling
 
@@ -141,7 +137,7 @@ ad-hoc signing.
 ### Build and bundle
 
 - `swift build` / `swift build -c release`; `scripts/bundle.sh [release|debug]` copies the binary and
-  `Resources/Info.plist` (LSUIElement false, Russian development region,
+  `Resources/Info.plist` (LSUIElement false, English development region,
   `NSAppleEventsUsageDescription`) into `dist/ShortcutClash.app` and signs it with `codesign -s -`.
 
 ### Tests

@@ -23,7 +23,7 @@ public enum HookLayer: Int, Codable, Sendable, Comparable, CaseIterable {
         }
     }
 
-    /// Why a winner at this layer beats everything after it. Russian, shown in the detail panel.
+    /// Why a winner at this layer beats everything after it. English, shown in the detail panel.
     public var reason: String {
         switch self {
         case .hidRemapper:
