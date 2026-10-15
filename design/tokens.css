@@ -1,0 +1,199 @@
+/* ShortcutClash design tokens v3 (minimal glass). Values mirror tokens.json. */
+:root {
+  --sc-font-sans: -apple-system, 'SF Pro Text', system-ui, sans-serif;
+  --sc-font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+  --sc-type-combo: 600 34px/42px var(--sc-font-sans);
+  --sc-type-row-combo: 600 17px/21px var(--sc-font-sans);
+  --sc-type-empty-title: 600 18px/24px var(--sc-font-sans);
+  --sc-type-card-name: 600 15px/18px var(--sc-font-sans);
+  --sc-type-row-owner: 500 14px/18px var(--sc-font-sans);
+  --sc-type-body: 400 14px/21px var(--sc-font-sans);
+  --sc-type-label: 400 13px/16px var(--sc-font-sans);
+  --sc-type-button: 500 13px/16px var(--sc-font-sans);
+  --sc-type-caption: 400 12px/15px var(--sc-font-sans);
+  --sc-type-badge: 500 11px/14px var(--sc-font-sans);
+  --sc-type-section-caps: 600 11px/14px var(--sc-font-sans);
+  --sc-type-mono: 400 11px/15px var(--sc-font-sans);
+  --sc-type-empty-body: 400 13px/18px var(--sc-font-sans);
+  --sc-space-4: 4px;
+  --sc-space-8: 8px;
+  --sc-space-12: 12px;
+  --sc-space-16: 16px;
+  --sc-space-24: 24px;
+  --sc-space-32: 32px;
+  --sc-space-40: 40px;
+  --sc-space-48: 48px;
+  --sc-space-64: 64px;
+  --sc-radius-badge: 999px;
+  --sc-radius-button: 8px;
+  --sc-radius-input: 8px;
+  --sc-radius-select: 8px;
+  --sc-radius-row: 10px;
+  --sc-radius-card: 12px;
+  --sc-radius-window: 14px;
+  --sc-radius-orb: 36px;
+  --sc-blur-bar: 10px;
+  --sc-dur-press: 60ms;
+  --sc-dur-focus: 100ms;
+  --sc-dur-hover: 120ms;
+  --sc-dur-input-focus: 120ms;
+  --sc-dur-switch: 160ms;
+  --sc-dur-release: 160ms;
+  --sc-dur-theme: 200ms;
+  --sc-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --sc-ease-press: cubic-bezier(0.4, 0, 1, 1);
+  color-scheme: light dark;
+}
+
+/* Light is the base; dark follows the system unless data-theme overrides it. */
+:root, :root[data-theme="light"] {
+  --sc-bg: #E8EDF4;
+  --sc-tint: rgba(127,166,255,0.55);
+  --sc-surface: #FFFFFF;
+  --sc-card: #FFFFFF;
+  --sc-sidebar: rgba(246,248,252,0.90);
+  --sc-toolbar: rgba(250,251,253,0.92);
+  --sc-fg: #0E1522;
+  --sc-muted: #4B5870;
+  --sc-accent: #1F4FD1;
+  --sc-on-accent: #FFFFFF;
+  --sc-danger: #B3261E;
+  --sc-danger-fill: #C7352B;
+  --sc-on-danger: #FFFFFF;
+  --sc-ok: #0A6670;
+  --sc-warn: #7D5200;
+  --sc-control: #FAFBFD;
+  --sc-control-hover: #FFFFFF;
+  --sc-control-active: #EBEFF6;
+  --sc-input: #FBFCFE;
+  --sc-border: rgba(14,21,34,0.14);
+  --sc-border-strong: rgba(14,21,34,0.26);
+  --sc-highlight: rgba(255,255,255,1);
+  --sc-hairline: rgba(14,21,34,0.08);
+  --sc-selected: rgba(31,79,209,0.09);
+  --sc-shadow: rgba(30,45,80,0.16);
+  --sc-shadow-soft: rgba(30,45,80,0.10);
+  --sc-inset: rgba(30,45,80,0.14);
+  --sc-focus-ring: #1F4FD1;
+  --sc-primary-top: #2457DC;
+  --sc-primary-bottom: #1F4FD1;
+  --sc-primary-highlight: rgba(255,255,255,0.30);
+  --sc-track-off: rgba(14,21,34,0.22);
+  --sc-knob: #FFFFFF;
+  --sc-opaque: #F6F8FB;
+  --sc-opaque-raised: #FFFFFF;
+  --sc-opaque-border: #C9D2DF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --sc-bg: #0F1319;
+    --sc-tint: rgba(125,168,255,0.45);
+    --sc-surface: #161B23;
+    --sc-card: #1A202A;
+    --sc-sidebar: rgba(22,27,35,0.88);
+    --sc-toolbar: rgba(22,27,35,0.90);
+    --sc-fg: #F2F4F8;
+    --sc-muted: #A3ACBB;
+    --sc-accent: #7DA8FF;
+    --sc-on-accent: #06122B;
+    --sc-danger: #FF7A75;
+    --sc-danger-fill: #FF7A75;
+    --sc-on-danger: #2A0806;
+    --sc-ok: #5CD9E0;
+    --sc-warn: #F2B84B;
+    --sc-control: #212733;
+    --sc-control-hover: #2A313D;
+    --sc-control-active: #1C212A;
+    --sc-input: #12161D;
+    --sc-border: rgba(255,255,255,0.10);
+    --sc-border-strong: rgba(255,255,255,0.18);
+    --sc-highlight: rgba(255,255,255,0.14);
+    --sc-hairline: rgba(255,255,255,0.07);
+    --sc-selected: rgba(125,168,255,0.14);
+    --sc-shadow: rgba(0,0,0,0.35);
+    --sc-shadow-soft: rgba(0,0,0,0.28);
+    --sc-inset: rgba(0,0,0,0.30);
+    --sc-focus-ring: #7DA8FF;
+    --sc-primary-top: #86B0FF;
+    --sc-primary-bottom: #7DA8FF;
+    --sc-primary-highlight: rgba(255,255,255,0.45);
+    --sc-track-off: rgba(255,255,255,0.16);
+    --sc-knob: #F2F4F8;
+    --sc-opaque: #161B24;
+    --sc-opaque-raised: #1E2430;
+    --sc-opaque-border: #323A49;
+  }
+}
+
+:root[data-theme="dark"] {
+  --sc-bg: #0F1319;
+  --sc-tint: rgba(125,168,255,0.45);
+  --sc-surface: #161B23;
+  --sc-card: #1A202A;
+  --sc-sidebar: rgba(22,27,35,0.88);
+  --sc-toolbar: rgba(22,27,35,0.90);
+  --sc-fg: #F2F4F8;
+  --sc-muted: #A3ACBB;
+  --sc-accent: #7DA8FF;
+  --sc-on-accent: #06122B;
+  --sc-danger: #FF7A75;
+  --sc-danger-fill: #FF7A75;
+  --sc-on-danger: #2A0806;
+  --sc-ok: #5CD9E0;
+  --sc-warn: #F2B84B;
+  --sc-control: #212733;
+  --sc-control-hover: #2A313D;
+  --sc-control-active: #1C212A;
+  --sc-input: #12161D;
+  --sc-border: rgba(255,255,255,0.10);
+  --sc-border-strong: rgba(255,255,255,0.18);
+  --sc-highlight: rgba(255,255,255,0.14);
+  --sc-hairline: rgba(255,255,255,0.07);
+  --sc-selected: rgba(125,168,255,0.14);
+  --sc-shadow: rgba(0,0,0,0.35);
+  --sc-shadow-soft: rgba(0,0,0,0.28);
+  --sc-inset: rgba(0,0,0,0.30);
+  --sc-focus-ring: #7DA8FF;
+  --sc-primary-top: #86B0FF;
+  --sc-primary-bottom: #7DA8FF;
+  --sc-primary-highlight: rgba(255,255,255,0.45);
+  --sc-track-off: rgba(255,255,255,0.16);
+  --sc-knob: #F2F4F8;
+  --sc-opaque: #161B24;
+  --sc-opaque-raised: #1E2430;
+  --sc-opaque-border: #323A49;
+}
+
+/* Matte frosted bars: the only translucent surfaces. Everything else is solid. */
+.sc-sidebar { background: var(--sc-sidebar); -webkit-backdrop-filter: blur(var(--sc-blur-bar)); backdrop-filter: blur(var(--sc-blur-bar)); }
+.sc-toolbar { background: var(--sc-toolbar); -webkit-backdrop-filter: blur(var(--sc-blur-bar)); backdrop-filter: blur(var(--sc-blur-bar)); box-shadow: 0 1px 4px var(--sc-shadow-soft); }
+.sc-card { background: var(--sc-card); border: 1px solid var(--sc-border); border-radius: var(--sc-radius-card); box-shadow: 0 2px 8px var(--sc-shadow-soft); }
+
+/* Soft glass keycap button: 1 px inner highlight, one small shadow, 1 px lift on hover. */
+.sc-button { height: 32px; padding: 0 15px; border-radius: var(--sc-radius-button); border: 1px solid var(--sc-border); color: var(--sc-fg); font: var(--sc-type-button);
+  background: var(--sc-control); box-shadow: inset 0 1px 0 var(--sc-highlight), 0 1px 2px var(--sc-shadow);
+  transition: transform var(--sc-dur-hover) var(--sc-ease-standard), box-shadow var(--sc-dur-hover) var(--sc-ease-standard), background var(--sc-dur-hover) var(--sc-ease-standard); }
+.sc-button:hover { transform: translateY(-1px); background: var(--sc-control-hover); box-shadow: inset 0 1px 0 var(--sc-highlight), 0 3px 8px var(--sc-shadow); }
+.sc-button:active { transform: none; background: var(--sc-control-active); box-shadow: inset 0 1px 3px var(--sc-inset); transition-duration: var(--sc-dur-press); transition-timing-function: var(--sc-ease-press); }
+.sc-button:focus-visible { outline: 2px solid var(--sc-focus-ring); outline-offset: 2px; }
+.sc-button:disabled { opacity: 0.45; }
+.sc-button--primary { color: var(--sc-on-accent); border-color: rgba(0,0,0,0.18); background: linear-gradient(to bottom, var(--sc-primary-top), var(--sc-primary-bottom)); box-shadow: inset 0 1px 0 var(--sc-primary-highlight), 0 1px 2px var(--sc-shadow); }
+.sc-button--error { color: var(--sc-danger); border-color: var(--sc-danger); }
+.sc-input { height: 36px; border-radius: var(--sc-radius-input); border: 1px solid var(--sc-border); background: var(--sc-input); color: var(--sc-fg); box-shadow: inset 0 1px 2px var(--sc-inset); transition: border-color var(--sc-dur-input-focus) var(--sc-ease-standard), box-shadow var(--sc-dur-input-focus) var(--sc-ease-standard); }
+.sc-input:hover { border-color: var(--sc-border-strong); background: var(--sc-control-hover); }
+.sc-input:focus { outline: none; border: 1.5px solid var(--sc-accent); box-shadow: inset 0 1px 2px var(--sc-inset), 0 0 0 3px color-mix(in srgb, var(--sc-accent) 28%, transparent); }
+.sc-input[aria-invalid="true"] { border-color: var(--sc-danger); box-shadow: 0 0 0 3px color-mix(in srgb, var(--sc-danger) 22%, transparent); }
+
+/* Reduce transparency: the bars become solid. */
+@media (prefers-reduced-transparency: reduce) {
+  .sc-sidebar, .sc-toolbar { background: var(--sc-opaque); -webkit-backdrop-filter: none; backdrop-filter: none; border-color: var(--sc-opaque-border); }
+  .sc-card { background: var(--sc-opaque-raised); }
+}
+:root[data-transparency="reduced"] .sc-sidebar, :root[data-transparency="reduced"] .sc-toolbar { background: var(--sc-opaque); -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* Reduce motion: no lift, no transitions. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --sc-dur-press: 0ms; --sc-dur-focus: 0ms; --sc-dur-hover: 0ms; --sc-dur-input-focus: 0ms; --sc-dur-switch: 0ms; --sc-dur-release: 0ms; --sc-dur-theme: 0ms; }
+  .sc-button:hover { transform: none; }
+}

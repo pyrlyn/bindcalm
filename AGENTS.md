@@ -34,3 +34,5 @@ scripts/bundle.sh && open dist/ShortcutClash.app
 
 `PLAN.md` (active tasks + implementation plan), `todo.md`, `done.md`, `roadmap.md`, `ideas.md`,
 `toolchain.md`, `README.md`.
+
+UI design: see `design/DESIGN-FOR-AGENTS.md` (glass style, tokens, states, themes).
