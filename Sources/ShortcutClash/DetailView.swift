@@ -37,6 +37,9 @@ struct DetailView: View {
                 Badge(text: group.status.label, color: group.status.color)
             }
             Text(explanation).foregroundStyle(.secondary)
+            if group.status == .conflict, let ranking = ShortcutRanking.winner(in: group.findings) {
+                winnerLine(ranking)
+            }
             HStack(spacing: 4) {
                 Text("Обнаружено методами:").font(.caption).foregroundStyle(.secondary)
                 ForEach(group.methods) { Badge(text: StrategyRegistry.displayName($0), color: .blue) }
@@ -44,6 +47,17 @@ struct DetailView: View {
             Text("Код клавиши: \(group.combo.keyCode) · модификаторы: \(group.combo.modifiers.symbols.isEmpty ? "нет" : group.combo.modifiers.symbols)")
                 .font(.caption.monospaced())
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    private func winnerLine(_ ranking: ShortcutWinner) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if ranking.isTie {
+                Badge(text: "Победитель не определён", color: .orange)
+            } else if let name = ranking.owners.first?.name {
+                Badge(text: "Победитель: \(name)", color: .green)
+            }
+            Text(ranking.explanation).font(.callout)
         }
     }
 

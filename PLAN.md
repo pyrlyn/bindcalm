@@ -13,7 +13,7 @@ between apps using every available detection method and highlights them.
 | T1 | todo | P1 | 3 | 0% | |
 | T2 | done | P2 | 3 | 100% | |
 | T3 | done | P2 | 2 | 100% | |
-| T4 | todo | P2 | 4 | 0% | |
+| T4 | done | P2 | 4 | 100% | |
 | T5 | todo | P3 | 2 | 0% | |
 | T6 | todo | P3 | 3 | 0% | |
 
@@ -81,6 +81,8 @@ ad-hoc signing.
   to `needsPermission` / `unavailable`, records counts and durations, de-duplicates by id.
 - **Analysis.** `ConflictAnalyzer` groups by combo and assigns `conflict` / `layoutConflict` /
   `inAppDuplicate` / `none` (rules in README). `LayoutAnalyzer` adds per-layout notes.
+  `ShortcutRanking` picks the likely winner of a conflict by hook layer (HID remapper → event tap →
+  symbolic hotkey → Carbon hotkey → frontmost menu).
 - **Owner resolution.** `OwnerResolver` (LaunchServices via `NSWorkspace`, cached, thread-safe).
 
 ### Strategy modules
@@ -168,4 +170,4 @@ See README → "Detection methods and their limitations" and "Research".
 | M8. CLI `--dump`, bundle script, unit tests, README research | done |
 | M9. GUI verification with grants | todo (T1) |
 | M10. Config-file parsers | done (T2) |
-| M11. Services accuracy, winner model, watch mode, stable signing | in progress (T3 done, T4–T6 todo) |
+| M11. Services accuracy, winner model, watch mode, stable signing | in progress (T3–T4 done, T5–T6 todo) |
