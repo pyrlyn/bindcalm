@@ -39,3 +39,9 @@ menus and `MenuClaimRefresh` replaces that owner's in-app menu claims. The Apple
 recorded by the last full scan. An unreadable menu bar keeps the previous claims. The refresh does
 not prompt for Accessibility, does not run while a full scan is in progress, and runs once for the
 frontmost app when the Accessibility grant appears.
+
+### D6. Stable code signature
+
+`scripts/bundle.sh` signs with `SHORTCUTCLASH_CODESIGN_IDENTITY` and a secure timestamp when that
+variable names a codesign identity, so TCC grants survive rebuilds. An unset, empty, or `-` value
+falls back to ad-hoc `codesign --force --sign - --timestamp=none`.

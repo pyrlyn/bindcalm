@@ -16,9 +16,14 @@ hotkey probing and live key capture — groups them by physical key combination 
 swift build                  # debug build
 swift build -c release       # release build
 swift test                   # unit tests (parsers, grouping, conflict rules, layout analysis)
-scripts/bundle.sh            # → dist/ShortcutClash.app (Info.plist + ad-hoc codesign)
+scripts/bundle.sh            # → dist/ShortcutClash.app (Info.plist + codesign)
 open dist/ShortcutClash.app
 ```
+
+`scripts/bundle.sh` signs ad-hoc unless `SHORTCUTCLASH_CODESIGN_IDENTITY` names a codesign identity
+(for example `Developer ID Application: Name (TEAMID)`). A named identity is signed with a secure
+timestamp, so Accessibility and Input Monitoring grants survive rebuilds. An unset, empty, or `-`
+value keeps the ad-hoc signature (`codesign --sign - --timestamp=none`).
 
 Headless modes (useful for scripting and for verifying the scanners without the GUI):
 
@@ -257,8 +262,9 @@ which match characters instead of key codes may misfire.
   only on request.
 - Both statuses are polled every 2 s (TCC does not notify apps) and shown at the bottom of the sidebar
   with buttons that open the right System Settings pane.
-- The bundle is ad-hoc signed: TCC keys grants to the code hash, so every rebuild looks like a new
-  app and grants may need to be re-approved. A stable Developer ID signature avoids this.
+- By default the bundle is ad-hoc signed: TCC keys grants to the code hash, so every rebuild looks
+  like a new app and grants may need to be re-approved. Set `SHORTCUTCLASH_CODESIGN_IDENTITY` when
+  running `scripts/bundle.sh` to sign with a Developer ID (or another stable identity) instead.
 - The app is not sandboxed (it must read other apps' preferences and walk their menus).
 
 ## Research: other macOS methods
