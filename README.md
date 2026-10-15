@@ -204,8 +204,13 @@ failing the scan. Claims are partial: the config can be present while the tool i
 Walks `AXMenuBar` of every running regular app with `AXUIElementCopyMultipleAttributeValues`
 (`AXMenuItemCmdChar`, `AXMenuItemCmdVirtualKey`, `AXMenuItemCmdModifiers`, `AXMenuItemCmdGlyph`), a
 1 s messaging timeout and an item budget. The first menu (Apple menu) is recorded once, as macOS and
-global. Limitations: only running apps; only menus — shortcuts handled in views/web content or by
-app-level key monitors are invisible; dynamic menus may be empty until opened; the AX modifier
+global. While this method is enabled, switching apps re-reads only the newly frontmost app's menus
+(`NSWorkspace.didActivateApplicationNotification`) and replaces that app's in-app claims. The Apple
+menu is not walked again, a menu bar that cannot be read leaves the previous claims in place, and
+the refresh does not prompt for Accessibility and does not run during a full scan. Gaining the
+Accessibility grant refreshes the frontmost app once. Limitations: only running apps; only menus —
+shortcuts handled in views/web content or by app-level key monitors are invisible; dynamic menus may
+be empty until opened; the AX modifier
 mask has **no fn/Globe bit**, so the window-tiling items macOS 15+ injects into every app
 (Window → Move & Resize, Fill, Center — really 🌐⌃) would look like ⌃-combos and are skipped
 (English/Russian/Ukrainian titles); status-bar extras are not opened.
@@ -273,7 +278,7 @@ availability and is unverified unless stated.
 | `RegisterEventHotKey` probing | ⚠️ verified, used | Sees system-held hotkeys only, owner unknown (see method 9). |
 | `AXIsProcessTrusted` + `AXUIElementCopyAttributeValue` menu walk | ✅ verified, used | Best source for in-app shortcuts; no fn bit. |
 | Focused app: `NSWorkspace.frontmostApplication`, `AXFocusedApplication` on `AXUIElementCreateSystemWide()` | ✅ verified, used | Both used in live capture; AX needs Accessibility and may differ for panels/agents. |
-| `NSWorkspace.didActivateApplicationNotification` | ✅ | Cheap way to track the frontmost app over time (e.g. re-scan the active app's menu on switch). Not needed for one-shot scans; candidate for a "watch" mode. |
+| `NSWorkspace.didActivateApplicationNotification` | ✅ used | Re-reads the activated app's menus so in-app claims stay current without a manual rescan (method 8). |
 | TIS: `TISCopyCurrentKeyboardInputSource`, `TISCopyCurrentKeyboardLayoutInputSource`, `TISCreateInputSourceList` | ✅ verified, used | Main thread only. |
 | Per-app input source ("automatically switch to a document's input source") | ⚠️ | Only the on/off flag is readable (`com.apple.HIToolbox` → `AppleGlobalTextInputProperties` → `TextInputGlobalPropertyPerContextInput`); which layout each app/document uses is not exposed by a public API. |
 | `UCKeyTranslate` key code ↔ character | ✅ verified, used | Basis of the layout analysis. |

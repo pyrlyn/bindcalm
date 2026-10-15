@@ -31,3 +31,11 @@ not treated as on. A confirmed entry without its own key equivalent keeps the pl
 Carbon hotkey, frontmost menu. The detail panel shows the winner and a Russian explanation. Several
 owners on the earliest layer are a tie. Disabled claims, live observations and unknown-layer
 heuristics do not beat a known hook.
+
+### D5. Watch mode for the frontmost app's menus
+
+`NSWorkspace.didActivateApplicationNotification` re-reads only the activated app's Accessibility
+menus and `MenuClaimRefresh` replaces that owner's in-app menu claims. The Apple menu stays as
+recorded by the last full scan. An unreadable menu bar keeps the previous claims. The refresh does
+not prompt for Accessibility, does not run while a full scan is in progress, and runs once for the
+frontmost app when the Accessibility grant appears.

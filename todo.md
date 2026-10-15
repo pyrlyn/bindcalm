@@ -1,3 +1,2 @@
 - T1. Verify the GUI flows with permissions granted
-- T5. Watch mode
 - T6. Stable code signature
