@@ -76,9 +76,9 @@ struct LiveCaptureView: View {
         @ViewBuilder private func logArea(_ display: CaptureDisplay) -> some View {
             if display.observations.isEmpty {
                 if display.isRunning {
-                    EmptyStateView(icon: .record, tone: .accent, title: "Waiting for key presses",
-                                   message: "Press a shortcut anywhere. It will show up here with the verdict on who received it.",
-                                   actions: [EmptyAction(title: "Stop recording") { model.toggleCapture() }])
+                    EmptyStateView(icon: .record, tone: .accent, title: "Waiting for key presses…",
+                                   message: "Press a shortcut with ⌘, ^, ⌥ or an F-key. Plain typing is not recorded.",
+                                   actions: [EmptyAction(title: "Stop") { model.toggleCapture() }])
                 } else {
                     EmptyStateView(icon: .record, tone: .muted, title: "Live capture is off",
                                    message: "Start recording, then press a shortcut to see whether a global interceptor takes it.",

@@ -1,9 +1,8 @@
 # App screens beyond the v3 Figma frames
 
-The v3 Figma file has frames for the main screen, the detail pane, six empty states and the component sheet
-(see `design/` on PR #1). The app has more views than that. They were designed together with the SwiftUI
+The v3 Figma file first had frames for the main screen, the detail pane, seven empty-state tiles and the component sheet. The app has more views than that. They were designed together with the SwiftUI
 implementation from the same tokens (`Theme.swift` mirrors `design/tokens.json`) and are documented here so
-`design/` stays the source of truth. Figma frames for them are still to be added (see the PR description).
+`design/` stays the source of truth. Their Figma frames are in the v3 Screens section (node ids in README.md) and exported to `design/screens/`.
 
 ## Layout (all screens)
 

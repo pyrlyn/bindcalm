@@ -173,28 +173,26 @@ struct SidebarView: View {
     @ViewBuilder private var listArea: some View {
         let rows = model.filteredGroups
         if model.isScanning && model.groups.isEmpty {
-            EmptyStateView(icon: .scan, tone: .accent, title: "Scanning shortcuts…",
-                           message: "Reading system settings, app menus and config files. This takes a few seconds.")
+            EmptyStateView(icon: .scan, tone: .accent, title: "Scanning…",
+                           message: "Running all enabled detection methods.")
         } else if model.scanFailed {
             EmptyStateView(icon: .warning, tone: .danger, title: "Scan failed",
-                           message: "No detection method could read shortcuts. Check diagnostics for the reason, then try again.",
-                           actions: [EmptyAction(title: "Try again", primary: true) { model.rescan() },
-                                     EmptyAction(title: "Open diagnostics") { model.showDiagnostics = true }])
+                           message: "One or more detection methods failed. Open Diagnostics for details.",
+                           actions: [EmptyAction(title: "Rescan", primary: true) { model.rescan() },
+                                     EmptyAction(title: "Diagnostics") { model.showDiagnostics = true }])
         } else if model.permissionNeeded {
-            EmptyStateView(icon: .lock, tone: .warn, title: "Permission needed",
-                           message: "Accessibility access lets ShortcutClash read app menus. Grant it in System Settings, then rescan.",
-                           actions: [EmptyAction(title: "Grant access", primary: true) { model.requestAccessibility() },
+            EmptyStateView(icon: .lock, tone: .warn, title: "Accessibility permission required",
+                           message: "Needed to read app menus and the global NSEvent monitor.",
+                           actions: [EmptyAction(title: "Request", primary: true) { model.requestAccessibility() },
                                      EmptyAction(title: "Open Settings") { Permissions.openSettings(for: .accessibility) }])
         } else if rows.isEmpty {
             if model.hasActiveFilters {
-                EmptyStateView(icon: .search, tone: .muted, title: "No matching shortcuts",
-                               message: model.trimmedQuery.isEmpty
-                                   ? "No shortcut matches the selected method or app."
-                                   : "Nothing matches “\(model.trimmedQuery)”. Try a key combination, an app name or an action.",
-                               actions: [EmptyAction(title: "Clear filters") { model.clearFilters() }])
+                EmptyStateView(icon: .search, tone: .accent, title: "Nothing found",
+                               message: "No shortcut matches your search. Try an app name, an action or a key combination.",
+                               actions: [EmptyAction(title: "Clear search") { model.clearFilters() }])
             } else if model.onlyConflicts && model.conflictCount == 0 {
                 EmptyStateView(icon: .check, tone: .ok, title: "No conflicts found",
-                               message: "Every shortcut found by the enabled methods has a single owner.",
+                               message: "All \(model.groups.count) shortcuts were scanned and none overlap.",
                                actions: [EmptyAction(title: "Show all shortcuts") { model.onlyConflicts = false }])
             } else {
                 EmptyStateView(icon: .search, tone: .muted, title: "No shortcuts found",
@@ -290,13 +288,13 @@ struct GroupRow: View {
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 ViewThatFits(in: .horizontal) {
-                    badges(limit: 3)
                     badges(limit: 2)
                     badges(limit: 1)
+                    badges(limit: 0)
                 }
             }
             trailing
-                .frame(width: Theme.Size.bead, height: Theme.Size.bead)
+                .frame(minWidth: Theme.Size.bead, minHeight: Theme.Size.bead)
         }
         .padding(.horizontal, 12)
         .frame(height: Theme.Size.row)
@@ -312,6 +310,9 @@ struct GroupRow: View {
         let methods = group.methods
         return HStack(spacing: 4) {
             ForEach(methods.prefix(limit)) { Badge(text: MethodShortName.of($0), tone: .accent) }
+            if let worst = group.findings.map(\.confidence).max() {
+                Badge(text: worst.label.lowercased(), tone: worst.tone)
+            }
             if methods.count > limit { Badge(text: "+\(methods.count - limit)") }
             if allOff { Badge(text: "Off") }
         }
@@ -324,7 +325,7 @@ struct GroupRow: View {
             CountBead(count: group.activeOwners.count)
                 .help("Conflict: \(group.activeOwners.count) owners")
         case .layoutConflict:
-            Image(systemName: "globe").foregroundStyle(Theme.warn).help("Layout conflict")
+            Badge(text: "layout", tone: .warn).help("Layout conflict")
         case .inAppDuplicate where showDuplicates:
             Image(systemName: "square.on.square").foregroundStyle(Theme.muted).help("Duplicate inside one app")
         default:
@@ -346,13 +347,18 @@ struct SidebarFooter: View {
                         MethodsView().environmentObject(model)
                     }
                 Spacer(minLength: 8)
-                Text("\(model.enabled.count) of \(model.strategies.count) enabled")
+                Text("\(model.enabled.count) of \(model.strategies.count) · configure")
                     .font(.system(size: 12)).foregroundStyle(Theme.muted)
-                    .padding(.trailing, 8)
-                FooterLink(title: "Diagnostics") { model.showDiagnostics = true }
+                Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(Theme.muted).padding(.leading, 4)
             }
             Rectangle().fill(Theme.hairline).frame(height: 1)
             PermissionBar()
+            Rectangle().fill(Theme.hairline).frame(height: 1)
+            HStack(spacing: 0) {
+                FooterLink(title: "Diagnostics") { model.showDiagnostics = true }
+                Spacer(minLength: 8)
+            }
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)

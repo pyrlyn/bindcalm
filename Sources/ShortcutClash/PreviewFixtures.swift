@@ -29,7 +29,7 @@ extension AppModel {
         results = PreviewFixtures.results(.healthy)
         findings = PreviewFixtures.findings
         regroup()
-        selection = groups.first?.id
+        selection = groups.first { $0.combo.display == "⌘Space" }?.id ?? groups.first?.id
 
         switch scenario {
         case .main:
@@ -38,7 +38,7 @@ extension AppModel {
             selection = nil
         case .noConflicts:
             findings = PreviewFixtures.findings.filter { $0.owner.name != "Alfred" && $0.owner.name != "Raycast"
-                && $0.owner.name != "CleanShot X" && $0.owner.name != "Hammerspoon" }
+                && $0.owner.name != "CleanShot X" && $0.owner.name != "Hammerspoon" && $0.action != "Comment Selection" }
             regroup()
             onlyConflicts = true
             selection = nil
@@ -98,9 +98,9 @@ enum PreviewFixtures {
 
     private static func hot(_ combo: KeyCombo, _ owner: HotKeyOwner, _ method: DiscoveryMethod,
                             _ confidence: Confidence, _ scope: HotKeyScope, _ action: String, source: String,
-                            enabled: Bool = true) -> DiscoveredHotKey {
+                            enabled: Bool = true, character: String? = nil) -> DiscoveredHotKey {
         DiscoveredHotKey(combo: combo, owner: owner, method: method, confidence: confidence, scope: scope,
-                         action: action, enabled: enabled, source: source)
+                         action: action, enabled: enabled, source: source, definingCharacter: character)
     }
 
     static let findings: [DiscoveredHotKey] = {
@@ -144,6 +144,10 @@ enum PreviewFixtures {
             hot(cmdN, notes, .accessibilityMenus, .reliable, .inApp, "New Note", source: "AX: File ▸ New Note"),
             hot(cmdD, safari, .accessibilityMenus, .reliable, .inApp, "Add Bookmark…", source: "AX: Bookmarks ▸ Add Bookmark…"),
             hot(cmdB, notes, .accessibilityMenus, .reliable, .inApp, "Bold", source: "AX: Format ▸ Font ▸ Bold"),
+            hot(combo(44, .command), xcode, .accessibilityMenus, .heuristic, .inApp, "Comment Selection",
+                source: "AX: Editor ▸ Structure ▸ Comment Selection", character: "/"),
+            hot(combo(27, .command), macOS, .symbolicHotKeys, .reliable, .global, "Zoom out",
+                source: "com.apple.symbolichotkeys · AppleSymbolicHotKeys 19"),
             hot(optSpace, macOS, .symbolicHotKeys, .reliable, .global, "Select the previous input source",
                 source: "com.apple.symbolichotkeys · AppleSymbolicHotKeys 60", enabled: false),
         ]
@@ -151,7 +155,9 @@ enum PreviewFixtures {
 
     static let layouts = LayoutSnapshot(layouts: [
         .init(id: "com.apple.keylayout.ABC", name: "ABC", isCurrent: true, isASCIICapable: true,
-              unshifted: [49: " ", 21: "4", 40: "k", 17: "t"], shifted: [21: "$", 40: "K", 17: "T"]),
+              unshifted: [49: " ", 21: "4", 40: "k", 17: "t", 44: "/"], shifted: [21: "$", 40: "K", 17: "T"]),
+        .init(id: "com.apple.keylayout.Dvorak", name: "Dvorak", isCurrent: false, isASCIICapable: true,
+              unshifted: [49: " ", 27: "/", 44: "z"], shifted: [27: "?"]),
         .init(id: "com.apple.keylayout.Ukrainian-PC", name: "Ukrainian", isCurrent: false, isASCIICapable: false,
               unshifted: [49: " ", 21: "4", 40: "л", 17: "е"], shifted: [21: ";", 40: "Л", 17: "Е"]),
     ], perDocumentInputSource: false)

@@ -11,8 +11,8 @@ struct DetailPane: View {
             if let group = model.group(with: model.selection) {
                 DetailView(group: group)
             } else {
-                EmptyStateView(icon: .cursor, tone: .muted, title: "Select a shortcut",
-                               message: "Pick a key combination on the left to see who owns it and which method found it.")
+                EmptyStateView(icon: .cursor, tone: .accent, title: "Select a shortcut",
+                               message: "Pick a shortcut on the left to see who owns it and how it was detected.")
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -68,12 +68,12 @@ struct DetailView: View {
                 winnerLine(ranking)
             }
             HStack(alignment: .center, spacing: 8) {
-                Text("Detected by").font(.system(size: 12)).foregroundStyle(Theme.muted)
+                Text("Detected by:").font(.system(size: 12)).foregroundStyle(Theme.muted)
                 FlowLayout {
-                    ForEach(group.methods) { Badge(text: StrategyRegistry.displayName($0), tone: .accent) }
+                    ForEach(group.methods) { Badge(text: MethodShortName.of($0), tone: .accent) }
                 }
             }
-            Text("Key code \(group.combo.keyCode) · modifiers: \(group.combo.modifiers.symbols.isEmpty ? "none" : group.combo.modifiers.symbols)")
+            Text("Key code: \(group.combo.keyCode) · modifiers: \(group.combo.modifiers.symbols.isEmpty ? "none" : group.combo.modifiers.symbols)")
                 .font(.system(size: 12, design: .monospaced))
                 .foregroundStyle(Theme.muted)
         }
@@ -97,7 +97,7 @@ struct DetailView: View {
     private var explanation: String {
         switch group.status {
         case .conflict:
-            return "Several owners claim this shortcut and at least one is global, so only one of them fires."
+            return "This shortcut is claimed by several owners, and at least one of them is global, so only one of them will fire."
         case .layoutConflict:
             return "The shortcut itself is free, but in another enabled keyboard layout its character lands on a key that is already taken."
         case .inAppDuplicate:
