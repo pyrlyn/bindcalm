@@ -11,7 +11,7 @@ between apps using every available detection method and highlights them.
 | # | Status | Priority | Complexity | Readiness | Agent |
 | --- | --- | --- | --- | --- | --- |
 | T1 | todo | P1 | 3 | 0% | |
-| T2 | todo | P2 | 3 | 0% | |
+| T2 | done | P2 | 3 | 100% | |
 | T3 | todo | P2 | 2 | 0% | |
 | T4 | todo | P2 | 4 | 0% | |
 | T5 | todo | P3 | 2 | 0% | |
@@ -93,6 +93,13 @@ ad-hoc signing.
 | App Shortcuts | `UserKeyEquivalentsStrategy.swift` | `CFPreferencesCopyValue(NSUserKeyEquivalents)` |
 | Services | `ServicesStrategy.swift` | Info.plist `NSServices`, `pbs` `NSServicesStatus` |
 | Preference heuristics | `PreferencesScanStrategy.swift` + `ShortcutFormatDetector.swift` | `PropertyListSerialization` |
+| Karabiner-Elements | `ConfigFileStrategies.swift` + `KarabinerParser.swift` | `karabiner.json` complex modifications |
+| skhd | `ConfigFileStrategies.swift` + `SkhdParser.swift` | `~/.config/skhd/skhdrc`, `~/.skhdrc` |
+| Hammerspoon | `ConfigFileStrategies.swift` + `HammerspoonParser.swift` | `hs.hotkey.bind` / `new` in `~/.hammerspoon` |
+| BetterTouchTool | `ConfigFileStrategies.swift` + `BetterTouchToolParser.swift` | `.bttpreset` JSON |
+| Keyboard Maestro | `ConfigFileStrategies.swift` + `KeyboardMaestroParser.swift` | `Keyboard Maestro Macros.plist` |
+| Alfred | `ConfigFileStrategies.swift` + `AlfredParser.swift` | workflow `info.plist`, hotkey prefs |
+| Raycast | `ConfigFileStrategies.swift` + `RaycastParser.swift` | JSON/plist `hotkey` fields |
 | Accessibility menus | `AccessibilityMenuStrategy.swift` | `AXUIElementCopyMultipleAttributeValues` |
 | Carbon probe | `CarbonProbeStrategy.swift` | `RegisterEventHotKey` / `UnregisterEventHotKey` |
 | Live capture | `Live/LiveCapture.swift` | `CGEvent.tapCreate`, `NSEvent` monitors |
@@ -140,7 +147,8 @@ ad-hoc signing.
 XCTest suites: modifier conversions and display; key-equivalent, glyph and hotkey-string parsing;
 symbolic hotkeys and Services parsing; shortcut-format detection (MASShortcut, ShortcutRecorder,
 KeyboardShortcuts JSON, archived data, parameters, strings); conflict rules; layout conflicts;
-AX tiling filter; preference scope heuristic.
+AX tiling filter; preference scope heuristic; config-file parsers (Karabiner, skhd, Hammerspoon,
+BetterTouchTool, Keyboard Maestro, Alfred, Raycast) and their registry toggles.
 
 ### Limitations
 
@@ -159,5 +167,5 @@ See README → "Detection methods and their limitations" and "Research".
 | M7. SwiftUI UI, per-method toggles, filters, export | done |
 | M8. CLI `--dump`, bundle script, unit tests, README research | done |
 | M9. GUI verification with grants | todo (T1) |
-| M10. Config-file parsers | todo (T2) |
+| M10. Config-file parsers | done (T2) |
 | M11. Services accuracy, winner model, watch mode, stable signing | todo (T3–T6) |

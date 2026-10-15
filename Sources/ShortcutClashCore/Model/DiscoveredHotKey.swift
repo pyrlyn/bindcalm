@@ -9,6 +9,13 @@ public enum DiscoveryMethod: String, Codable, CaseIterable, Sendable, Identifiab
     case preferencesScan
     case sandboxPreferences
     case services
+    case karabiner
+    case skhd
+    case hammerspoon
+    case betterTouchTool
+    case keyboardMaestro
+    case alfred
+    case raycast
     case accessibilityMenus
     case systemKeys
     case nsEventMonitor

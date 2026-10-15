@@ -18,7 +18,13 @@ public struct PreferencesScanStrategy: HotKeyDiscoveryStrategy {
     }
     public var defaultEnabled: Bool { !sandboxContainers }
 
-    static let skippedDomains: Set<String> = ["com.apple.symbolichotkeys", "pbs", ".GlobalPreferences"]
+    /// Domains read by a dedicated strategy. The heuristic scan would only duplicate them, less accurately.
+    static let skippedDomains: Set<String> = [
+        "com.apple.symbolichotkeys", "pbs", ".GlobalPreferences",
+        "com.raycast.macos", "com.hegenberg.BetterTouchTool",
+        "com.stairways.keyboardmaestro", "com.stairways.keyboardmaestro.engine",
+        "com.runningwithcrayons.Alfred", "com.runningwithcrayons.Alfred-Preferences",
+    ]
     static let maxFileSize = 8 * 1024 * 1024
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
