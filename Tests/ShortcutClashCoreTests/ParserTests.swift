@@ -90,7 +90,43 @@ final class ParserTests: XCTestCase {
         let workflow = entries.first { $0.title == "My Shortcut" }
         XCTAssertNil(workflow?.providerBundleID)
         XCTAssertEqual(workflow?.combo, KeyCombo(keyCode: 38, modifiers: [.command, .control]))
+        // A shortcut without an enabled flag is not confirmation that the service is on.
+        XCTAssertEqual(workflow?.enabled, false)
+        XCTAssertEqual(terminal?.enabled, true)
         XCTAssertEqual(entries.first { $0.providerBundleID == "com.apple.Notes" }?.enabled, false)
+
+        let contextOnly: [String: Any] = [
+            "com.apple.Safari - Search With Google - searchWithGoogle": ["enabled_context_menu": true, "enabled_services_menu": false],
+            "com.apple.Finder - New Terminal at Folder - newTerminalAtFolder": ["enabled_context_menu": 1],
+        ]
+        let flags = ServicesParser.parseStatus(contextOnly)
+        XCTAssertEqual(flags.first { $0.providerBundleID == "com.apple.Safari" }?.enabled, false)
+        XCTAssertEqual(flags.first { $0.providerBundleID == "com.apple.Finder" }?.enabled, true)
+    }
+
+    func testUnconfirmedServiceDefaultsAreDisabled() {
+        let services = ServicesParser.parseInfoPlistServices([
+            ["NSMenuItem": ["default": "Open man Page in Terminal"], "NSKeyEquivalent": ["default": "M"]],
+            ["NSMenuItem": ["default": "Make Sticky"], "NSKeyEquivalent": ["default": "y"]],
+        ])
+        let open = services[0]
+        let sticky = services[1]
+        let confirmedOff = ServiceStatusEntry(providerBundleID: "com.apple.Terminal", title: open.title, combo: nil,
+                                               enabled: false, rawKey: "com.apple.Terminal - Open man Page in Terminal - openManPage")
+        let overridden = ServiceStatusEntry(providerBundleID: "com.apple.Terminal", title: sticky.title,
+                                            combo: KeyCombo(keyCode: 0, modifiers: [.command]), enabled: true, rawKey: "status")
+
+        let unconfirmed = ServicesParser.resolveDefault(open, status: nil)
+        XCTAssertEqual(unconfirmed?.enabled, false)
+        XCTAssertEqual(unconfirmed?.confirmed, false)
+        XCTAssertEqual(unconfirmed?.combo, open.combo)
+
+        let confirmed = ServicesParser.resolveDefault(open, status: confirmedOff)
+        XCTAssertEqual(confirmed?.enabled, false)
+        XCTAssertEqual(confirmed?.confirmed, true)
+        XCTAssertEqual(confirmed?.combo, open.combo)
+
+        XCTAssertNil(ServicesParser.resolveDefault(sticky, status: overridden))
     }
 }
 

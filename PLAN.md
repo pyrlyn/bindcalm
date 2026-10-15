@@ -12,7 +12,7 @@ between apps using every available detection method and highlights them.
 | --- | --- | --- | --- | --- | --- |
 | T1 | todo | P1 | 3 | 0% | |
 | T2 | done | P2 | 3 | 100% | |
-| T3 | todo | P2 | 2 | 0% | |
+| T3 | done | P2 | 2 | 100% | |
 | T4 | todo | P2 | 4 | 0% | |
 | T5 | todo | P3 | 2 | 0% | |
 | T6 | todo | P3 | 3 | 0% | |
@@ -168,4 +168,4 @@ See README → "Detection methods and their limitations" and "Research".
 | M8. CLI `--dump`, bundle script, unit tests, README research | done |
 | M9. GUI verification with grants | todo (T1) |
 | M10. Config-file parsers | done (T2) |
-| M11. Services accuracy, winner model, watch mode, stable signing | todo (T3–T6) |
+| M11. Services accuracy, winner model, watch mode, stable signing | in progress (T3 done, T4–T6 todo) |
