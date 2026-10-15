@@ -7,13 +7,14 @@ struct ContentView: View {
     @FocusState private var searchFocused: Bool
 
     var body: some View {
-        VStack(spacing: 0) {
-            AppToolbar()
-            Rectangle().fill(Theme.hairline).frame(height: 1)
-            HStack(spacing: 0) {
-                SidebarView(searchFocused: $searchFocused)
-                    .frame(width: Theme.Size.sidebarWidth)
-                Rectangle().fill(Theme.hairline).frame(width: 1)
+        HStack(spacing: 0) {
+            // Sidebar runs full height; the traffic lights float over its top strip.
+            SidebarView(searchFocused: $searchFocused)
+                .frame(width: Theme.Size.sidebarWidth)
+            Rectangle().fill(Theme.hairline).frame(width: 1)
+            VStack(spacing: 0) {
+                AppToolbar()
+                Rectangle().fill(Theme.hairline).frame(height: 1)
                 DetailPane()
             }
         }
@@ -89,16 +90,12 @@ struct AppToolbar: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Text("ShortcutClash")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(Theme.fg)
-                .padding(.leading, 78) // clears the traffic lights
             Spacer(minLength: 12)
             SoftMenu(options: AppearanceMode.allCases.map { ($0.title, $0.rawValue) }, selection: $appearance, width: 104)
                 .help("Appearance")
                 .accessibilityLabel("Appearance")
             Button("Rescan") { model.rescan() }
-                .softButton()
+                .softButton(.primary)
                 .disabled(model.isScanning)
                 .help("Run every enabled method again")
             let capturing = model.captureDisplay.isRunning
@@ -112,7 +109,7 @@ struct AppToolbar: View {
             }
             .softButton()
             .help("Press a shortcut and see who receives it")
-            Button("Export") { model.exportJSON() }
+            Button("Export JSON") { model.exportJSON() }
                 .softButton()
                 .help("Save the full report as JSON")
         }
@@ -130,6 +127,7 @@ struct SidebarView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            Color.clear.frame(height: Theme.Size.toolbarHeight - 16) // traffic-light strip
             filters
             Rectangle().fill(Theme.hairline).frame(height: 1)
             listArea
@@ -148,7 +146,7 @@ struct SidebarView: View {
                 }
                 .toggleStyle(.soft)
                 Spacer(minLength: 8)
-                Text("\(model.groups.count) shortcuts")
+                Text("\(model.groups.count) combos")
                     .font(.system(size: 12)).foregroundStyle(Theme.muted)
                 Text("·").font(.system(size: 12)).foregroundStyle(Theme.muted)
                 Text("\(model.conflictCount) conflicts")
@@ -211,18 +209,42 @@ struct SidebarView: View {
 
 private struct ShortcutList: View {
     @EnvironmentObject private var model: AppModel
+    @State private var showOthers = true
     let rows: [HotKeyGroup]
+
+    private func row(_ group: HotKeyGroup) -> some View {
+        GroupRow(group: group, showDuplicates: model.showDuplicates, selected: model.selection == group.id)
+            .id(group.id)
+            .onTapGesture { model.selection = group.id }
+            .accessibilityAddTraits(.isButton)
+            .accessibilityAddTraits(model.selection == group.id ? .isSelected : [])
+    }
 
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView {
                 LazyVStack(spacing: 4) {
-                    ForEach(rows) { group in
-                        GroupRow(group: group, showDuplicates: model.showDuplicates, selected: model.selection == group.id)
-                            .id(group.id)
-                            .onTapGesture { model.selection = group.id }
-                            .accessibilityAddTraits(.isButton)
-                            .accessibilityAddTraits(model.selection == group.id ? .isSelected : [])
+                    let conflicts = rows.filter(\.isProblem)
+                    let others = rows.filter { !$0.isProblem }
+                    if !conflicts.isEmpty {
+                        SectionCaps(text: "Conflicts · \(conflicts.count)", tone: .danger)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 4).padding(.top, 4)
+                    }
+                    ForEach(conflicts) { row($0) }
+                    if !others.isEmpty {
+                        let open = showOthers || conflicts.isEmpty
+                        Button { showOthers.toggle() } label: {
+                            HStack(spacing: 4) {
+                                SectionCaps(text: "Other shortcuts · \(others.count)")
+                                Image(systemName: "chevron.right").font(.system(size: 9, weight: .semibold))
+                                    .foregroundStyle(Theme.muted).rotationEffect(.degrees(open ? 90 : 0))
+                                Spacer()
+                            }
+                            .padding(.horizontal, 4).frame(height: 28).contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain).focusEffectDisabled().padding(.top, 8)
+                        if open { ForEach(others) { row($0) } }
                     }
                 }
                 .padding(.horizontal, 12)
@@ -318,16 +340,19 @@ struct SidebarFooter: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            PermissionBar()
-            Rectangle().fill(Theme.hairline).frame(height: 1)
             HStack(spacing: 0) {
                 FooterLink(title: "Detection methods") { model.showMethods = true }
                     .popover(isPresented: $model.showMethods, arrowEdge: .top) {
                         MethodsView().environmentObject(model)
                     }
                 Spacer(minLength: 8)
+                Text("\(model.enabled.count) of \(model.strategies.count) enabled")
+                    .font(.system(size: 12)).foregroundStyle(Theme.muted)
+                    .padding(.trailing, 8)
                 FooterLink(title: "Diagnostics") { model.showDiagnostics = true }
             }
+            Rectangle().fill(Theme.hairline).frame(height: 1)
+            PermissionBar()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
