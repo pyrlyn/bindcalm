@@ -1,2 +1,1 @@
 - T1. Verify the GUI flows with permissions granted
-- T6. Stable code signature

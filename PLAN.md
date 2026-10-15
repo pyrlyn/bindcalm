@@ -15,7 +15,7 @@ between apps using every available detection method and highlights them.
 | T3 | done | P2 | 2 | 100% | |
 | T4 | done | P2 | 4 | 100% | |
 | T5 | done | P3 | 2 | 100% | |
-| T6 | todo | P3 | 3 | 0% | |
+| T6 | done | P3 | 3 | 100% | |
 
 ### T1. Verify the GUI flows with permissions granted
 
@@ -135,14 +135,17 @@ ad-hoc signing.
   strategy and the global NSEvent monitor.
 - Input Monitoring: `CGPreflightListenEventAccess` / `CGRequestListenEventAccess`. Needed by the tap.
 - Statuses polled every 2 s; buttons open `x-apple.systempreferences:` panes.
-- Ad-hoc signature → grants are bound to the code hash and reset on rebuild (T6).
+- Ad-hoc signature → grants are bound to the code hash and reset on rebuild. A Developer ID set in
+  `SHORTCUTCLASH_CODESIGN_IDENTITY` keeps them (T6).
 - Secure input detection via `IsSecureEventInputEnabled`.
 
 ### Build and bundle
 
 - `swift build` / `swift build -c release`; `scripts/bundle.sh [release|debug]` copies the binary and
   `Resources/Info.plist` (LSUIElement false, Russian development region,
-  `NSAppleEventsUsageDescription`) into `dist/ShortcutClash.app` and signs it with `codesign -s -`.
+  `NSAppleEventsUsageDescription`) into `dist/ShortcutClash.app`. It signs with
+  `SHORTCUTCLASH_CODESIGN_IDENTITY` and a timestamp when that variable names an identity, and
+  otherwise falls back to ad-hoc `codesign --sign - --timestamp=none`.
 
 ### Tests
 
@@ -171,4 +174,4 @@ See README → "Detection methods and their limitations" and "Research".
 | M8. CLI `--dump`, bundle script, unit tests, README research | done |
 | M9. GUI verification with grants | todo (T1) |
 | M10. Config-file parsers | done (T2) |
-| M11. Services accuracy, winner model, watch mode, stable signing | in progress (T3–T5 done, T6 todo) |
+| M11. Services accuracy, winner model, watch mode, stable signing | done (T3–T6) |
