@@ -75,6 +75,12 @@ choice is persisted) and every shortcut shows which method(s) found it.
 - Owners found by several methods are merged (macOS from the plist and from SkyLight is one owner).
 - The anonymous owner from the Carbon probe corroborates a known global owner instead of opposing it.
 - Disabled claims (e.g. a switched-off symbolic hotkey) are shown greyed and ignored.
+- For a conflict, the detail panel names the likely winner. Claims are ranked by where they hook
+  the keyboard, earliest first: HID remapper (Karabiner) → event tap (skhd, BetterTouchTool) →
+  symbolic hotkey → Carbon hotkey (Alfred, Raycast, Keyboard Maestro, Hammerspoon `hs.hotkey`,
+  the Carbon probe) → frontmost menu (Accessibility menus, App Shortcuts, Services). Two owners
+  on the same earliest layer are a tie. Live observations and disabled claims do not win.
+  Preference heuristics do not name a layer, so they lose to every known hook.
 
 ## Detection methods and their limitations
 

@@ -24,3 +24,10 @@ strategies are skipped by the heuristic plist scan.
 Info.plist defaults are reported disabled unless a status entry confirms them.
 `enabled_services_menu` is the keyboard-shortcut gate; a status entry with neither enabled flag is
 not treated as on. A confirmed entry without its own key equivalent keeps the plist shortcut.
+
+### D4. Which shortcut wins
+
+`ShortcutRanking` orders enabled claims by hook layer: HID remapper, event tap, symbolic hotkey,
+Carbon hotkey, frontmost menu. The detail panel shows the winner and a Russian explanation. Several
+owners on the earliest layer are a tie. Disabled claims, live observations and unknown-layer
+heuristics do not beat a known hook.
