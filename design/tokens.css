@@ -1,18 +1,20 @@
-/* ShortcutClash design tokens v2 (3D glass). Values mirror tokens.json. */
+/* ShortcutClash design tokens v3 (minimal glass). Values mirror tokens.json. */
 :root {
-  --sc-font-sans: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
-  --sc-font-rounded: ui-rounded, 'SF Pro Rounded', -apple-system, sans-serif;
+  --sc-font-sans: -apple-system, 'SF Pro Text', system-ui, sans-serif;
   --sc-font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
-  --sc-type-title: 600 20px/24px var(--sc-font-sans);
-  --sc-type-headline: 600 16px/22px var(--sc-font-sans);
-  --sc-type-body: 400 14px/20px var(--sc-font-sans);
-  --sc-type-callout: 500 13px/18px var(--sc-font-sans);
-  --sc-type-caption: 400 12px/16px var(--sc-font-sans);
-  --sc-type-badge: 600 11px/14px var(--sc-font-sans);
-  --sc-type-keycap-large: 600 32px/40px var(--sc-font-sans);
-  --sc-type-mono: 400 11px/16px var(--sc-font-sans);
-  --sc-type-owner-name: 600 16px/22px var(--sc-font-sans);
-  --sc-space-0: 0px;
+  --sc-type-combo: 600 34px/42px var(--sc-font-sans);
+  --sc-type-row-combo: 600 17px/21px var(--sc-font-sans);
+  --sc-type-empty-title: 600 18px/24px var(--sc-font-sans);
+  --sc-type-card-name: 600 15px/18px var(--sc-font-sans);
+  --sc-type-row-owner: 500 14px/18px var(--sc-font-sans);
+  --sc-type-body: 400 14px/21px var(--sc-font-sans);
+  --sc-type-label: 400 13px/16px var(--sc-font-sans);
+  --sc-type-button: 500 13px/16px var(--sc-font-sans);
+  --sc-type-caption: 400 12px/15px var(--sc-font-sans);
+  --sc-type-badge: 500 11px/14px var(--sc-font-sans);
+  --sc-type-section-caps: 600 11px/14px var(--sc-font-sans);
+  --sc-type-mono: 400 11px/15px var(--sc-font-sans);
+  --sc-type-empty-body: 400 13px/18px var(--sc-font-sans);
   --sc-space-4: 4px;
   --sc-space-8: 8px;
   --sc-space-12: 12px;
@@ -23,206 +25,175 @@
   --sc-space-48: 48px;
   --sc-space-64: 64px;
   --sc-radius-badge: 999px;
-  --sc-radius-keycap-sm: 10px;
-  --sc-radius-input: 14px;
-  --sc-radius-row: 18px;
-  --sc-radius-card: 20px;
-  --sc-radius-bar: 22px;
-  --sc-radius-slab: 28px;
-  --sc-radius-orb: 48px;
-  --sc-blur-keycap: 18px;
-  --sc-blur-input: 20px;
-  --sc-blur-input-focus: 30px;
-  --sc-blur-card: 28px;
-  --sc-blur-bar: 30px;
-  --sc-blur-slab: 36px;
-  --sc-blur-sidebar: 40px;
-  --sc-blur-ambient: 110px;
-  --sc-depth-keycap-small: 3px;
-  --sc-depth-keycap: 5px;
-  --sc-depth-card: 5px;
-  --sc-depth-bar: 6px;
-  --sc-depth-slab: 8px;
-  --sc-dur-press: 80ms;
-  --sc-dur-focus: 120ms;
-  --sc-dur-hover: 140ms;
-  --sc-dur-input-focus: 160ms;
-  --sc-dur-switch: 180ms;
-  --sc-dur-theme: 240ms;
-  --sc-dur-release: 280ms;
+  --sc-radius-button: 8px;
+  --sc-radius-input: 8px;
+  --sc-radius-select: 8px;
+  --sc-radius-row: 10px;
+  --sc-radius-card: 12px;
+  --sc-radius-window: 14px;
+  --sc-radius-orb: 36px;
+  --sc-blur-bar: 10px;
+  --sc-dur-press: 60ms;
+  --sc-dur-focus: 100ms;
+  --sc-dur-hover: 120ms;
+  --sc-dur-input-focus: 120ms;
+  --sc-dur-switch: 160ms;
+  --sc-dur-release: 160ms;
+  --sc-dur-theme: 200ms;
   --sc-ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --sc-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --sc-ease-press: cubic-bezier(0.4, 0, 1, 1);
   color-scheme: light dark;
 }
 
 /* Light is the base; dark follows the system unless data-theme overrides it. */
 :root, :root[data-theme="light"] {
-  --sc-bg: #EAF1FA;
-  --sc-blob1: #47D3E6;
-  --sc-blob2: #5B8CFF;
-  --sc-blob3: #FF8A78;
-  --sc-blob4: #FFC24A;
-  --sc-fg: #0B1220;
-  --sc-muted: #41506A;
-  --sc-accent: #1B47C7;
+  --sc-bg: #E8EDF4;
+  --sc-tint: rgba(127,166,255,0.55);
+  --sc-surface: #FFFFFF;
+  --sc-card: #FFFFFF;
+  --sc-sidebar: rgba(246,248,252,0.90);
+  --sc-toolbar: rgba(250,251,253,0.92);
+  --sc-fg: #0E1522;
+  --sc-muted: #4B5870;
+  --sc-accent: #1F4FD1;
   --sc-on-accent: #FFFFFF;
   --sc-danger: #B3261E;
   --sc-danger-fill: #C7352B;
   --sc-on-danger: #FFFFFF;
   --sc-ok: #0A6670;
   --sc-warn: #7D5200;
-  --sc-glass-fill: rgba(255,255,255,0.66);
-  --sc-glass-strong: rgba(255,255,255,0.78);
-  --sc-glass-input: rgba(255,255,255,0.58);
-  --sc-glass-sheen: rgba(255,255,255,0.30);
-  --sc-glass-border-top: rgba(255,255,255,1);
-  --sc-glass-border-bottom: rgba(70,100,170,0.28);
-  --sc-glass-edge: rgba(40,70,140,0.14);
-  --sc-shadow-near: rgba(30,50,110,0.22);
-  --sc-shadow-far: rgba(30,50,110,0.30);
-  --sc-hairline: rgba(14,30,70,0.10);
-  --sc-selected: rgba(27,71,199,0.12);
-  --sc-keycap-top: rgba(255,255,255,0.98);
-  --sc-keycap-bottom: rgba(255,255,255,0.62);
-  --sc-keycap-wall: rgba(40,70,140,0.30);
-  --sc-keycap-primary-top: #3563E0;
-  --sc-keycap-primary-bottom: #1F4FD1;
-  --sc-keycap-primary-wall: #102C80;
-  --sc-focus-ring: rgba(27,71,199,0.75);
-  --sc-glow: rgba(40,90,240,0.50);
-  --sc-opaque: #F4F7FC;
+  --sc-control: #FAFBFD;
+  --sc-control-hover: #FFFFFF;
+  --sc-control-active: #EBEFF6;
+  --sc-input: #FBFCFE;
+  --sc-border: rgba(14,21,34,0.14);
+  --sc-border-strong: rgba(14,21,34,0.26);
+  --sc-highlight: rgba(255,255,255,1);
+  --sc-hairline: rgba(14,21,34,0.08);
+  --sc-selected: rgba(31,79,209,0.09);
+  --sc-shadow: rgba(30,45,80,0.16);
+  --sc-shadow-soft: rgba(30,45,80,0.10);
+  --sc-inset: rgba(30,45,80,0.14);
+  --sc-focus-ring: #1F4FD1;
+  --sc-primary-top: #2457DC;
+  --sc-primary-bottom: #1F4FD1;
+  --sc-primary-highlight: rgba(255,255,255,0.30);
+  --sc-track-off: rgba(14,21,34,0.22);
+  --sc-knob: #FFFFFF;
+  --sc-opaque: #F6F8FB;
   --sc-opaque-raised: #FFFFFF;
-  --sc-opaque-border: #C4CFE0;
-  --sc-blob-opacity: 0.8;
+  --sc-opaque-border: #C9D2DF;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --sc-bg: #060914;
-    --sc-blob1: #0B93B5;
-    --sc-blob2: #2D55E6;
-    --sc-blob3: #D8453B;
-    --sc-blob4: #C27B0A;
-    --sc-fg: #F5F8FC;
-    --sc-muted: #C6CFDD;
-    --sc-accent: #B8D2FF;
-    --sc-on-accent: #07122B;
-    --sc-danger: #FFBDB6;
-    --sc-danger-fill: #FF7A6E;
+    --sc-bg: #0F1319;
+    --sc-tint: rgba(125,168,255,0.45);
+    --sc-surface: #161B23;
+    --sc-card: #1A202A;
+    --sc-sidebar: rgba(22,27,35,0.88);
+    --sc-toolbar: rgba(22,27,35,0.90);
+    --sc-fg: #F2F4F8;
+    --sc-muted: #A3ACBB;
+    --sc-accent: #7DA8FF;
+    --sc-on-accent: #06122B;
+    --sc-danger: #FF7A75;
+    --sc-danger-fill: #FF7A75;
     --sc-on-danger: #2A0806;
-    --sc-ok: #78EEF0;
-    --sc-warn: #FFD27A;
-    --sc-glass-fill: rgba(8,13,26,0.50);
-    --sc-glass-strong: rgba(8,13,26,0.62);
-    --sc-glass-input: rgba(8,13,26,0.44);
-    --sc-glass-sheen: rgba(255,255,255,0.10);
-    --sc-glass-border-top: rgba(255,255,255,0.55);
-    --sc-glass-border-bottom: rgba(255,255,255,0.08);
-    --sc-glass-edge: rgba(255,255,255,0.07);
-    --sc-shadow-near: rgba(0,0,0,0.35);
-    --sc-shadow-far: rgba(0,0,0,0.55);
-    --sc-hairline: rgba(255,255,255,0.10);
-    --sc-selected: rgba(175,203,255,0.18);
-    --sc-keycap-top: rgba(255,255,255,0.34);
-    --sc-keycap-bottom: rgba(255,255,255,0.10);
-    --sc-keycap-wall: rgba(0,0,0,0.38);
-    --sc-keycap-primary-top: #C4D8FF;
-    --sc-keycap-primary-bottom: #7DA6FF;
-    --sc-keycap-primary-wall: #3A60C0;
-    --sc-focus-ring: rgba(175,203,255,0.85);
-    --sc-glow: rgba(125,166,255,0.60);
-    --sc-opaque: #121A2B;
-    --sc-opaque-raised: #1A2438;
-    --sc-opaque-border: #364560;
-    --sc-blob-opacity: 0.8;
+    --sc-ok: #5CD9E0;
+    --sc-warn: #F2B84B;
+    --sc-control: #212733;
+    --sc-control-hover: #2A313D;
+    --sc-control-active: #1C212A;
+    --sc-input: #12161D;
+    --sc-border: rgba(255,255,255,0.10);
+    --sc-border-strong: rgba(255,255,255,0.18);
+    --sc-highlight: rgba(255,255,255,0.14);
+    --sc-hairline: rgba(255,255,255,0.07);
+    --sc-selected: rgba(125,168,255,0.14);
+    --sc-shadow: rgba(0,0,0,0.35);
+    --sc-shadow-soft: rgba(0,0,0,0.28);
+    --sc-inset: rgba(0,0,0,0.30);
+    --sc-focus-ring: #7DA8FF;
+    --sc-primary-top: #86B0FF;
+    --sc-primary-bottom: #7DA8FF;
+    --sc-primary-highlight: rgba(255,255,255,0.45);
+    --sc-track-off: rgba(255,255,255,0.16);
+    --sc-knob: #F2F4F8;
+    --sc-opaque: #161B24;
+    --sc-opaque-raised: #1E2430;
+    --sc-opaque-border: #323A49;
   }
 }
 
 :root[data-theme="dark"] {
-  --sc-bg: #060914;
-  --sc-blob1: #0B93B5;
-  --sc-blob2: #2D55E6;
-  --sc-blob3: #D8453B;
-  --sc-blob4: #C27B0A;
-  --sc-fg: #F5F8FC;
-  --sc-muted: #C6CFDD;
-  --sc-accent: #B8D2FF;
-  --sc-on-accent: #07122B;
-  --sc-danger: #FFBDB6;
-  --sc-danger-fill: #FF7A6E;
+  --sc-bg: #0F1319;
+  --sc-tint: rgba(125,168,255,0.45);
+  --sc-surface: #161B23;
+  --sc-card: #1A202A;
+  --sc-sidebar: rgba(22,27,35,0.88);
+  --sc-toolbar: rgba(22,27,35,0.90);
+  --sc-fg: #F2F4F8;
+  --sc-muted: #A3ACBB;
+  --sc-accent: #7DA8FF;
+  --sc-on-accent: #06122B;
+  --sc-danger: #FF7A75;
+  --sc-danger-fill: #FF7A75;
   --sc-on-danger: #2A0806;
-  --sc-ok: #78EEF0;
-  --sc-warn: #FFD27A;
-  --sc-glass-fill: rgba(8,13,26,0.50);
-  --sc-glass-strong: rgba(8,13,26,0.62);
-  --sc-glass-input: rgba(8,13,26,0.44);
-  --sc-glass-sheen: rgba(255,255,255,0.10);
-  --sc-glass-border-top: rgba(255,255,255,0.55);
-  --sc-glass-border-bottom: rgba(255,255,255,0.08);
-  --sc-glass-edge: rgba(255,255,255,0.07);
-  --sc-shadow-near: rgba(0,0,0,0.35);
-  --sc-shadow-far: rgba(0,0,0,0.55);
-  --sc-hairline: rgba(255,255,255,0.10);
-  --sc-selected: rgba(175,203,255,0.18);
-  --sc-keycap-top: rgba(255,255,255,0.34);
-  --sc-keycap-bottom: rgba(255,255,255,0.10);
-  --sc-keycap-wall: rgba(0,0,0,0.38);
-  --sc-keycap-primary-top: #C4D8FF;
-  --sc-keycap-primary-bottom: #7DA6FF;
-  --sc-keycap-primary-wall: #3A60C0;
-  --sc-focus-ring: rgba(175,203,255,0.85);
-  --sc-glow: rgba(125,166,255,0.60);
-  --sc-opaque: #121A2B;
-  --sc-opaque-raised: #1A2438;
-  --sc-opaque-border: #364560;
-  --sc-blob-opacity: 0.8;
+  --sc-ok: #5CD9E0;
+  --sc-warn: #F2B84B;
+  --sc-control: #212733;
+  --sc-control-hover: #2A313D;
+  --sc-control-active: #1C212A;
+  --sc-input: #12161D;
+  --sc-border: rgba(255,255,255,0.10);
+  --sc-border-strong: rgba(255,255,255,0.18);
+  --sc-highlight: rgba(255,255,255,0.14);
+  --sc-hairline: rgba(255,255,255,0.07);
+  --sc-selected: rgba(125,168,255,0.14);
+  --sc-shadow: rgba(0,0,0,0.35);
+  --sc-shadow-soft: rgba(0,0,0,0.28);
+  --sc-inset: rgba(0,0,0,0.30);
+  --sc-focus-ring: #7DA8FF;
+  --sc-primary-top: #86B0FF;
+  --sc-primary-bottom: #7DA8FF;
+  --sc-primary-highlight: rgba(255,255,255,0.45);
+  --sc-track-off: rgba(255,255,255,0.16);
+  --sc-knob: #F2F4F8;
+  --sc-opaque: #161B24;
+  --sc-opaque-raised: #1E2430;
+  --sc-opaque-border: #323A49;
 }
 
-/* Slab recipe (thick bevelled glass). Needs an .sc-slab__edge sibling behind it for the thickness wall. */
-.sc-slab {
-  position: relative;
-  background:
-    linear-gradient(to bottom, var(--sc-glass-sheen), rgba(255,255,255,0.02) 55%, rgba(255,255,255,0)),
-    var(--sc-glass-fill);
-  border: 1.5px solid transparent;
-  border-radius: var(--sc-radius-slab);
-  background-clip: padding-box, padding-box;
-  box-shadow:
-    inset 0 2px 0 var(--sc-glass-border-top),
-    inset 0 -3px 6px var(--sc-shadow-near),
-    inset 0 0 10px rgba(255,255,255,0.18),
-    0 10px 20px var(--sc-shadow-near),
-    0 var(--sc-depth-slab) 0 var(--sc-glass-edge),
-    0 36px 64px var(--sc-shadow-far);
-  -webkit-backdrop-filter: blur(var(--sc-blur-slab)) saturate(1.5);
-  backdrop-filter: blur(var(--sc-blur-slab)) saturate(1.5);
-}
+/* Matte frosted bars: the only translucent surfaces. Everything else is solid. */
+.sc-sidebar { background: var(--sc-sidebar); -webkit-backdrop-filter: blur(var(--sc-blur-bar)); backdrop-filter: blur(var(--sc-blur-bar)); }
+.sc-toolbar { background: var(--sc-toolbar); -webkit-backdrop-filter: blur(var(--sc-blur-bar)); backdrop-filter: blur(var(--sc-blur-bar)); box-shadow: 0 1px 4px var(--sc-shadow-soft); }
+.sc-card { background: var(--sc-card); border: 1px solid var(--sc-border); border-radius: var(--sc-radius-card); box-shadow: 0 2px 8px var(--sc-shadow-soft); }
 
-/* Keycap recipe. */
-.sc-keycap {
-  height: 40px; padding: 0 14px; display: inline-flex; align-items: center; justify-content: center;
-  color: var(--sc-fg); font: var(--sc-type-callout); border-radius: 14px;
-  background: linear-gradient(to bottom, var(--sc-keycap-top), var(--sc-keycap-bottom));
-  box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.85), inset 0 -2px 4px var(--sc-shadow-near), inset 0 0 3px rgba(255,255,255,0.45),
-              0 var(--sc-depth-keycap) 0 var(--sc-keycap-wall), 0 8px 8px var(--sc-shadow-near);
-  -webkit-backdrop-filter: blur(var(--sc-blur-keycap)); backdrop-filter: blur(var(--sc-blur-keycap));
-  transition: transform var(--sc-dur-hover) var(--sc-ease-standard), box-shadow var(--sc-dur-hover) var(--sc-ease-standard);
-}
-.sc-keycap:hover { transform: translateY(-2px); box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.95), 0 7px 0 var(--sc-keycap-wall), 0 12px 16px var(--sc-shadow-near), 0 0 22px var(--sc-glow); }
-.sc-keycap:active { transform: translateY(4px); transition-duration: var(--sc-dur-press); transition-timing-function: var(--sc-ease-accelerate);
-  box-shadow: inset 0 3px 5px rgba(0,0,0,0.35), 0 1px 0 var(--sc-keycap-wall), 0 1px 3px var(--sc-shadow-near); }
-.sc-keycap:focus-visible { outline: 2px solid var(--sc-focus-ring); outline-offset: 4px; }
-.sc-keycap:disabled { opacity: 0.4; }
+/* Soft glass keycap button: 1 px inner highlight, one small shadow, 1 px lift on hover. */
+.sc-button { height: 32px; padding: 0 15px; border-radius: var(--sc-radius-button); border: 1px solid var(--sc-border); color: var(--sc-fg); font: var(--sc-type-button);
+  background: var(--sc-control); box-shadow: inset 0 1px 0 var(--sc-highlight), 0 1px 2px var(--sc-shadow);
+  transition: transform var(--sc-dur-hover) var(--sc-ease-standard), box-shadow var(--sc-dur-hover) var(--sc-ease-standard), background var(--sc-dur-hover) var(--sc-ease-standard); }
+.sc-button:hover { transform: translateY(-1px); background: var(--sc-control-hover); box-shadow: inset 0 1px 0 var(--sc-highlight), 0 3px 8px var(--sc-shadow); }
+.sc-button:active { transform: none; background: var(--sc-control-active); box-shadow: inset 0 1px 3px var(--sc-inset); transition-duration: var(--sc-dur-press); transition-timing-function: var(--sc-ease-press); }
+.sc-button:focus-visible { outline: 2px solid var(--sc-focus-ring); outline-offset: 2px; }
+.sc-button:disabled { opacity: 0.45; }
+.sc-button--primary { color: var(--sc-on-accent); border-color: rgba(0,0,0,0.18); background: linear-gradient(to bottom, var(--sc-primary-top), var(--sc-primary-bottom)); box-shadow: inset 0 1px 0 var(--sc-primary-highlight), 0 1px 2px var(--sc-shadow); }
+.sc-button--error { color: var(--sc-danger); border-color: var(--sc-danger); }
+.sc-input { height: 36px; border-radius: var(--sc-radius-input); border: 1px solid var(--sc-border); background: var(--sc-input); color: var(--sc-fg); box-shadow: inset 0 1px 2px var(--sc-inset); transition: border-color var(--sc-dur-input-focus) var(--sc-ease-standard), box-shadow var(--sc-dur-input-focus) var(--sc-ease-standard); }
+.sc-input:hover { border-color: var(--sc-border-strong); background: var(--sc-control-hover); }
+.sc-input:focus { outline: none; border: 1.5px solid var(--sc-accent); box-shadow: inset 0 1px 2px var(--sc-inset), 0 0 0 3px color-mix(in srgb, var(--sc-accent) 28%, transparent); }
+.sc-input[aria-invalid="true"] { border-color: var(--sc-danger); box-shadow: 0 0 0 3px color-mix(in srgb, var(--sc-danger) 22%, transparent); }
 
-/* Reduce transparency: opaque fallback, no blur, no ambient blobs, no glare. */
+/* Reduce transparency: the bars become solid. */
 @media (prefers-reduced-transparency: reduce) {
-  .sc-slab { background: var(--sc-opaque); border-color: var(--sc-opaque-border); -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .sc-keycap { background: var(--sc-opaque-raised); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .sc-sidebar, .sc-toolbar { background: var(--sc-opaque); -webkit-backdrop-filter: none; backdrop-filter: none; border-color: var(--sc-opaque-border); }
+  .sc-card { background: var(--sc-opaque-raised); }
 }
-:root[data-transparency="reduced"] .sc-slab { background: var(--sc-opaque); border-color: var(--sc-opaque-border); -webkit-backdrop-filter: none; backdrop-filter: none; }
+:root[data-transparency="reduced"] .sc-sidebar, :root[data-transparency="reduced"] .sc-toolbar { background: var(--sc-opaque); -webkit-backdrop-filter: none; backdrop-filter: none; }
 
-/* Reduce motion: no lift, no sink, no spring, no theme crossfade. */
+/* Reduce motion: no lift, no transitions. */
 @media (prefers-reduced-motion: reduce) {
-  :root { --sc-dur-press: 0ms; --sc-dur-focus: 0ms; --sc-dur-hover: 0ms; --sc-dur-input-focus: 0ms; --sc-dur-switch: 0ms; --sc-dur-theme: 0ms; --sc-dur-release: 0ms; }
-  .sc-keycap:hover, .sc-keycap:active { transform: none; }
+  :root { --sc-dur-press: 0ms; --sc-dur-focus: 0ms; --sc-dur-hover: 0ms; --sc-dur-input-focus: 0ms; --sc-dur-switch: 0ms; --sc-dur-release: 0ms; --sc-dur-theme: 0ms; }
+  .sc-button:hover { transform: none; }
 }

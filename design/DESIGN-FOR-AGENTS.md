@@ -1,78 +1,89 @@
-# ShortcutClash: design spec for implementers and agents (v2, 3D glass)
+# ShortcutClash: design spec for implementers and agents (v3, minimal glass)
 
-Source of truth: tokens.json / tokens.css, Figma (see README.md), and the PNGs in screens/. Do not implement from the v1 sections in Figma. Do not change `Sources/ShortcutClashCore`. All UI strings are English.
+Source of truth: tokens.json / tokens.css, the Figma v3 sections (see README.md) and the PNGs in screens/. Do not implement from the v1 or v2 sections. Do not change `Sources/ShortcutClashCore`. All UI strings are English.
 
-## 1. Layout (canvas 1440x900)
-- **Top bar slab**: x32 y24, 1376x64, radius 22, depth 6. Search input 440x40 centered vertically (face y12). Right-aligned keycaps, height 40, depth 5, right inset 24, gap 10: Rescan (primary), Live capture, Export JSON (glass).
-- **Sidebar slab**: x32 y116, 420x764, radius 28, depth 8.
-  - Filters: switch 48x28 at (24,20), label at x84, counter right-aligned at x396; selects h36: 176 wide at x24 and 180 wide at x216, y68.
-  - List: "CONFLICTS · N" header (danger) y124; rows from y148, height 76, pitch 84, x20 width 380: keycap combo left, owners at x140, method and confidence badges, count bead or "layout" badge right. A collapsed "OTHER SHORTCUTS · N" row follows.
-  - Quiet footer: divider y632; "Methods · 7 of 9 enabled" row y642 h40; permission rows (Accessibility, Input Monitoring + Request keycap h28) at y690 and y722.
-- **Detail slab**: x476 y116, 932x764, radius 28, depth 8.
-  - Header: large keycaps (h76) at (36,32); Conflict badge; explanation y134 width 840, 14/20.
-  - "Detected by:" y182; "Key code: 49 · modifiers: ⌘" y212.
-  - Owner cards: height 176, depth 5; first at (36,252) width 860; further cards stack with a (20,200) offset and 36 px narrower for parallax. Card: icon tile 44 radius 13 at (24,24); name x84 y20; id y43; path y60; action y88; badges y116; source y146.
+## 0. Principle: minimal effects
+Keep every effect at the lowest noticeable level. Translucency only on the sidebar and toolbar (88-92% opaque, 10 px blur). Everything else solid. One soft shadow per element. A 1 px highlight on buttons. No blobs, shards, glows, thick edges or springs. If an effect is hard to notice, that is correct. If it draws attention, reduce it.
 
-## 2. Glass values
-Slab: fill `glassFill` + sheen gradient, backdrop blur 36 (sidebar 40, bar 30), border 1.5 px gradient (`glassBorderTop` to `glassBorderBottom`), inner shadows 0/2/0 highlight, 0/-3/6 dark, 0/0/10 rim, outer shadows 0/10/20 `shadowNear` and 0/36/64 `shadowFar`, thickness wall `glassEdge` at depth px below. In SwiftUI approximate with `.ultraThinMaterial` or `NSVisualEffectView` (`.hudWindow`/`.underWindowBackground`) plus the tint, gradient stroke and shadow stack.
-Backdrop: `bg` plus four blobs `blob1..4`, blur 110, opacity 0.8, plus three rotated glass shards.
+## 1. Layout (window 1232x752, shown on a 1280x800 canvas with 24 px margin)
+- **Sidebar** (translucent): x0, width 400, full height. Traffic lights at x16/36/56, y20 (12 px). Search input x16 y48, 368x36. Row at y100: "Conflicts only" label x16 with a 36x22 switch 10 px after it; counter right-aligned to x384 ("128 combos · 5 conflicts" in danger, or "· 0 conflicts" in ok). Selects at y134, 32 px high, 176 wide at x16 and x208 ("All methods", "All apps"). Section header y186 ("CONFLICTS · 5" in danger, "SHORTCUTS · 128" in muted when empty). Rows from y208, x16, 368x68, pitch 72. "OTHER SHORTCUTS · 123 ›" at y502. Footer at y616, 136 high: divider, "Detection methods" nav row (y10, 36 high, right text "7 of 9 · configure ›"), permission lines at y58 and y84 (6 px status dot, label, status in ok or warn) and a small "Request" button (26 high) at x284 y78.
+- **Detail pane** (solid): x400, width 832. Toolbar on top, 52 high, translucent, 1 px bottom divider; buttons 32 high, right inset 16, gap 8: Rescan (primary), Live capture, Export JSON.
+  - Header: combo title (34/42) at x32 y76 with a "Conflict" badge 16 px to its right, vertically centered on the title; explanation y128 (14/21, muted, width 740); "Detected by:" y176 with method badges; "Key code: 49 · modifiers: ⌘" y204.
+  - Owner cards: x32, 768x152, pitch 168, first at y244. Icon tile 32 at (18,18); name x62 y16; id y36; path y52 (mono); action y78; badges y100; source y126 (mono).
+- **Row** (368x68): combo x14 vertically centered (17/21 semibold); owners x112 y11; badges x112 y36 (gap 4, height 19); count bead 24 px at x330 y22, or a "layout" badge right-aligned at x354 and centered vertically.
+
+## 2. Surfaces and effects
+| Surface | Value |
+|---|---|
+| Window | radius 14, 1 px border, shadow 0/6/24, base `bg` plus the faint `tint` gradient (left to 60%) |
+| Sidebar | `sidebar` fill (88% dark / 90% light), background blur 10, 1 px `hairline` right edge |
+| Toolbar | `toolbar` fill (90% / 92%), blur 10, shadow 0/1/4, 1 px `hairline` bottom edge; the detail pane has a 0 to 8% accent gradient in its top 190 px so the translucency is just visible |
+| Detail pane, cards | solid `surface` / `card`, cards radius 12, 1 px `border`, shadow 0/2/8 `shadowSoft` |
+In SwiftUI use `NSVisualEffectView` (`.sidebar` / `.headerView` material) or `.regularMaterial` for the bars only; everything else is a plain color.
 
 ## 3. Components and states
 | Component | Spec |
 |---|---|
-| Keycap (glass) | h40 (h28 compact), radius 14, wall 5 (3 compact), gradient `keycapTop` to `keycapBottom`, blur 18, label callout 13/18 medium centered on the face |
-| Keycap (primary) | same, gradient `keycapPrimaryTop` to `keycapPrimaryBottom`, wall `keycapPrimaryWall`, label `onAccent` |
-| Hover | lift 2 px (wall shows 7), glow 22 px `glow`, +12% white, 140 ms ease-out |
-| Pressed | face sinks to wall-1, shadow 0/1/3, inner top shadow 0/3/5 black 35%, 80 ms ease-in, release spring 280 ms (response 0.28, damping 0.7) |
-| Focus | 2 px `focusRing`, offset 4 px, 120 ms |
-| Disabled / error | 40% opacity / `dangerFill` keycap with `onDanger` text |
-| Input | recessed glass `glassInput`, h40 radius 12, inner shadow 0/3/5 dark + 0/-1/0 white 45%, blur 20, leading icon and text centered on the vertical axis |
-| Input focus / typing | border `accent` 90%, glow 18 px `accent`, blur 20 to 30, caret 2 px, 160 ms ease-out |
-| Input error | border `danger`, glow 14 px |
-| Select | h36 radius 14, recessed glass, chevron vector centered |
-| Switch | 48x28 glass track, 22 px bead, 180 ms spring (damping 0.8), on = accent fill |
-| Row | h76 radius 18; hover lift 2 px + fill 10-55%; selected `selected` tint + 90% accent border; focus ring; disabled 55%; error owners in `danger` |
-| Badge | pill, fill token 18%, 1 px border token 45%, text full token (AA checked); confidence: reliable=ok, partial=warn, heuristic=muted, failed=danger; method badges accent |
-| Count bead | 26-28 px, `dangerFill`, digit `onDanger` centered on both axes |
-| Combo keys | each key a keycap; large (h76) in detail header, small (h30) in rows |
+| Button (secondary) | 32 high (26 small), radius 8, label 13/16 medium centered, horizontal padding 15, `control` fill, 1 px `border`, inner top highlight 0/1/0 `highlight`, shadow 0/1/2 `shadow` |
+| Button (primary) | same geometry, vertical gradient `primaryTop` to `primaryBottom`, label `onAccent`, inner highlight `primaryHighlight` |
+| Hover | lift 1 px, fill `controlHover`, shadow 0/3/8, 120 ms ease-out |
+| Pressed | no lift, fill `controlActive`, inner shadow 0/1/3 `inset`, 60 ms; release 160 ms |
+| Focus | 2 px `focusRing` outline with a 2 px gap |
+| Disabled / error | 45% opacity / danger border and text (primary error: `dangerFill` fill, `onDanger` text) |
+| Input | 36 high, radius 8, `input` fill, 1 px `border`, inner shadow 0/1/2 `inset`; icon 14 px and text centered vertically, left padding 12, gap 8 |
+| Input hover / focus / typing / error | `borderStrong` + `controlHover` fill / 1.5 px `accent` border + 3 px 28% accent ring (120 ms) / same, 2 px caret / `danger` border + 3 px 30% ring |
+| Select | 32 high, radius 8, button styling, label left, 12 px chevron right, both centered vertically |
+| Switch | 36x22, knob 18 centered vertically (2 px inset), `accent` when on, `trackOff` when off, 160 ms |
+| Row | see layout; hover `controlHover` + shadow 0/2/6; selected `selected` fill + 40% accent 1 px border; focus 1.5 px accent border; disabled 50%; error owners in `danger` |
+| Badge | pill, 19 high, 8 px horizontal padding, 11/14 medium, tone fill 14% + 1 px tone border 32%, text full tone. plist/prefs/AX/HIToolbox accent; reliable ok; partial and layout warn; heuristic, global muted; failed, Conflict danger |
+| Count bead | 24 circle `dangerFill`, 12 semibold digit `onDanger`, centered both axes |
 
-## 4. Input effects
-Focus and typing: border brightens to accent 90%, an 18 px accent glow fades in over 160 ms, backdrop blur 20 to 30, placeholder dims, caret 2 px accent. Search placeholder "Search: ⌘⇧K, app, action". Error shows danger border and the leading icon and text keep the same vertical center.
+## 4. EmptyState (shared pattern)
+Vertical stack, center-aligned, gap 12: orb 72 (tone fill 12%, 1 px tone border) with a 32 px vector icon, title 18/24 semibold, body 13/18 muted max 300 wide, actions 32 px buttons gap 10. Center the stack in its container (detail pane below the toolbar, or a tile).
 
-## 5. EmptyState
-Vertical stack, center-aligned, gap 16: orb 96 (glass, tone glow, vector icon), title 20/24 semibold, body 13/18 muted max 300, actions 40 px keycaps gap 12. Variants and tone: No conflicts found (ok), Nothing found (accent) with Clear search, Select a shortcut (accent), Waiting for key presses… (accent) with Stop, Scanning… (accent), Accessibility permission required (warn) with Request and Settings, Scan failed (danger) with Rescan and Diagnostics. Use it in the detail pane and in the list when it is empty. Copy marked as derived in the style guide must be confirmed against real app strings.
+| Variant | Icon / tone | Title | Actions |
+|---|---|---|---|
+| no-conflicts | check / ok | No conflicts found | Show all shortcuts |
+| no-results | magnifier / accent | Nothing found | Clear search |
+| nothing-selected | cursor / accent | Select a shortcut | none |
+| live-waiting | record / accent | Waiting for key presses… | Stop |
+| scanning | 3/4 arc / accent | Scanning… | none |
+| permission | lock / warn | Accessibility permission required | Request (primary), Open Settings |
+| scan-failed | triangle / danger | Scan failed | Rescan (primary), Diagnostics |
 
-## 6. Themes
-Dark and light token sets must both be implemented as dynamic colors (a `Theme.swift` with `Color(light:dark:)` resolving through `NSAppearance`). Follow the system; allow override. Switching cross-fades 240 ms. No hardcoded `.red/.blue/.green`; map conflict to `danger`/`dangerFill`, "all fine" to `ok`, partial/layout/missing to `warn`.
+Use it in the detail pane and in the list when it is empty. Copy that is derived, not literal app text: "Show all shortcuts", "Clear search", the Scan failed body and "Open Settings". Confirm against the app's real strings.
 
-## 7. Reduced motion and transparency
-- Reduce Motion (`accessibilityReduceMotion`): no lift, sink, spring, glow pulse or crossfade; state changes instant or an 80 ms opacity change.
-- Reduce Transparency (`accessibilityReduceTransparency`): fills `opaque`, `opaqueRaised`, `opaqueBorder` (dark #121A2B/#1A2438/#364560; light #F4F7FC/#FFFFFF/#C4CFE0), no blur, no blobs or shards, keep wall and shadows.
-- Increase Contrast: use the opaque set and a 2 px border.
+## 5. Themes
+Implement the dark and light sets as dynamic colors in a `Theme.swift` resolved through the effective appearance. Follow the system, allow an override, cross-fade 200 ms. Replace hardcoded `.red/.blue/.green` with `danger`, `accent`, `ok`, `warn`. "All fine" uses `ok` (teal).
 
-## 8. Accessibility and keyboard
-Text tokens meet AA (min 4.91:1 on worst-case glass; see STYLE-GUIDE.md). Tab order: search, Rescan, Live capture, Export, filters, list, detail. Arrow keys move through rows, Return selects, ⌘F focuses search, ⌘R rescans. Every keycap has an accessibility label (the combo spoken as "Command Space"). Minimum hit area 28 px.
+## 6. Reduce Transparency and Reduce Motion
+- Reduce Transparency (`accessibilityReduceTransparency`): sidebar and toolbar use `opaque` (dark #161B24, light #F6F8FB), raised `opaqueRaised`, borders `opaqueBorder`; disable blur and the tint.
+- Reduce Motion (`accessibilityReduceMotion`): no lift, no transitions, state changes are instant.
+- Increase Contrast: use `borderStrong` for borders.
 
-## 9. Methods and settings
-Hotkey detection settings are not on the main screen. The footer row "Methods · 7 of 9 enabled" opens a popover/sheet (`MethodsView`) listing the methods with switches; permission rows open the system panes. The main screen only shows the summary and permission state; the conflict list stays primary.
+## 7. Accessibility and keyboard
+Text tokens meet AA (see the table in STYLE-GUIDE.md). Tab order: search, Rescan, Live capture, Export JSON, filters, list, detail, footer. Arrow keys move through rows, Return selects, ⌘F focuses search, ⌘R rescans. Combos have spoken labels ("Command Space"). Minimum hit height 26 px.
 
-## 10. Centering rule
-Everything that appears centered is centered on its bounding box on both axes (no shadows, glows or walls counted), through stack/auto-layout alignment, never magic offsets. Only unevenly weighted vector icons get an optical nudge of at most 2 px (warning triangle +2, cursor and lock -1). Keycap labels center on the face. Verify with a screenshot of every screen.
+## 8. Methods and settings
+Detection settings are not on the main screen. The footer row "Detection methods · 7 of 9 · configure ›" opens the methods sheet/popover (`MethodsView`) with a switch per method. Permission rows are a quiet summary with one small action. The conflict list stays primary.
 
-## 11. Do / don't
-- Do use the tokens, keep slabs thick with edge and shadow, show combos as keycaps, keep copy in English.
-- Don't use literal green for "ok", flat opaque panels (except under Reduce Transparency), text below AA, mixed radii in one component, or hand-tuned offsets for centering.
+## 9. Centering rule
+Anything that looks centered is centered on its bounding box on both axes via stack/auto-layout alignment, never magic offsets. Only the warning triangle icon gets a +1 px optical nudge. Verify with a screenshot of every screen.
 
-## 12. SwiftUI mapping
-`ContentView` (backdrop + top bar slab + two slabs), `SidebarView`, `GroupRow` (row + keycap combo), `Badge` in Labels.swift, `DetailView`, `OwnerCard`, `MethodsView`, `PermissionBar`, `LiveCaptureView`. Add `Theme.swift` (colors), `GlassSlab`, `KeycapButtonStyle`, `GlassFieldStyle` and `EmptyStateView`. `ShortcutClashCore` is unchanged.
+## 10. Do / don't
+- Do keep content solid and quiet, use tokens only, show tone color only in badges, counts and status text.
+- Don't add blur to panels, cards or buttons, add glows, thick edges, backdrop blobs, stacked shadows, or use literal green for "ok".
 
-## 13. Acceptance checklist
-- [ ] Both themes match the PNGs; tokens only, no hardcoded colors
-- [ ] Slabs have edge, rim, blur and shadow stack; keycaps have wall, hover, press, focus
-- [ ] Input focus, typing and error effects present
-- [ ] All seven empty states exist and are centered on one vertical axis
-- [ ] All text AA on glass and on opaque fallback
-- [ ] Reduce Motion and Reduce Transparency fallbacks work
-- [ ] Centering verified on a screenshot of every screen (bbox centers within 0.6 px, optical nudges documented)
+## 11. SwiftUI mapping
+`ContentView` (window, toolbar, split), `SidebarView` (bar material), `GroupRow`, `Badge` (Labels.swift), `DetailView`, `OwnerCard`, `MethodsView`, `PermissionBar`, `LiveCaptureView`. Add `Theme.swift`, a `SoftButtonStyle`, a `RecessedFieldStyle` and an `EmptyStateView`. `ShortcutClashCore` is unchanged.
+
+## 12. Acceptance checklist
+- [ ] Both themes match the PNGs, tokens only
+- [ ] Only sidebar and toolbar are translucent (88-92%, blur 10); no other blur
+- [ ] One soft shadow per element; no glow, blob or thick edge
+- [ ] Buttons: 1 px highlight, 1 px hover lift, subtle press, focus ring
+- [ ] All seven empty states exist, centered on one vertical axis
+- [ ] All text AA on every surface; Reduce Transparency and Reduce Motion work
+- [ ] Centering verified on a screenshot of every screen (bounding-box centers within 0.6 px)
 - [ ] All UI strings English
 - [ ] `Sources/ShortcutClashCore` untouched
