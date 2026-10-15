@@ -83,6 +83,34 @@ tint overlay with the token color and a `strokeBorder` overlay. The window uses
 Ambient backdrop: two blurred ellipses (see STYLE-GUIDE section 3), drawn behind the window content only
 when transparency is allowed.
 
+## 3b. Alignment and optical centering
+
+Same rule as STYLE-GUIDE.md. In SwiftUI:
+
+- Labels and icons inside buttons, badges, pills and circles are centered on both axes: build them as
+  stacks with `.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)` or `HStack(alignment: .center)` and equal padding (buttons 0/14, badges
+  3/8). Never position a label with hand-set x/y offsets. Fixed-size containers (count circle, clear
+  button, switch knob) center their child by `(container - child) / 2` on each axis.
+- Fields, selects, nav rows and switches: leading icon, text, chevron and clear button share the
+  vertical center of the control. The switch knob is centered in its track, and switch, label and counter
+  share one center line in the filter row.
+- Toolbar items, traffic lights and the section's title share one horizontal center line; toolbar buttons
+  are 32 px high and centered in the 52 px toolbar band.
+- Row content: the key combination is vertically centered in the row; the owners and badge block is
+  centered as a group; the count circle and the `раскладка` badge are centered on the row's center line.
+- Badges next to large text (the `Конфликт` badge beside the 34 px combo) are centered on the text box's
+  vertical center, not on its top.
+- Empty state: orb, glow, check mark, title, subtitle and button sit on one vertical axis, the center of the
+  detail pane (x = 816 in the 1280 canvas). The check mark's bounding box is centered in the orb.
+- Optical centering: glyph boxes include side bearings and line gaps, so after centering by box, check
+  the render. Arrows, chevrons and the `⌕` / `×` glyphs may be nudged by at most 1 px; triangular or
+  asymmetric icons are centered on their visual mass, not their bounding box. Prefer real vector icons
+  (SF Symbols with `.imageScale`) over text glyphs in the implementation.
+- Verify on a render, not on the structure: measure label and container centers (tolerance 0.5 px) and
+  look at the exported PNGs at 2×.
+
+Measured in the Figma file (all four screens and both component sheets): label-to-container center offset 0 px for buttons, badges and count circles; empty-state elements 0 px off the axis; filter row label, switch and counter share one center.
+
 ## 4. Tokens
 
 Use `tokens.json` (both themes) or `tokens.css`. In SwiftUI create `Theme.swift` with a `Theme` enum of
@@ -234,5 +262,6 @@ Don't:
 - [ ] All text tokens pass AA (measured on the built UI for both themes and both fallbacks).
 - [ ] Focus ring visible; everything reachable by keyboard; hit targets ≥ 28 px.
 - [ ] Empty state uses the `ok` glow (teal), not green.
+- [ ] Centering: button and badge labels, count circles, switch knobs, field icons and toolbar items are centered on both axes (≤ 0.5 px off on a render); empty-state illustration, text and button share one axis; optical centering of icons checked at 2×.
 - [ ] No hardcoded hex or system-color literals left in views; no change to `ShortcutClashCore`.
 - [ ] `swift build && swift test` pass; before/after screenshots attached to the PR.
