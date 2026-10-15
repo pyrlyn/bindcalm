@@ -30,6 +30,10 @@ final class AppModel: ObservableObject {
     private var registryFindings: [DiscoveredHotKey] = []
     private var cancellables: Set<AnyCancellable> = []
     private var scanTask: Task<Void, Never>?
+    private var menuWatchTask: Task<Void, Never>?
+    private var activationObserver: NSObjectProtocol?
+    /// Bumped on every full rescan so an in-flight menu refresh cannot overwrite newer results.
+    private var scanGeneration = 0
 
     private enum Keys {
         static let methods = "enabledMethods"
@@ -56,12 +60,30 @@ final class AppModel: ObservableObject {
             .sink { [weak self] _ in self?.refreshPermissions() }
             .store(in: &cancellables)
 
+        activationObserver = NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main
+        ) { [weak self] notification in
+            let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+            MainActor.assumeIsolated {
+                guard let self, let app else { return }
+                self.refreshFrontmostMenus(of: app)
+            }
+        }
+
         rescan()
+    }
+
+    deinit {
+        if let activationObserver {
+            NSWorkspace.shared.notificationCenter.removeObserver(activationObserver)
+        }
     }
 
     // MARK: - Scanning
 
     func rescan() {
+        scanGeneration += 1
+        menuWatchTask?.cancel()
         scanTask?.cancel()
         isScanning = true
         let snapshot = LayoutService.snapshot()
@@ -98,7 +120,26 @@ final class AppModel: ObservableObject {
 
     func refreshPermissions() {
         let now = Permissions.snapshot()
+        let gainedAccessibility = now.accessibility && !permissions.accessibility
         if now != permissions { permissions = now }
+        if gainedAccessibility, let app = NSWorkspace.shared.frontmostApplication {
+            refreshFrontmostMenus(of: app)
+        }
+    }
+
+    /// Re-reads the activated app's menus. Does not prompt for Accessibility and does not rescan other strategies.
+    private func refreshFrontmostMenus(of app: NSRunningApplication) {
+        guard !isScanning, enabled.contains(.accessibilityMenus) else { return }
+        let generation = scanGeneration
+        let context = DiscoveryContext(layouts: layouts)
+        let ownerKey = context.owners.owner(for: app).key
+        menuWatchTask?.cancel()
+        menuWatchTask = Task {
+            let fresh = AccessibilityMenuStrategy().menuClaims(of: app, in: context)
+            guard !Task.isCancelled, generation == scanGeneration, let fresh else { return }
+            registryFindings = MenuClaimRefresh.apply(ownerKey: ownerKey, fresh: fresh, to: registryFindings)
+            mergeLiveFindings()
+        }
     }
 
     private func persistMethods() {

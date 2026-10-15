@@ -7,7 +7,7 @@ public struct AccessibilityMenuStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .accessibilityMenus }
     public var displayName: String { "Меню запущенных приложений (Accessibility)" }
-    public var summary: String { "Читает строку меню каждого запущенного приложения через AX API. Надёжно для сочетаний внутри приложения; требует «Универсальный доступ»." }
+    public var summary: String { "Читает строку меню каждого запущенного приложения через AX API. При смене активного приложения его меню перечитывается само. Требует «Универсальный доступ»." }
     public var requiredPermission: PermissionKind? { .accessibility }
 
     static let maxItemsPerApp = 6000
@@ -39,23 +39,49 @@ public struct AccessibilityMenuStrategy: HotKeyDiscoveryStrategy {
         var appleMenuRead = false
         for app in apps {
             try Task.checkCancellation()
-            let owner = context.owners.owner(for: app)
-            let element = AXUIElementCreateApplication(app.processIdentifier)
-            AXUIElementSetMessagingTimeout(element, 1.0)
-            guard let menuBar = Self.value(element, "AXMenuBar").map({ $0 as! AXUIElement }) else { continue }
-            let topItems = (Self.value(menuBar, "AXChildren") as? [AXUIElement]) ?? []
-            var budget = Self.maxItemsPerApp
-            for (index, item) in topItems.enumerated() {
-                let isAppleMenu = index == 0
-                if isAppleMenu && appleMenuRead { continue }
-                let itemOwner = isAppleMenu ? HotKeyOwner.macOS : owner
-                let scope: HotKeyScope = isAppleMenu ? .global : .inApp
-                walk(item, path: [], depth: 0, owner: itemOwner, scope: scope, appName: owner.name,
-                     context: context, budget: &budget, into: &found)
-                if isAppleMenu { appleMenuRead = true }
-            }
+            guard let read = readMenus(of: app, includeAppleMenu: !appleMenuRead, in: context) else { continue }
+            if read.sawAppleMenu { appleMenuRead = true }
+            found += read.claims
         }
         return found
+    }
+
+    /// In-app menu shortcuts for one app, skipping the Apple menu.
+    /// Nil when the menu bar cannot be read. Does not prompt for Accessibility.
+    public func menuClaims(of app: NSRunningApplication, in context: DiscoveryContext) -> [DiscoveredHotKey]? {
+        readMenus(of: app, includeAppleMenu: false, in: context)?.claims
+    }
+
+    private struct MenuRead {
+        var claims: [DiscoveredHotKey]
+        var sawAppleMenu: Bool
+    }
+
+    /// Nil when this is not a readable regular app. `sawAppleMenu` is true once the first menu was walked,
+    /// even if that menu contained no shortcuts, matching the full scan's "read the Apple menu once" rule.
+    private func readMenus(of app: NSRunningApplication, includeAppleMenu: Bool, in context: DiscoveryContext) -> MenuRead? {
+        guard AXIsProcessTrusted(), app.activationPolicy == .regular,
+              app.processIdentifier != getpid(), !app.isTerminated else { return nil }
+        let owner = context.owners.owner(for: app)
+        let element = AXUIElementCreateApplication(app.processIdentifier)
+        AXUIElementSetMessagingTimeout(element, 1.0)
+        guard let menuBar = Self.value(element, "AXMenuBar").map({ $0 as! AXUIElement }) else { return nil }
+        let topItems = (Self.value(menuBar, "AXChildren") as? [AXUIElement]) ?? []
+        var found: [DiscoveredHotKey] = []
+        var budget = Self.maxItemsPerApp
+        var sawAppleMenu = false
+        for (index, item) in topItems.enumerated() {
+            let isAppleMenu = index == 0
+            if isAppleMenu {
+                sawAppleMenu = true
+                if !includeAppleMenu { continue }
+            }
+            let itemOwner = isAppleMenu ? HotKeyOwner.macOS : owner
+            let scope: HotKeyScope = isAppleMenu ? .global : .inApp
+            walk(item, path: [], depth: 0, owner: itemOwner, scope: scope, appName: owner.name,
+                 context: context, budget: &budget, into: &found)
+        }
+        return MenuRead(claims: found, sawAppleMenu: sawAppleMenu)
     }
 
     private func walk(_ element: AXUIElement, path: [String], depth: Int, owner: HotKeyOwner, scope: HotKeyScope,
@@ -109,7 +135,20 @@ public struct AccessibilityMenuStrategy: HotKeyDiscoveryStrategy {
         guard AXUIElementCopyAttributeValue(element, attribute as CFString, &value) == .success else { return nil }
         return value
     }
+}
 
+/// Replaces one app's in-app Accessibility claims and leaves every other finding alone.
+public enum MenuClaimRefresh {
+    public static func apply(ownerKey: String, fresh: [DiscoveredHotKey], to findings: [DiscoveredHotKey]) -> [DiscoveredHotKey] {
+        let kept = findings.filter { finding in
+            finding.method != .accessibilityMenus || finding.scope != .inApp || finding.owner.key != ownerKey
+        }
+        let incoming = fresh.filter { $0.method == .accessibilityMenus && $0.scope == .inApp && $0.owner.key == ownerKey }
+        return kept + incoming
+    }
+}
+
+extension AccessibilityMenuStrategy {
     /// Focused app according to Accessibility (can differ from NSWorkspace for panels and agents).
     public static func focusedApplicationPID() -> pid_t? {
         guard AXIsProcessTrusted() else { return nil }

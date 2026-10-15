@@ -14,7 +14,7 @@ between apps using every available detection method and highlights them.
 | T2 | done | P2 | 3 | 100% | |
 | T3 | done | P2 | 2 | 100% | |
 | T4 | done | P2 | 4 | 100% | |
-| T5 | todo | P3 | 2 | 0% | |
+| T5 | done | P3 | 2 | 100% | |
 | T6 | todo | P3 | 3 | 0% | |
 
 ### T1. Verify the GUI flows with permissions granted
@@ -150,7 +150,8 @@ XCTest suites: modifier conversions and display; key-equivalent, glyph and hotke
 symbolic hotkeys and Services parsing; shortcut-format detection (MASShortcut, ShortcutRecorder,
 KeyboardShortcuts JSON, archived data, parameters, strings); conflict rules; layout conflicts;
 AX tiling filter; preference scope heuristic; config-file parsers (Karabiner, skhd, Hammerspoon,
-BetterTouchTool, Keyboard Maestro, Alfred, Raycast) and their registry toggles.
+BetterTouchTool, Keyboard Maestro, Alfred, Raycast) and their registry toggles; menu-claim refresh
+when the frontmost app changes.
 
 ### Limitations
 
@@ -170,4 +171,4 @@ See README → "Detection methods and their limitations" and "Research".
 | M8. CLI `--dump`, bundle script, unit tests, README research | done |
 | M9. GUI verification with grants | todo (T1) |
 | M10. Config-file parsers | done (T2) |
-| M11. Services accuracy, winner model, watch mode, stable signing | in progress (T3–T4 done, T5–T6 todo) |
+| M11. Services accuracy, winner model, watch mode, stable signing | in progress (T3–T5 done, T6 todo) |
