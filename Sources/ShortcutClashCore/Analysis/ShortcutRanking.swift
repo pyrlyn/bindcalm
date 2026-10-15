@@ -11,15 +11,15 @@ public enum HookLayer: Int, Codable, Sendable, Comparable, CaseIterable {
 
     public static func < (lhs: HookLayer, rhs: HookLayer) -> Bool { lhs.rawValue < rhs.rawValue }
 
-    /// Russian name shown next to the winner.
+    /// Name shown next to the winner.
     public var label: String {
         switch self {
-        case .hidRemapper: return "HID-ремаппер"
+        case .hidRemapper: return "HID remapper"
         case .eventTap: return "event tap"
-        case .symbolicHotkey: return "символическое сочетание"
-        case .carbonHotkey: return "Carbon-сочетание"
-        case .frontmostMenu: return "меню активного приложения"
-        case .unknown: return "неизвестный уровень"
+        case .symbolicHotkey: return "symbolic hotkey"
+        case .carbonHotkey: return "Carbon hotkey"
+        case .frontmostMenu: return "frontmost app menu"
+        case .unknown: return "unknown layer"
         }
     }
 
@@ -27,17 +27,17 @@ public enum HookLayer: Int, Codable, Sendable, Comparable, CaseIterable {
     public var reason: String {
         switch self {
         case .hidRemapper:
-            return "событие подменяется на уровне HID, до того как его увидит macOS."
+            return "the event is rewritten at the HID level, before macOS sees it."
         case .eventTap:
-            return "перехватчик event tap забирает клавишу раньше символических сочетаний, Carbon и меню."
+            return "an event tap takes the key before symbolic hotkeys, Carbon and menus."
         case .symbolicHotkey:
-            return "символическое сочетание обрабатывается системой раньше горячих клавиш приложений и меню."
+            return "a symbolic hotkey is handled by the system before app hotkeys and menus."
         case .carbonHotkey:
-            return "Carbon-сочетание (RegisterEventHotKey) срабатывает раньше меню активного приложения."
+            return "a Carbon hotkey (RegisterEventHotKey) fires before the frontmost app's menu."
         case .frontmostMenu:
-            return "это меню или служба активного приложения; на более раннем уровне клавишу никто не забрал."
+            return "it is a menu item or service of the frontmost app; nothing took the key at an earlier layer."
         case .unknown:
-            return "источник не сообщает уровень перехвата, а более ранних претендентов нет."
+            return "the source does not report its interception layer and there are no earlier claimants."
         }
     }
 }
@@ -56,9 +56,9 @@ public struct ShortcutWinner: Hashable, Sendable {
     public var explanation: String {
         let names = owners.map(\.name).joined(separator: ", ")
         if isTie {
-            return "На уровне «\(layer.label)» сочетание перехватывают сразу несколько: \(names). Кто из них сработает, не определено."
+            return "At the \(layer.label) layer several claim this shortcut: \(names). Which one fires is undetermined."
         }
-        return "Скорее всего сработает \(names): \(layer.reason)"
+        return "Most likely \(names) wins: \(layer.reason)"
     }
 }
 

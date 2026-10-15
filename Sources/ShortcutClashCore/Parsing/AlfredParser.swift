@@ -9,7 +9,7 @@ import Foundation
 /// A disabled workflow is reported with `enabled = false`.
 public enum AlfredParser {
     public static func parseWorkflow(_ plist: [String: Any], workflowName: String? = nil) -> [ParsedConfigHotKey] {
-        let name = workflowName ?? ConfigFiles.string(plist["name"]) ?? "Воркфлоу"
+        let name = workflowName ?? ConfigFiles.string(plist["name"]) ?? "Workflow"
         let workflowEnabled = ConfigFiles.bool(plist["disabled"]) != true
         let objects = ConfigFiles.array(plist["objects"]) ?? []
         var found: [ParsedConfigHotKey] = []
@@ -44,7 +44,7 @@ public enum AlfredParser {
         if path.lowercased().contains("hotkey"),
            let label = ConfigFiles.string(dict["string"]), dict["key"] != nil, dict["mod"] != nil,
            let claim = hotkey(key: ConfigFiles.int(dict["key"]), modifiers: ConfigFiles.int(dict["mod"]),
-                              label: label, action: "Главное сочетание Alfred",
+                              label: label, action: "Main Alfred hotkey",
                               enabled: true, source: path) {
             found.append(claim)
             return

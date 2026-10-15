@@ -23,8 +23,8 @@ public enum DiscoveryError: Error, Sendable, CustomStringConvertible {
 
     public var description: String {
         switch self {
-        case .permissionRequired(.accessibility): return "Нужно разрешение «Универсальный доступ»"
-        case .permissionRequired(.inputMonitoring): return "Нужно разрешение «Мониторинг ввода»"
+        case .permissionRequired(.accessibility): return "Accessibility permission required"
+        case .permissionRequired(.inputMonitoring): return "Input Monitoring permission required"
         case .unavailable(let reason): return reason
         }
     }

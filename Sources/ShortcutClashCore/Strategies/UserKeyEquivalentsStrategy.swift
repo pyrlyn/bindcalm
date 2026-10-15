@@ -4,8 +4,8 @@ import Foundation
 public struct UserKeyEquivalentsStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .userKeyEquivalents }
-    public var displayName: String { "Пользовательские сочетания меню (NSUserKeyEquivalents)" }
-    public var summary: String { "Сочетания из «Клавиатура → Сочетания клавиш → Сочетания приложений» для каждого приложения и для всех (NSGlobalDomain). Надёжно." }
+    public var displayName: String { "Custom menu shortcuts (NSUserKeyEquivalents)" }
+    public var summary: String { "Shortcuts from Keyboard → Keyboard Shortcuts → App Shortcuts, for each app and for all apps (NSGlobalDomain). Reliable." }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         var found: [DiscoveredHotKey] = []

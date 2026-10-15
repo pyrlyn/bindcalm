@@ -6,8 +6,8 @@ import ApplicationServices
 public struct AccessibilityMenuStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .accessibilityMenus }
-    public var displayName: String { "Меню запущенных приложений (Accessibility)" }
-    public var summary: String { "Читает строку меню каждого запущенного приложения через AX API. Надёжно для сочетаний внутри приложения; требует «Универсальный доступ»." }
+    public var displayName: String { "Menus of running apps (Accessibility)" }
+    public var summary: String { "Reads the menu bar of every running app through the AX API. Reliable for in-app shortcuts; requires Accessibility permission." }
     public var requiredPermission: PermissionKind? { .accessibility }
 
     static let maxItemsPerApp = 6000
@@ -78,7 +78,7 @@ public struct AccessibilityMenuStrategy: HotKeyDiscoveryStrategy {
 
         if let combo = Self.combo(cmdChar: cmdChar, virtualKey: virtualKey, glyph: glyph, modifiers: modifiers, layouts: context.layouts),
            !Self.isSystemTilingItem(path: currentPath, modifiers: combo.modifiers) {
-            let label = scope == .global ? "\(appName): меню Apple" : appName
+            let label = scope == .global ? "\(appName): Apple menu" : appName
             found.append(DiscoveredHotKey(combo: combo, owner: owner, method: id, confidence: .reliable, scope: scope,
                                           action: currentPath.joined(separator: " → "),
                                           source: "AX \(label) → \(currentPath.joined(separator: " → "))",

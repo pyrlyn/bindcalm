@@ -94,8 +94,8 @@ final class ConfigFileParserTests: XCTestCase {
         ])
         XCTAssertEqual(parsed[0].action, "open -a Terminal")
         XCTAssertEqual(parsed[3].action, "echo p")
-        XCTAssertEqual(parsed[5].action, "по приложению")
-        XCTAssertTrue(parsed[6].action.contains("пропускает клавишу"))
+        XCTAssertEqual(parsed[5].action, "per app")
+        XCTAssertTrue(parsed[6].action.contains("passes the key through"))
         XCTAssertFalse(parsed.contains { $0.action.contains("loginwindow") })
     }
 
@@ -122,7 +122,7 @@ final class ConfigFileParserTests: XCTestCase {
             KeyCombo(keyCode: 122, modifiers: []),
         ])
         XCTAssertEqual(parsed[1].action, "Launch terminal")
-        XCTAssertEqual(parsed[0].action, "Сочетание Hammerspoon")
+        XCTAssertEqual(parsed[0].action, "Hammerspoon shortcut")
     }
 
     func testBetterTouchToolPreset() throws {
@@ -332,7 +332,7 @@ final class ConfigFileParserTests: XCTestCase {
         let launcher = AlfredParser.parseHotkeyPreferences(prefs, sourceName: "hotkey/prefs.plist")
         XCTAssertEqual(launcher.count, 1)
         XCTAssertEqual(launcher.first?.combo, KeyCombo(keyCode: 13, modifiers: [.command]))
-        XCTAssertEqual(launcher.first?.action, "Главное сочетание Alfred")
+        XCTAssertEqual(launcher.first?.action, "Main Alfred hotkey")
         XCTAssertTrue(AlfredParser.parseHotkeyPreferences(prefs, sourceName: "features/clipboard/prefs.plist").isEmpty)
     }
 
