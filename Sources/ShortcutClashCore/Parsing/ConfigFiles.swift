@@ -68,6 +68,12 @@ enum ConfigFiles {
 
     static func array(_ any: Any?) -> [Any]? { any as? [Any] }
 
+    /// Config files record a binding the user created, including Shift-only and fn-only chords that the
+    /// heuristic scanners reject. F-keys stay claimable after `KeyCombo` strips their implicit fn flag.
+    static func accepts(_ combo: KeyCombo) -> Bool {
+        !combo.modifiers.isEmpty || KeyCodes.isFunctionKey(combo.keyCode)
+    }
+
     static func enabledFlag(in dict: [String: Any], keys: [String], default defaultValue: Bool = true) -> Bool {
         for key in keys {
             if let flag = bool(dict[key]) { return flag }

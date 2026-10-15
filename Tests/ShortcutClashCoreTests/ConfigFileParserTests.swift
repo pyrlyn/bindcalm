@@ -296,15 +296,20 @@ final class ConfigFileParserTests: XCTestCase {
           </array>
         </dict></plist>
         """)
-        let shortcuts = AlfredParser.parseWorkflow(workflow as! [String: Any])
+        guard let workflowDict = workflow as? [String: Any] else {
+            XCTFail("workflow plist did not decode as a dictionary")
+            return
+        }
+        let shortcuts = AlfredParser.parseWorkflow(workflowDict)
         XCTAssertEqual(shortcuts.count, 1)
-        XCTAssertEqual(shortcuts[0].combo, KeyCombo(keyCode: 49, modifiers: [.shift]))
-        XCTAssertEqual(shortcuts[0].action, "Dict")
-        XCTAssertTrue(shortcuts[0].enabled)
+        guard let shortcut = shortcuts.first else { return }
+        XCTAssertEqual(shortcut.combo, KeyCombo(keyCode: 49, modifiers: [.shift]))
+        XCTAssertEqual(shortcut.action, "Dict")
+        XCTAssertTrue(shortcut.enabled)
 
-        var disabled = workflow as! [String: Any]
+        var disabled = workflowDict
         disabled["disabled"] = true
-        XCTAssertFalse(AlfredParser.parseWorkflow(disabled)[0].enabled)
+        XCTAssertEqual(AlfredParser.parseWorkflow(disabled).first?.enabled, false)
 
         let prefs = try plist("""
         <?xml version="1.0" encoding="UTF-8"?>
@@ -326,8 +331,8 @@ final class ConfigFileParserTests: XCTestCase {
         """)
         let launcher = AlfredParser.parseHotkeyPreferences(prefs, sourceName: "hotkey/prefs.plist")
         XCTAssertEqual(launcher.count, 1)
-        XCTAssertEqual(launcher[0].combo, KeyCombo(keyCode: 13, modifiers: [.command]))
-        XCTAssertEqual(launcher[0].action, "Главное сочетание Alfred")
+        XCTAssertEqual(launcher.first?.combo, KeyCombo(keyCode: 13, modifiers: [.command]))
+        XCTAssertEqual(launcher.first?.action, "Главное сочетание Alfred")
         XCTAssertTrue(AlfredParser.parseHotkeyPreferences(prefs, sourceName: "features/clipboard/prefs.plist").isEmpty)
     }
 

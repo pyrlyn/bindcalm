@@ -20,7 +20,7 @@ public enum HammerspoonParser {
             let modifiers = modifiers(from: String(text[modifierRange]))
             guard let keyCode = keyCode(for: String(text[keyRange])) else { continue }
             let combo = KeyCombo(keyCode: keyCode, modifiers: modifiers)
-            guard combo.modifiers.isShortcutLike || KeyCodes.isFunctionKey(keyCode) else { continue }
+            guard ConfigFiles.accepts(combo) else { continue }
             let message: String
             if match.range(at: 5).location != NSNotFound, let messageRange = Range(match.range(at: 5), in: text) {
                 message = String(text[messageRange])

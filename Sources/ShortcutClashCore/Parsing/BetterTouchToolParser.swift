@@ -35,7 +35,7 @@ public enum BetterTouchToolParser {
               let keyCode = ConfigFiles.int(dict["BTTShortcutKeyCode"]), keyCode >= 0, keyCode < 128 else { return nil }
         let modifiers = ModifierSet(cocoa: UInt64(ConfigFiles.int(dict["BTTShortcutModifierKeys"]) ?? 0))
         let combo = KeyCombo(keyCode: UInt16(keyCode), modifiers: modifiers)
-        guard combo.modifiers.isShortcutLike || KeyCodes.isFunctionKey(combo.keyCode) else { return nil }
+        guard ConfigFiles.accepts(combo) else { return nil }
         let enabled = ConfigFiles.enabledFlag(in: dict, keys: ["BTTEnabled2", "BTTEnabled"])
         let action = ConfigFiles.string(dict["BTTGestureNotes"])
             ?? ConfigFiles.string(dict["BTTPredefinedActionName"])

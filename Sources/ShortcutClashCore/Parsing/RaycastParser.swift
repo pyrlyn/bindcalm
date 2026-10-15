@@ -60,7 +60,7 @@ public enum RaycastParser {
             modifiers = []
         }
         let combo = KeyCombo(keyCode: code, modifiers: modifiers)
-        guard combo.modifiers.isShortcutLike || KeyCodes.isFunctionKey(code) else { return nil }
+        guard ConfigFiles.accepts(combo) else { return nil }
         return combo
     }
 

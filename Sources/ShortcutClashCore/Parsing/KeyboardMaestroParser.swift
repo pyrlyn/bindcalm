@@ -41,7 +41,7 @@ public enum KeyboardMaestroParser {
                       let keyCode = ConfigFiles.int(trigger["KeyCode"]), keyCode >= 0, keyCode < 128 else { continue }
                 let modifiers = ModifierSet(carbon: ConfigFiles.int(trigger["Modifiers"]) ?? 0)
                 let combo = KeyCombo(keyCode: UInt16(keyCode), modifiers: modifiers)
-                guard combo.modifiers.isShortcutLike || KeyCodes.isFunctionKey(combo.keyCode) else { continue }
+                guard ConfigFiles.accepts(combo) else { continue }
                 found.append(ParsedConfigHotKey(combo: combo, action: "\(groupName): \(macroName)",
                                                 enabled: macroEnabled,
                                                 source: "\(groupName) → \(macroName)",

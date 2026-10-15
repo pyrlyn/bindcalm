@@ -5,7 +5,8 @@ import Foundation
 /// `hotkey` / `key` is a virtual key code. `hotmod` / `mod` is a Cocoa modifier mask; Alfred sometimes
 /// ORs in device-dependent low bits (Shift+Space is `131720` rather than `131072`), which
 /// `ModifierSet(cocoa:)` ignores. An object with no modifiers and an empty `hotstring` is an unassigned
-/// trigger and is skipped. A disabled workflow is reported with `enabled = false`.
+/// trigger and is skipped. Shift-only and fn-only chords are kept: Alfred registered them.
+/// A disabled workflow is reported with `enabled = false`.
 public enum AlfredParser {
     public static func parseWorkflow(_ plist: [String: Any], workflowName: String? = nil) -> [ParsedConfigHotKey] {
         let name = workflowName ?? ConfigFiles.string(plist["name"]) ?? "Воркфлоу"
@@ -59,7 +60,7 @@ public enum AlfredParser {
         let text = label?.trimmingCharacters(in: .whitespaces) ?? ""
         if modifiers == 0, text.isEmpty { return nil }
         let combo = KeyCombo(keyCode: UInt16(key), modifiers: ModifierSet(cocoa: UInt64(modifiers)))
-        guard combo.modifiers.isShortcutLike || KeyCodes.isFunctionKey(combo.keyCode) else { return nil }
+        guard ConfigFiles.accepts(combo) else { return nil }
         return ParsedConfigHotKey(combo: combo, action: action, enabled: enabled, source: source)
     }
 }

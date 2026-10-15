@@ -39,7 +39,7 @@ public enum SkhdParser {
         let (keyToken, action) = splitKeyAndAction(rest)
         guard let keyCode = keyCode(for: keyToken), let modifiers = modifiers(from: modifierPart) else { return nil }
         let combo = KeyCombo(keyCode: keyCode, modifiers: modifiers)
-        guard combo.modifiers.isShortcutLike || KeyCodes.isFunctionKey(keyCode) || !modifiers.isEmpty else { return nil }
+        guard ConfigFiles.accepts(combo) else { return nil }
         var label = action.isEmpty ? "Сочетание skhd" : action
         if passthrough { label = "пропускает клавишу · \(label)" }
         return ParsedConfigHotKey(combo: combo, action: String(label.prefix(160)),

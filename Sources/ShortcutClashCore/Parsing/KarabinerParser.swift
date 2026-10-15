@@ -31,7 +31,7 @@ public enum KarabinerParser {
                       let keyCode = keyCode(for: keyName) else { continue }
                 let modifiers = modifiers(from: from["modifiers"])
                 let combo = KeyCombo(keyCode: keyCode, modifiers: modifiers)
-                guard combo.modifiers.isShortcutLike || KeyCodes.isFunctionKey(keyCode) else { continue }
+                guard ConfigFiles.accepts(combo) else { continue }
                 found.append(ParsedConfigHotKey(combo: combo, action: description,
                                                 source: "\(profileName) → \(description) → \(keyName)"))
             }
