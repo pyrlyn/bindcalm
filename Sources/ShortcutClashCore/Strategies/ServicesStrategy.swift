@@ -6,7 +6,7 @@ public struct ServicesStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .services }
     public var displayName: String { "Службы (NSServices + pbs)" }
-    public var summary: String { "Сочетания пунктов меню «Службы» из Info.plist приложений и быстрых действий, с учётом настроек pbs. Значения по умолчанию — частичная достоверность: служба может быть выключена." }
+    public var summary: String { "Сочетания меню «Службы». Запись pbs (NSServicesStatus) говорит, включена ли служба. Сочетание по умолчанию из Info.plist без такой записи показывается выключенным: macOS не сообщает его реальное состояние." }
 
     static let quickActionOwner = HotKeyOwner(name: "Быстрые действия (Automator/Команды)", bundleID: nil)
 
@@ -15,9 +15,9 @@ public struct ServicesStrategy: HotKeyDiscoveryStrategy {
         let statusDict = CFPreferencesCopyValue("NSServicesStatus" as CFString, "pbs" as CFString,
                                                 kCFPreferencesCurrentUser, kCFPreferencesAnyHost) as? [String: Any] ?? [:]
         let status = ServicesParser.parseStatus(statusDict, layouts: context.layouts)
-        var overridden = Set<String>()
+        var statusByKey: [String: ServiceStatusEntry] = [:]
         for entry in status {
-            overridden.insert(Self.key(entry.providerBundleID, entry.title))
+            statusByKey[Self.key(entry.providerBundleID, entry.title)] = entry
             guard let combo = entry.combo else { continue }
             let owner = entry.providerBundleID.map { context.owners.owner(bundleID: $0) } ?? Self.quickActionOwner
             found.append(DiscoveredHotKey(combo: combo, owner: owner, method: id, confidence: .reliable, scope: .global,
@@ -34,13 +34,18 @@ public struct ServicesStrategy: HotKeyDiscoveryStrategy {
             let bundleID = info["CFBundleIdentifier"] as? String
             let isWorkflow = bundle.pathExtension == "workflow"
             for shortcut in ServicesParser.parseInfoPlistServices(services) {
-                guard !overridden.contains(Self.key(bundleID, shortcut.title)) else { continue }
+                let match = statusByKey[Self.key(bundleID, shortcut.title)]
+                guard let resolved = ServicesParser.resolveDefault(shortcut, status: match) else { continue }
                 var owner = isWorkflow ? Self.quickActionOwner : OwnerResolver.owner(appURL: bundle, bundleID: bundleID)
                 if isWorkflow { owner.path = bundle.path }
-                found.append(DiscoveredHotKey(combo: shortcut.combo, owner: owner, method: id, confidence: .partial,
-                                              scope: .global, action: "Служба: \(shortcut.title)",
-                                              source: "\(bundle.path)/Contents/Info.plist → NSServices → NSKeyEquivalent = \"\(shortcut.character)\"",
-                                              definingCharacter: shortcut.character))
+                let plistSource = "\(bundle.path)/Contents/Info.plist → NSServices → NSKeyEquivalent = \"\(shortcut.character)\""
+                let source = resolved.confirmed
+                    ? "\(plistSource) · \(match?.rawKey ?? "pbs")"
+                    : "\(plistSource) · default not confirmed in NSServicesStatus"
+                found.append(DiscoveredHotKey(combo: resolved.combo, owner: owner, method: id,
+                                              confidence: resolved.confirmed ? .reliable : .partial, scope: .global,
+                                              action: "Служба: \(shortcut.title)", enabled: resolved.enabled,
+                                              source: source, definingCharacter: resolved.definingCharacter))
             }
         }
         return found

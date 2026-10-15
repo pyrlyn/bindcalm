@@ -134,12 +134,19 @@ character-based, so the key code is resolved through the ANSI table or the enabl
 ### 5. Services
 
 User choices in `pbs` (`NSServicesStatus`, including Shortcuts/Automator quick actions stored as
-`(null) - Name - runWorkflowAsService`) are reliable. Defaults from `NSServices` → `NSKeyEquivalent`
-in `/Applications`, `~/Applications`, `/System/Applications`, `/System/Library/Services`,
-`/Library/Services`, `~/Library/Services` are **partial**: a default service shortcut is always ⌘
-(uppercase adds ⇧) and the service may be disabled or not applicable to the current selection, which
-the plist does not record. The per-app Services submenu is skipped by the AX strategy for the same
-reason.
+`(null) - Name - runWorkflowAsService`) are reliable. `enabled_services_menu` decides whether the
+shortcut is on; `enabled_context_menu` is used only when that key is absent. An entry that names a
+shortcut but sets neither flag is **not** treated as enabled.
+
+`NSServicesStatus` does not list the effective state of a service the user has never changed.
+System Settings writes entries when the Services pane is opened or a checkbox is toggled, and there
+is no other public pbs field for "the default is currently on". Defaults from `NSServices` →
+`NSKeyEquivalent` in `/Applications`, `~/Applications`, `/System/Applications`,
+`/System/Library/Services`, `/Library/Services`, `~/Library/Services` are therefore reported
+**disabled** unless a status entry confirms them. A confirmed entry without its own
+`key_equivalent` keeps the plist shortcut and the status enabled flag. Unconfirmed defaults stay
+visible (partial, greyed) and do not create conflicts. The per-app Services submenu is skipped by
+the AX strategy for the same reason.
 
 ### 6–7. Preference heuristics
 

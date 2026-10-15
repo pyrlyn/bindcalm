@@ -17,3 +17,10 @@ Seven independent strategies, each with a pure parser and fixture tests, registe
 BetterTouchTool, Keyboard Maestro, Alfred and Raycast. Missing configs produce no claims. A present
 file that cannot be parsed marks that strategy unavailable. Preference domains owned by these
 strategies are skipped by the heuristic plist scan.
+
+### D3. Services defaults stay disabled until pbs confirms them
+
+`NSServicesStatus` does not publish the effective state of a service the user has never changed.
+Info.plist defaults are reported disabled unless a status entry confirms them.
+`enabled_services_menu` is the keyboard-shortcut gate; a status entry with neither enabled flag is
+not treated as on. A confirmed entry without its own key equivalent keeps the plist shortcut.
