@@ -1,6 +1,6 @@
-# ShortcutClash: design spec for implementers and agents (v3, minimal glass)
+# Bindcalm: design spec for implementers and agents (v3, minimal glass)
 
-Source of truth: tokens.json / tokens.css, the Figma v3 sections (see README.md) and the PNGs in screens/. Do not implement from the v1 or v2 sections. Do not change `Sources/ShortcutClashCore`. All UI strings are English.
+Source of truth: tokens.json / tokens.css, the Figma v3 sections (see README.md) and the PNGs in screens/. Do not implement from the v1 or v2 sections. Do not change `Sources/BindcalmCore`. All UI strings are English.
 
 ## 0. Principle: minimal effects
 Keep every effect at the lowest noticeable level. Translucency only on the sidebar and toolbar (88-92% opaque, 10 px blur). Everything else solid. One soft shadow per element. A 1 px highlight on buttons. No blobs, shards, glows, thick edges or springs. If an effect is hard to notice, that is correct. If it draws attention, reduce it.
@@ -75,7 +75,7 @@ Anything that looks centered is centered on its bounding box on both axes via st
 - Don't add blur to panels, cards or buttons, add glows, thick edges, backdrop blobs, stacked shadows, or use literal green for "ok".
 
 ## 11. SwiftUI mapping
-`ContentView` (window, toolbar, split), `SidebarView` (bar material), `GroupRow`, `Badge` (Labels.swift), `DetailView`, `OwnerCard`, `MethodsView`, `PermissionBar`, `LiveCaptureView`. Add `Theme.swift`, a `SoftButtonStyle`, a `RecessedFieldStyle` and an `EmptyStateView`. `ShortcutClashCore` is unchanged.
+`ContentView` (window, toolbar, split), `SidebarView` (bar material), `GroupRow`, `Badge` (Labels.swift), `DetailView`, `OwnerCard`, `MethodsView`, `PermissionBar`, `LiveCaptureView`. Add `Theme.swift`, a `SoftButtonStyle`, a `RecessedFieldStyle` and an `EmptyStateView`. `BindcalmCore` is unchanged.
 
 ## 12. Acceptance checklist
 - [ ] Both themes match the PNGs, tokens only
@@ -86,4 +86,4 @@ Anything that looks centered is centered on its bounding box on both axes via st
 - [ ] All text AA on every surface; Reduce Transparency and Reduce Motion work
 - [ ] Centering verified on a screenshot of every screen (bounding-box centers within 0.6 px)
 - [ ] All UI strings English
-- [ ] `Sources/ShortcutClashCore` untouched
+- [ ] `Sources/BindcalmCore` untouched

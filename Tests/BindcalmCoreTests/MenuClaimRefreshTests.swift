@@ -1,5 +1,5 @@
 import XCTest
-@testable import ShortcutClashCore
+@testable import BindcalmCore
 
 final class MenuClaimRefreshTests: XCTestCase {
     let combo = KeyCombo(keyCode: 0, modifiers: [.command])

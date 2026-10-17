@@ -1,12 +1,12 @@
 import AppKit
 import SwiftUI
 
-struct ShortcutClashApp: App {
+struct BindcalmApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     @StateObject private var model = AppModel()
 
     var body: some Scene {
-        WindowGroup("ShortcutClash") {
+        WindowGroup("Bindcalm") {
             ContentView()
                 .environmentObject(model)
                 .frame(minWidth: 960, minHeight: 600)

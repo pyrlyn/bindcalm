@@ -1,6 +1,6 @@
-# ShortcutClash
+# Bindcalm
 
-GitHub: https://github.com/listepo/ShortcutClash
+GitHub: https://github.com/pyrlyn/bindcalm
 
 A macOS app (Swift, SwiftUI, Apple frameworks only, Russian UI) that finds keyboard shortcut conflicts
 between apps using every available detection method and highlights them.
@@ -63,9 +63,9 @@ ad-hoc signing.
 
 - **Package layout.** `Package.swift` (tools 6.0, macOS 14, Swift 5 language mode because the
   AX/Carbon/CGEvent C APIs lack concurrency annotations). Targets:
-  - `ShortcutClashCore` (library): models, parsers, strategies, analysis, layout, live capture.
-  - `ShortcutClash` (executable): SwiftUI app + headless CLI (`--dump`, `--summary`, `--probe-symbols`).
-  - `ShortcutClashCoreTests`: XCTest suites for pure logic.
+  - `BindcalmCore` (library): models, parsers, strategies, analysis, layout, live capture.
+  - `Bindcalm` (executable): SwiftUI app + headless CLI (`--dump`, `--summary`, `--probe-symbols`).
+  - `BindcalmCoreTests`: XCTest suites for pure logic.
 - **Model.**
   - `ModifierSet` — one option set with converters for Carbon masks, Cocoa/CGEvent flags,
     `kAXMenuItemCmdModifiers` (⌘ implied unless bit 8) and Apple display order `fn ⌃⌥⇧⌘`.
@@ -136,15 +136,15 @@ ad-hoc signing.
 - Input Monitoring: `CGPreflightListenEventAccess` / `CGRequestListenEventAccess`. Needed by the tap.
 - Statuses polled every 2 s; buttons open `x-apple.systempreferences:` panes.
 - Ad-hoc signature → grants are bound to the code hash and reset on rebuild. A Developer ID set in
-  `SHORTCUTCLASH_CODESIGN_IDENTITY` keeps them (T6).
+  `BINDCALM_CODESIGN_IDENTITY` keeps them (T6).
 - Secure input detection via `IsSecureEventInputEnabled`.
 
 ### Build and bundle
 
 - `swift build` / `swift build -c release`; `scripts/bundle.sh [release|debug]` copies the binary and
   `Resources/Info.plist` (LSUIElement false, Russian development region,
-  `NSAppleEventsUsageDescription`) into `dist/ShortcutClash.app`. It signs with
-  `SHORTCUTCLASH_CODESIGN_IDENTITY` and a timestamp when that variable names an identity, and
+  `NSAppleEventsUsageDescription`) into `dist/Bindcalm.app`. It signs with
+  `BINDCALM_CODESIGN_IDENTITY` and a timestamp when that variable names an identity, and
   otherwise falls back to ad-hoc `codesign --sign - --timestamp=none`.
 
 ### Tests

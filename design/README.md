@@ -1,6 +1,6 @@
-# ShortcutClash design package (v3, minimal glass)
+# Bindcalm design package (v3, minimal glass)
 
-English-only design handoff for the ShortcutClash macOS app. v3 returns to the original v1 layout and look and adds only a very small amount of translucency, depth and glass-button polish. It replaces the heavier v2 package.
+English-only design handoff for the Bindcalm macOS app. v3 returns to the original v1 layout and look and adds only a very small amount of translucency, depth and glass-button polish. It replaces the heavier v2 package.
 
 | File | What it is |
 |---|---|
@@ -23,8 +23,8 @@ English-only design handoff for the ShortcutClash macOS app. v3 returns to the o
 
 File key `0ReL88zpUMqzQBGEklkq9v` (https://www.figma.com/design/0ReL88zpUMqzQBGEklkq9v).
 
-- Screens page, section "ShortcutClash v3 - minimal glass - English - light + dark" (`89:33759`): main dark `89:33760`, main light `89:33893`, no-conflicts dark `89:34026`, light `89:34116`, empty states dark `89:34206`, light `89:34284`.
-- Components page, section "ShortcutClash v3 - minimal glass components - states - light + dark" (`89:34417`): dark `89:34418`, light `89:34635`.
+- Screens page, section "Bindcalm v3 - minimal glass - English - light + dark" (`89:33759`): main dark `89:33760`, main light `89:33893`, no-conflicts dark `89:34026`, light `89:34116`, empty states dark `89:34206`, light `89:34284`.
+- Components page, section "Bindcalm v3 - minimal glass components - states - light + dark" (`89:34417`): dark `89:34418`, light `89:34635`.
 - Older sections are kept and labelled "v1 (superseded)" and "v2 (superseded)". Implement from v3 only.
 
 ## Scope

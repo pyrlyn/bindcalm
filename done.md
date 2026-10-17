@@ -2,7 +2,7 @@
 
 ### D1. Initial implementation
 
-Swift package with `ShortcutClashCore`, the SwiftUI app and tests. Eleven independent detection
+Swift package with `BindcalmCore`, the SwiftUI app and tests. Eleven independent detection
 strategies behind `HotKeyDiscoveryStrategy` (symbolic hotkeys plist, SkyLight symbolic hotkeys,
 fn/Caps Lock, NSUserKeyEquivalents, Services, preference heuristics, sandbox preferences,
 Accessibility menus, Carbon probe, NSEvent monitors, CGEvent tap), conflict and layout analysis,
@@ -42,6 +42,6 @@ frontmost app when the Accessibility grant appears.
 
 ### D6. Stable code signature
 
-`scripts/bundle.sh` signs with `SHORTCUTCLASH_CODESIGN_IDENTITY` and a secure timestamp when that
+`scripts/bundle.sh` signs with `BINDCALM_CODESIGN_IDENTITY` and a secure timestamp when that
 variable names a codesign identity, so TCC grants survive rebuilds. An unset, empty, or `-` value
 falls back to ad-hoc `codesign --force --sign - --timestamp=none`.

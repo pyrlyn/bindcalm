@@ -5,15 +5,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>ru</string>
 	<key>CFBundleExecutable</key>
-	<string>ShortcutClash</string>
+	<string>Bindcalm</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.listepo.ShortcutClash</string>
+	<string>com.pyrlyn.bindcalm</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ShortcutClash</string>
+	<string>Bindcalm</string>
 	<key>CFBundleDisplayName</key>
-	<string>ShortcutClash</string>
+	<string>Bindcalm</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -33,7 +33,7 @@
 	<key>NSSupportsAutomaticTermination</key>
 	<false/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>ShortcutClash не отправляет Apple Events другим приложениям; ключ нужен, чтобы macOS корректно показала запрос, если он когда-нибудь понадобится.</string>
+	<string>Bindcalm не отправляет Apple Events другим приложениям; ключ нужен, чтобы macOS корректно показала запрос, если он когда-нибудь понадобится.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Ivan Tugay</string>
 </dict>

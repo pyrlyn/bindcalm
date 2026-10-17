@@ -1,5 +1,5 @@
 import XCTest
-@testable import ShortcutClashCore
+@testable import BindcalmCore
 
 final class ShortcutRankingTests: XCTestCase {
     let combo = KeyCombo(keyCode: 49, modifiers: [.command])
