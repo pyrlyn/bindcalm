@@ -1,5 +1,5 @@
 import XCTest
-@testable import ShortcutClashCore
+@testable import BindcalmCore
 
 final class ParserTests: XCTestCase {
     func testUserKeyEquivalentNotation() {

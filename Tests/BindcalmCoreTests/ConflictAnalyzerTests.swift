@@ -1,5 +1,5 @@
 import XCTest
-@testable import ShortcutClashCore
+@testable import BindcalmCore
 
 final class ConflictAnalyzerTests: XCTestCase {
     let cmdSpace = KeyCombo(keyCode: 49, modifiers: [.command])

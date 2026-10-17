@@ -1,4 +1,4 @@
-import ShortcutClashCore
+import BindcalmCore
 import SwiftUI
 
 struct DiagnosticsView: View {

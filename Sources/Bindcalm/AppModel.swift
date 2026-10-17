@@ -1,6 +1,6 @@
 import AppKit
 import Combine
-import ShortcutClashCore
+import BindcalmCore
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -222,7 +222,7 @@ final class AppModel: ObservableObject {
         guard let data = try? report.jsonData() else { return }
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.json]
-        panel.nameFieldStringValue = "shortcutclash-report.json"
+        panel.nameFieldStringValue = "bindcalm-report.json"
         if panel.runModal() == .OK, let url = panel.url {
             try? data.write(to: url)
         }

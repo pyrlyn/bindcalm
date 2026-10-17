@@ -2,14 +2,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "ShortcutClash",
+    name: "Bindcalm",
     platforms: [.macOS(.v14)],
     products: [
-        .executable(name: "ShortcutClash", targets: ["ShortcutClash"]),
+        .executable(name: "Bindcalm", targets: ["Bindcalm"]),
     ],
     targets: [
         .target(
-            name: "ShortcutClashCore",
+            name: "BindcalmCore",
             linkerSettings: [
                 .linkedFramework("AppKit"),
                 .linkedFramework("Carbon"),
@@ -17,12 +17,12 @@ let package = Package(
             ]
         ),
         .executableTarget(
-            name: "ShortcutClash",
-            dependencies: ["ShortcutClashCore"]
+            name: "Bindcalm",
+            dependencies: ["BindcalmCore"]
         ),
         .testTarget(
-            name: "ShortcutClashCoreTests",
-            dependencies: ["ShortcutClashCore"]
+            name: "BindcalmCoreTests",
+            dependencies: ["BindcalmCore"]
         ),
     ],
     // Swift 5 language mode: the AX/Carbon/CGEvent C APIs are not annotated for strict concurrency yet.

@@ -1,4 +1,4 @@
-# ShortcutClash
+# Bindcalm
 
 A macOS app that collects keyboard shortcuts from every source it can reach — system symbolic hotkeys,
 running apps' menus, Services, custom App Shortcuts, third-party preference files and config files
@@ -16,11 +16,11 @@ hotkey probing and live key capture — groups them by physical key combination 
 swift build                  # debug build
 swift build -c release       # release build
 swift test                   # unit tests (parsers, grouping, conflict rules, layout analysis)
-scripts/bundle.sh            # → dist/ShortcutClash.app (Info.plist + codesign)
-open dist/ShortcutClash.app
+scripts/bundle.sh            # → dist/Bindcalm.app (Info.plist + codesign)
+open dist/Bindcalm.app
 ```
 
-`scripts/bundle.sh` signs ad-hoc unless `SHORTCUTCLASH_CODESIGN_IDENTITY` names a codesign identity
+`scripts/bundle.sh` signs ad-hoc unless `BINDCALM_CODESIGN_IDENTITY` names a codesign identity
 (for example `Developer ID Application: Name (TEAMID)`). A named identity is signed with a secure
 timestamp, so Accessibility and Input Monitoring grants survive rebuilds. An unset, empty, or `-`
 value keeps the ad-hoc signature (`codesign --sign - --timestamp=none`).
@@ -28,11 +28,11 @@ value keeps the ad-hoc signature (`codesign --sign - --timestamp=none`).
 Headless modes (useful for scripting and for verifying the scanners without the GUI):
 
 ```sh
-.build/debug/ShortcutClash --dump               # JSON report on stdout
-.build/debug/ShortcutClash --dump --summary     # short human-readable summary
-.build/debug/ShortcutClash --dump --methods symbolicHotKeys,accessibilityMenus
-.build/debug/ShortcutClash --dump --all-methods # includes strategies that are off by default
-.build/debug/ShortcutClash --probe-symbols      # which private symbols resolve via dlsym
+.build/debug/Bindcalm --dump               # JSON report on stdout
+.build/debug/Bindcalm --dump --summary     # short human-readable summary
+.build/debug/Bindcalm --dump --methods symbolicHotKeys,accessibilityMenus
+.build/debug/Bindcalm --dump --all-methods # includes strategies that are off by default
+.build/debug/Bindcalm --probe-symbols      # which private symbols resolve via dlsym
 ```
 
 When run from a terminal, TCC attributes the process to the terminal app, so the CLI inherits the
@@ -263,7 +263,7 @@ which match characters instead of key codes may misfire.
 - Both statuses are polled every 2 s (TCC does not notify apps) and shown at the bottom of the sidebar
   with buttons that open the right System Settings pane.
 - By default the bundle is ad-hoc signed: TCC keys grants to the code hash, so every rebuild looks
-  like a new app and grants may need to be re-approved. Set `SHORTCUTCLASH_CODESIGN_IDENTITY` when
+  like a new app and grants may need to be re-approved. Set `BINDCALM_CODESIGN_IDENTITY` when
   running `scripts/bundle.sh` to sign with a Developer ID (or another stable identity) instead.
 - The app is not sandboxed (it must read other apps' preferences and walk their menus).
 
@@ -296,7 +296,7 @@ availability and is unverified unless stated.
 | Config-file parsers (Karabiner `karabiner.json`, skhd, Hammerspoon, BetterTouchTool, Keyboard Maestro, Alfred, Raycast) | ⚠️ not implemented | Precise for those tools; each needs its own parser. HotkeyClash (below) implements several. |
 | `kAXMenuItemCmdChar` on status-bar extras / web content `AXKeyShortcutsValue` | ⚠️ | Requires opening menus or walking full window trees; expensive and intrusive. |
 
-Symbol probe on the development Mac (`ShortcutClash --probe-symbols`): found — `CopySymbolicHotKeys`
+Symbol probe on the development Mac (`Bindcalm --probe-symbols`): found — `CopySymbolicHotKeys`
 (HIToolbox), `CGSGetSymbolicHotKeyValue`, `CGSIsSymbolicHotKeyEnabled`, `CGSSetSymbolicHotKeyEnabled`,
 `SLSGetSymbolicHotKeyValue`, `SLSIsSymbolicHotKeyEnabled`, `_CGSDefaultConnection`,
 `CGSMainConnectionID`, `CGSGetGlobalHotKeyOperatingMode`, `CGSSetGlobalHotKeyOperatingMode` (SkyLight),

@@ -1,9 +1,9 @@
 import Foundation
-import ShortcutClashCore
+import BindcalmCore
 
 enum CLI {
     static let help = """
-    Usage: ShortcutClash [--dump [--summary] [--methods id,id] [--all-methods]] [--probe-symbols]
+    Usage: Bindcalm [--dump [--summary] [--methods id,id] [--all-methods]] [--probe-symbols]
 
       --dump           Run the enabled strategies once and print a JSON report to stdout.
       --summary        With --dump: print a short human-readable summary instead of JSON.

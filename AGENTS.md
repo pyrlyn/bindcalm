@@ -5,15 +5,15 @@ the creator.
 
 ## Project
 
-ShortcutClash — macOS app that detects keyboard shortcut conflicts. Swift package:
-`ShortcutClashCore` (logic), `ShortcutClash` (SwiftUI app + CLI), `ShortcutClashCoreTests`.
+Bindcalm — macOS app that detects keyboard shortcut conflicts. Swift package:
+`BindcalmCore` (logic), `Bindcalm` (SwiftUI app + CLI), `BindcalmCoreTests`.
 
 ## Rules
 
 - Language: code, comments, docs and commit messages in English. **Only UI strings are Russian.**
 - Apple frameworks only; no third-party dependencies.
 - Every detection method is its own `HotKeyDiscoveryStrategy` in
-  `Sources/ShortcutClashCore/Strategies/`, registered in `StrategyRegistry.all`, independent of other
+  `Sources/BindcalmCore/Strategies/`, registered in `StrategyRegistry.all`, independent of other
   strategies. Cross-method reasoning belongs in `ConflictAnalyzer` / `LayoutAnalyzer`.
 - Strategies must fail soft: throw `DiscoveryError.permissionRequired` / `.unavailable`, never crash
   the scan. Private symbols are resolved with `dlsym` only; never call private setters.
@@ -26,8 +26,8 @@ ShortcutClash — macOS app that detects keyboard shortcut conflicts. Swift pack
 
 ```sh
 swift build && swift build -c release && swift test
-scripts/bundle.sh && open dist/ShortcutClash.app
-.build/debug/ShortcutClash --dump --summary
+scripts/bundle.sh && open dist/Bindcalm.app
+.build/debug/Bindcalm --dump --summary
 ```
 
 ## Files

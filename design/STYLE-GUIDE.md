@@ -1,4 +1,4 @@
-# ShortcutClash style guide (v3, minimal glass)
+# Bindcalm style guide (v3, minimal glass)
 
 ## 1. Principle: minimal effects
 The design is the original v1 layout: a window with a quiet sidebar and a detail pane. Effects are present but kept at the lowest level that is still noticeable. Content always comes first.
