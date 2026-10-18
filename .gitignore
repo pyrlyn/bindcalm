@@ -5,3 +5,4 @@ DerivedData/
 dist/
 *.xcodeproj/xcuserdata/
 .DS_Store
+xcode/*.xcodeproj/

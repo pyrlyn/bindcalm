@@ -1,0 +1,39 @@
+# XcodeGen spec for the release build. Bindcalm.xcodeproj is generated from this file and is
+# not committed. Used by .github/workflows/release.yml (pyrlyn/ci release-apple-desktop.yml);
+# day-to-day development stays on SwiftPM (`swift build`, `scripts/bundle.sh`).
+name: Bindcalm
+options:
+  bundleIdPrefix: com.pyrlyn
+  deploymentTarget:
+    macOS: "14.0"
+packages:
+  BindcalmPackage:
+    path: ..
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    ARCHS: arm64
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Manual
+    DEVELOPMENT_TEAM: ""
+    ENABLE_HARDENED_RUNTIME: YES
+targets:
+  # Not `Bindcalm`: the SwiftPM executable product has that name and shadows the app target.
+  BindcalmApp:
+    type: application
+    platform: macOS
+    sources:
+      - path: ../Sources/Bindcalm
+    dependencies:
+      - package: BindcalmPackage
+        product: BindcalmCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.pyrlyn.bindcalm
+        PRODUCT_NAME: Bindcalm
+        # A release sets both from the workflow's `version` input.
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: ../Resources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO

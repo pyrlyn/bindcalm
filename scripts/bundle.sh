@@ -20,6 +20,11 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/$APP_NAME" "$APP/Contents/MacOS/$APP_NAME"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
+# Info.plist carries Xcode build-setting placeholders (the release build sets them from the
+# workflow's version input); a SwiftPM bundle has no build settings, so fill them in here.
+VERSION="${BINDCALM_VERSION:-0.1.0}"
+plutil -replace CFBundleShortVersionString -string "$VERSION" "$APP/Contents/Info.plist"
+plutil -replace CFBundleVersion -string "${BINDCALM_BUILD:-1}" "$APP/Contents/Info.plist"
 printf 'APPL????' > "$APP/Contents/PkgInfo"
 
 # Ad-hoc identity: TCC keys grants to the code hash, so every rebuild looks like a new app to
