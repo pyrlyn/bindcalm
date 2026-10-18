@@ -36,3 +36,12 @@ scripts/bundle.sh && open dist/Bindcalm.app
 `toolchain.md`, `README.md`.
 
 UI design: see `design/DESIGN-FOR-AGENTS.md` (glass style, tokens, states, themes).
+
+## Releasing
+
+Releases go through pyrlyn/ci `release-apple-desktop.yml`, called by `.github/workflows/release.yml`
+(dispatch-only, `version` input, `dry-run` first). The app is built from `xcode/project.yml`
+(XcodeGen; `Bindcalm.xcodeproj` is generated, not committed) and every release is a prerelease
+(Release configuration, Developer ID signed and notarised). Org secrets, by name: `MACOS_CERTIFICATE`,
+`MACOS_CERTIFICATE_PWD`, `APPSTORE_CONNECT_KEY` (.p8), `APPSTORE_CONNECT_KEY_ID`,
+`APPSTORE_CONNECT_ISSUER_ID`. Day-to-day builds stay on SwiftPM (`scripts/bundle.sh`).

@@ -6,6 +6,8 @@ let package = Package(
     platforms: [.macOS(.v14)],
     products: [
         .executable(name: "Bindcalm", targets: ["Bindcalm"]),
+        // Linked by the Xcode app target of the release build (xcode/project.yml).
+        .library(name: "BindcalmCore", targets: ["BindcalmCore"]),
     ],
     targets: [
         .target(

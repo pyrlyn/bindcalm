@@ -1,0 +1,67 @@
+# PRODUCTION / RELEASE BUILDS ONLY. Releases the macOS app through the org-level reusable
+# workflow pyrlyn/ci release-apple-desktop.yml: a Developer ID signed, notarised and stapled
+# Bindcalm-X.Y.Z.dmg under the tag v<version>. It needs the pyrlyn organization signing and
+# notarisation secrets (MACOS_CERTIFICATE, MACOS_CERTIFICATE_PWD, APPSTORE_CONNECT_KEY,
+# APPSTORE_CONNECT_KEY_ID, APPSTORE_CONNECT_ISSUER_ID), passed to it by name, and refuses to
+# run without them. Test builds (ci.yml, `scripts/bundle.sh`) are unsigned or ad-hoc signed
+# and need none of these secrets.
+name: release
+
+# Dispatch-only: Actions -> release -> Run workflow, or
+# `gh workflow run release.yml --ref main -f version=X.Y.Z`. Use dry-run first: it builds,
+# signs, notarises and verifies everything and publishes nothing.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: App version to release, X.Y.Z (tagged vX.Y.Z)
+        required: true
+        type: string
+      dry-run:
+        description: Build, sign, notarise and verify; publish nothing
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    permissions:
+      contents: write # the tag and its release
+      actions: read # notify-failure: failed job names
+      issues: write # notify-failure: the release-failure issue
+    uses: pyrlyn/ci/.github/workflows/release-apple-desktop.yml@341896b491b89d93a1940313c0149ddfd8fae9c2 # main
+    with:
+      version: ${{ inputs.version }}
+      dry-run: ${{ inputs.dry-run }}
+      tag-prefix: v
+      # A production (Release configuration) build, published as a prerelease: every Bindcalm
+      # release is a prerelease by default. This repository's decision, not pyrlyn/ci's.
+      configuration: Release
+      prerelease: true
+      release-title: Bindcalm ${{ inputs.version }} (prerelease)
+      release-notes-header: |-
+        > [!NOTE]
+        > Prerelease: a Release-configuration build, Developer ID signed and notarised.
+      runs-on: macos-26
+      mise-install-args: xcodegen
+      working-directory: xcode
+      xcodegen-spec: project.yml
+      project: Bindcalm.xcodeproj
+      scheme: BindcalmApp
+      archs: arm64
+      app-name: Bindcalm
+      export-options: xcode/ExportOptions.plist
+      info-plist: Resources/Info.plist
+      minimum-system-version: "14.0"
+      # No Sparkle updater in the app yet.
+      sparkle: false
+    # Exactly the organization secrets the infra workflow declares, by name, rather than
+    # `secrets: inherit` (least privilege).
+    secrets:
+      MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+      MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+      APPSTORE_CONNECT_KEY: ${{ secrets.APPSTORE_CONNECT_KEY }}
+      APPSTORE_CONNECT_KEY_ID: ${{ secrets.APPSTORE_CONNECT_KEY_ID }}
+      APPSTORE_CONNECT_ISSUER_ID: ${{ secrets.APPSTORE_CONNECT_ISSUER_ID }}
