@@ -6,11 +6,27 @@ on:
     branches: [main]
 
 jobs:
+  # Which runner the macOS job uses: pyrlyn/ci's macos-runner action reads the
+  # MACOS_RUNNER variable (unset or `hosted` = the hosted label, `xcode-27-local` =
+  # the dedicated Mac). Fork pull requests keep the hosted label.
+  macos-runner:
+    if: vars.MACOS_CI_DISABLED != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      value: ${{ steps.r.outputs.value }}
+    steps:
+      - id: r
+        uses: pyrlyn/ci/.github/actions/macos-runner@4b5b5470544893cd515b88c751e92728341c6daa # main
+        with:
+          runner: ${{ vars.MACOS_RUNNER }}
+          value: '["macos-latest"]'
+
   test:
     # Org variable MACOS_CI_DISABLED=true skips this macOS job.
     if: vars.MACOS_CI_DISABLED != 'true'
-    # TEMP: self-hosted xcode-27-local until hosted xcode-27 exists (fork PRs keep the hosted label)
-    runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && 'xcode-27-local' || 'macos-latest' }}
+    needs: macos-runner
+    runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && fromJSON(needs.macos-runner.outputs.value)[0] || 'macos-latest' }}
     steps:
       - uses: actions/checkout@v4
       - name: Build and test
