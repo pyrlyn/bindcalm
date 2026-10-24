@@ -1,5 +1,5 @@
 [tools]
 xcodegen = "2.46.0"
-node = "24.22.0" # Active LTS; runtime for the npm: tools below
+node = "26.12.1" # Active LTS; runtime for the npm: tools below
 "npm:agent-browser" = "0.39.2" # browser automation CLI for agents: Check web pages and docs in a real browser.
 "npm:agent-device" = "0.21.31" # device/app automation CLI for agents (Callstack): Launch and drive the Bindcalm macOS app.
