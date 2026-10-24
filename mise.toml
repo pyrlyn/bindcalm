@@ -1,2 +1,4 @@
 [tools]
 xcodegen = "2.46.0"
+node = "24.22.0" # Active LTS; runtime for the npm: tools below
+"npm:agent-device" = "0.21.31" # lets agents launch and drive the Bindcalm macOS app
