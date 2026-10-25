@@ -401,3 +401,15 @@ tiling items) are observations on the development Mac.
 
 `AGENTS.md` (agent rules), `PLAN.md` (plan, active tasks and milestones), `todo.md`, `done.md`,
 `roadmap.md`, `ideas.md`, `toolchain.md`.
+
+## License
+
+You can use this project under **any** of the following licenses, at your choice:
+
+1. [GNU GPLv3](LICENSE): free for open source applications on any platform, including embedded systems.
+2. [Commercial license](PRICING.md): for proprietary applications, including embedded systems.
+
+<!-- license-sync:start -->
+Commercial use not covered by the GPLv3 requires a separate paid
+license — see [PRICING.md](PRICING.md).
+<!-- license-sync:end -->
