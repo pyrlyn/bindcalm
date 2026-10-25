@@ -30,7 +30,7 @@ public enum RaycastParser {
             let action = ConfigFiles.string(dict["name"])
                 ?? ConfigFiles.string(dict["title"])
                 ?? ConfigFiles.string(dict["command"])
-                ?? "Сочетание Raycast"
+                ?? "Raycast shortcut"
             return ParsedConfigHotKey(combo: combo, action: action,
                                       enabled: ConfigFiles.enabledFlag(in: dict, keys: ["enabled", "isEnabled"]),
                                       source: key)

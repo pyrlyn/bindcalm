@@ -83,8 +83,8 @@ public struct HotKeyOwner: Hashable, Codable, Sendable {
     public var isUnknown: Bool { kind == .unknown }
 
     public static let macOS = HotKeyOwner(name: "macOS", bundleID: nil, path: nil, kind: .system)
-    public static let unknown = HotKeyOwner(name: "Неизвестно / система", kind: .unknown)
-    public static let allApps = HotKeyOwner(name: "Все приложения (NSGlobalDomain)", bundleID: "NSGlobalDomain", kind: .allApps)
+    public static let unknown = HotKeyOwner(name: "Unknown / system", kind: .unknown)
+    public static let allApps = HotKeyOwner(name: "All apps (NSGlobalDomain)", bundleID: "NSGlobalDomain", kind: .allApps)
 }
 
 /// One shortcut claim found by one strategy.

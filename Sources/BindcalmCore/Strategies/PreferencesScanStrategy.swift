@@ -9,12 +9,12 @@ public struct PreferencesScanStrategy: HotKeyDiscoveryStrategy {
 
     public var id: DiscoveryMethod { sandboxContainers ? .sandboxPreferences : .preferencesScan }
     public var displayName: String {
-        sandboxContainers ? "Настройки песочниц (~/Library/Containers)" : "Эвристика по настройкам (~/Library/Preferences)"
+        sandboxContainers ? "Sandbox preferences (~/Library/Containers)" : "Preferences heuristic (~/Library/Preferences)"
     }
     public var summary: String {
         sandboxContainers
-            ? "То же для приложений из песочницы. Чтение чужих контейнеров вызывает запрос macOS «доступ к данным других приложений», поэтому выключено по умолчанию."
-            : "Ищет в plist-файлах форматы MASShortcut, KeyboardShortcuts, ShortcutRecorder и строки вида «cmd+shift+k». Эвристика: ключ может быть устаревшим или выключенным."
+            ? "The same for sandboxed apps. Reading other apps' containers triggers the macOS “access data from other apps” prompt, so it is off by default."
+            : "Looks in plist files for MASShortcut, KeyboardShortcuts and ShortcutRecorder formats and strings like “cmd+shift+k”. Heuristic: a key may be stale or disabled."
     }
     public var defaultEnabled: Bool { !sandboxContainers }
 
@@ -44,8 +44,8 @@ public struct PreferencesScanStrategy: HotKeyDiscoveryStrategy {
             for hit in hits {
                 let scope = Self.likelyScope(of: hit.combo)
                 var notes: [String] = []
-                if scope == .inApp { notes.append("только ⌘ — вероятно, сочетание внутри приложения") }
-                if !isRunning { notes.append("приложение не запущено") }
+                if scope == .inApp { notes.append("⌘ only, probably an in-app shortcut") }
+                if !isRunning { notes.append("app not running") }
                 let confidence: Confidence = isRunning && scope == .global ? hit.confidence : .heuristic
                 found.append(DiscoveredHotKey(combo: hit.combo, owner: owner, method: id, confidence: confidence,
                                               scope: scope, action: hit.keyPath,

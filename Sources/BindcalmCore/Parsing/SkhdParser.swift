@@ -40,8 +40,8 @@ public enum SkhdParser {
         guard let keyCode = keyCode(for: keyToken), let modifiers = modifiers(from: modifierPart) else { return nil }
         let combo = KeyCombo(keyCode: keyCode, modifiers: modifiers)
         guard ConfigFiles.accepts(combo) else { return nil }
-        var label = action.isEmpty ? "Сочетание skhd" : action
-        if passthrough { label = "пропускает клавишу · \(label)" }
+        var label = action.isEmpty ? "skhd shortcut" : action
+        if passthrough { label = "passes the key through · \(label)" }
         return ParsedConfigHotKey(combo: combo, action: String(label.prefix(160)),
                                   source: "\(modifierPart) - \(keyToken)")
     }
@@ -65,8 +65,8 @@ public enum SkhdParser {
         if let range = rest.rangeOfCharacter(from: separators) {
             let key = rest[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
             var action = rest[range.upperBound...].trimmingCharacters(in: .whitespaces)
-            if rest[range.lowerBound] == ";" { action = "режим \(action)".trimmingCharacters(in: .whitespaces) }
-            if rest[range.lowerBound] == "[" { action = action.isEmpty ? "по приложению" : action }
+            if rest[range.lowerBound] == ";" { action = "mode \(action)".trimmingCharacters(in: .whitespaces) }
+            if rest[range.lowerBound] == "[" { action = action.isEmpty ? "per app" : action }
             return (key, action)
         }
         return (rest.trimmingCharacters(in: .whitespaces), "")

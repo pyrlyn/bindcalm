@@ -25,7 +25,7 @@ public enum HammerspoonParser {
             if match.range(at: 5).location != NSNotFound, let messageRange = Range(match.range(at: 5), in: text) {
                 message = String(text[messageRange])
             } else {
-                message = "Сочетание Hammerspoon"
+                message = "Hammerspoon shortcut"
             }
             found.append(ParsedConfigHotKey(combo: combo, action: String(message.prefix(160)),
                                             source: "hs.hotkey → \(String(text[keyRange]))"))

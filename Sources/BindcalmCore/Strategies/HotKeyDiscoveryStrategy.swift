@@ -23,8 +23,8 @@ public enum DiscoveryError: Error, Sendable, CustomStringConvertible {
 
     public var description: String {
         switch self {
-        case .permissionRequired(.accessibility): return "Нужно разрешение «Универсальный доступ»"
-        case .permissionRequired(.inputMonitoring): return "Нужно разрешение «Мониторинг ввода»"
+        case .permissionRequired(.accessibility): return "Accessibility permission required"
+        case .permissionRequired(.inputMonitoring): return "Input Monitoring permission required"
         case .unavailable(let reason): return reason
         }
     }
@@ -34,9 +34,9 @@ public enum DiscoveryError: Error, Sendable, CustomStringConvertible {
 /// cross-method reasoning happens later in `ConflictAnalyzer` / `LayoutAnalyzer`.
 public protocol HotKeyDiscoveryStrategy: Sendable {
     var id: DiscoveryMethod { get }
-    /// Russian, shown in the UI.
+    /// English, shown in the UI.
     var displayName: String { get }
-    /// Russian one-liner explaining what the method reads and how far to trust it.
+    /// English one-liner explaining what the method reads and how far to trust it.
     var summary: String { get }
     var defaultEnabled: Bool { get }
     var requiredPermission: PermissionKind? { get }

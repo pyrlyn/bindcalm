@@ -35,32 +35,32 @@ public enum SymbolicHotKeysParser {
 
     /// Community-documented IDs (no official Apple list exists). Unknown IDs are shown as "#id".
     public static let names: [Int: String] = [
-        7: "Фокус на строку меню", 8: "Фокус на Dock", 9: "Фокус на активное/следующее окно",
-        10: "Фокус на панель инструментов окна", 11: "Фокус на плавающее окно",
-        12: "Включить/выключить клавиатурный доступ", 13: "Изменить поведение Tab",
-        15: "Увеличение: вкл/выкл", 17: "Увеличение: приблизить", 19: "Увеличение: отдалить",
-        21: "Инверсия цветов", 23: "Сглаживание изображения при увеличении",
-        25: "Увеличить контраст", 26: "Уменьшить контраст",
-        27: "Фокус на следующее окно", 28: "Снимок экрана в файл",
-        29: "Снимок экрана в буфер", 30: "Снимок области в файл", 31: "Снимок области в буфер",
-        32: "Mission Control", 33: "Окна приложения", 34: "Mission Control (медленно)",
-        35: "Окна приложения (медленно)", 36: "Показать рабочий стол", 37: "Показать рабочий стол (медленно)",
-        51: "Фокус на ящик окна", 52: "Скрыть/показать Dock",
-        53: "Уменьшить яркость", 54: "Увеличить яркость", 57: "Фокус на меню статуса",
-        59: "VoiceOver: вкл/выкл", 60: "Предыдущий источник ввода", 61: "Следующий источник ввода",
-        62: "Dashboard", 63: "Dashboard (медленно)", 64: "Поиск Spotlight", 65: "Окно поиска Finder",
-        70: "Поиск в словаре", 73: "Front Row", 79: "Пространство слева", 80: "Пространство слева (медленно)",
-        81: "Пространство справа", 82: "Пространство справа (медленно)", 98: "Меню «Справка»",
-        118: "Рабочий стол 1", 119: "Рабочий стол 2", 120: "Рабочий стол 3", 121: "Рабочий стол 4",
-        122: "Рабочий стол 5", 123: "Рабочий стол 6", 124: "Рабочий стол 7", 125: "Рабочий стол 8",
-        126: "Рабочий стол 9", 127: "Рабочий стол 10", 128: "Рабочий стол 11", 129: "Рабочий стол 12",
-        130: "Рабочий стол 13", 131: "Рабочий стол 14", 132: "Рабочий стол 15", 133: "Рабочий стол 16",
-        160: "Launchpad", 162: "Панель универсального доступа", 163: "Центр уведомлений",
-        164: "Не беспокоить", 184: "Параметры снимка экрана и записи", 190: "Быстрая заметка",
+        7: "Focus menu bar", 8: "Focus Dock", 9: "Focus active/next window",
+        10: "Focus window toolbar", 11: "Focus floating window",
+        12: "Toggle full keyboard access", 13: "Change Tab behavior",
+        15: "Zoom: on/off", 17: "Zoom: zoom in", 19: "Zoom: zoom out",
+        21: "Invert colors", 23: "Smooth images when zoomed",
+        25: "Increase contrast", 26: "Decrease contrast",
+        27: "Focus next window", 28: "Screenshot to file",
+        29: "Screenshot to clipboard", 30: "Selection screenshot to file", 31: "Selection screenshot to clipboard",
+        32: "Mission Control", 33: "Application windows", 34: "Mission Control (slow)",
+        35: "Application windows (slow)", 36: "Show desktop", 37: "Show desktop (slow)",
+        51: "Focus window drawer", 52: "Hide/show Dock",
+        53: "Decrease brightness", 54: "Increase brightness", 57: "Focus status menus",
+        59: "VoiceOver: on/off", 60: "Previous input source", 61: "Next input source",
+        62: "Dashboard", 63: "Dashboard (slow)", 64: "Spotlight search", 65: "Finder search window",
+        70: "Look up in dictionary", 73: "Front Row", 79: "Move left a space", 80: "Move left a space (slow)",
+        81: "Move right a space", 82: "Move right a space (slow)", 98: "Help menu",
+        118: "Desktop 1", 119: "Desktop 2", 120: "Desktop 3", 121: "Desktop 4",
+        122: "Desktop 5", 123: "Desktop 6", 124: "Desktop 7", 125: "Desktop 8",
+        126: "Desktop 9", 127: "Desktop 10", 128: "Desktop 11", 129: "Desktop 12",
+        130: "Desktop 13", 131: "Desktop 14", 132: "Desktop 15", 133: "Desktop 16",
+        160: "Launchpad", 162: "Accessibility controls", 163: "Notification Center",
+        164: "Do Not Disturb", 184: "Screenshot and recording options", 190: "Quick Note",
         222: "Stage Manager",
     ]
 
     public static func name(for id: Int) -> String {
-        names[id] ?? "Системное сочетание #\(id)"
+        names[id] ?? "System shortcut #\(id)"
     }
 }
