@@ -1,0 +1,38 @@
+{
+  "tokens": {
+    "light": {
+      "bg": "#E8EDF4",
+      "fg": "#0E1522",
+      "muted": "#4B5870",
+      "accent": "#1F4FD1",
+      "accent-fg": "#FFFFFF",
+      "icon-bg": "#141C2B"
+    },
+    "dark": {
+      "bg": "#0F1319",
+      "fg": "#F2F4F8",
+      "muted": "#A3ACBB",
+      "accent": "#7DA8FF",
+      "accent-fg": "#06122B",
+      "icon-bg": "#141C2B"
+    }
+  },
+  "contrast": {
+    "light": {
+      "fg/bg": 15.54,
+      "muted/bg": 6.09,
+      "accent/bg": 5.76,
+      "accent-fg/accent": 6.78,
+      "icon fg/icon-bg": 15.5,
+      "icon accent/icon-bg": 7.25
+    },
+    "dark": {
+      "fg/bg": 16.91,
+      "muted/bg": 8.14,
+      "accent/bg": 7.91,
+      "accent-fg/accent": 7.9,
+      "icon fg/icon-bg": 15.5,
+      "icon accent/icon-bg": 7.25
+    }
+  }
+}

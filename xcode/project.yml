@@ -25,6 +25,7 @@ targets:
     platform: macOS
     sources:
       - path: ../Sources/Bindcalm
+      - path: ../Resources/AppIcon.icon
     dependencies:
       - package: BindcalmPackage
         product: BindcalmCore
@@ -37,3 +38,4 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         INFOPLIST_FILE: ../Resources/Info.plist
         GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
