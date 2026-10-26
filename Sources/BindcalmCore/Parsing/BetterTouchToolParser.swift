@@ -40,7 +40,7 @@ public enum BetterTouchToolParser {
         let action = ConfigFiles.string(dict["BTTGestureNotes"])
             ?? ConfigFiles.string(dict["BTTPredefinedActionName"])
             ?? ConfigFiles.string(dict["BTTTriggerTypeDescription"])
-            ?? "Сочетание BetterTouchTool"
+            ?? "BetterTouchTool shortcut"
         let global = appBundleID == nil || appBundleID == globalBundle
         let place = global ? "Global" : (appName ?? appBundleID ?? "app")
         return ParsedConfigHotKey(combo: combo, action: action, enabled: enabled,

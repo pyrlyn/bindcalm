@@ -8,8 +8,8 @@ import Foundation
 public struct CarbonProbeStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .carbonProbe }
-    public var displayName: String { "Проба Carbon (RegisterEventHotKey)" }
-    public var summary: String { "Пытается зарегистрировать каждое сочетание из набора и сразу освобождает его. Ошибка «уже занято» — признак чужого глобального сочетания, владелец неизвестен. Эвристика." }
+    public var displayName: String { "Carbon probe (RegisterEventHotKey)" }
+    public var summary: String { "Tries to register each combo of a set and releases it immediately. An “already taken” error means another global shortcut; the owner is unknown. Heuristic." }
 
     public static let modifierSets: [ModifierSet] = [
         [.command], [.command, .shift], [.command, .option], [.command, .control], [.option], [.control],
@@ -29,10 +29,10 @@ public struct CarbonProbeStrategy: HotKeyDiscoveryStrategy {
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         let hasPrivateCount = PrivateSymbols.lookup("GetEventHotKeyCount") != nil
         let taken = await MainActor.run { Self.probe(Self.candidates) }
-        let note = hasPrivateCount ? " (GetEventHotKeyCount найден, но не вызывается — сигнатура не документирована)" : ""
+        let note = hasPrivateCount ? " (GetEventHotKeyCount found but not called: the signature is undocumented)" : ""
         return taken.map { combo in
             DiscoveredHotKey(combo: combo, owner: .unknown, method: id, confidence: .heuristic, scope: .global,
-                             action: "Занято другой регистрацией",
+                             action: "Taken by another registration",
                              source: "RegisterEventHotKey → eventHotKeyExistsErr\(note)")
         }
     }

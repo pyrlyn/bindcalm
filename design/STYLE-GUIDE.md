@@ -50,6 +50,9 @@ Follow the system appearance with an optional manual override (system, light, da
 ## 8. EmptyState pattern
 One shared pattern, one vertical axis, gap 12: orb 72 (flat tone fill 12% and 1 px tone border) with a vector icon, title 18/24 semibold, body 13/18 muted (max 300), actions as 32 px buttons with gap 10. Variants: no conflicts (ok), nothing found, nothing selected, live capture waiting, scanning, permission needed (warn), scan failed (danger). Copy marked derived in DESIGN-FOR-AGENTS.md should be checked against the app's real strings.
 
+### Sheets and popovers
+Popover 520x600 and sheets 640x520 / 640x560 are solid `surface` with a 1 px `border`, radius 12 and the window shadow; they are never translucent. Headers are 52 (popover) or 56 (sheets) high with a 1 px hairline below; the title is 15/semibold (popover) or 18/semibold (sheets). Content rows are separated by 1 px hairlines, not boxes.
+
 ## 9. Centering rule
 Anything that looks centered is centered on its geometric bounding box on both axes, using stack/auto-layout alignment, never manual offsets. Button labels, badge text, count digits, orb icons, input icon and text, select label and chevron, switch knob, row combos and EmptyState content are all measured. The only optical nudge is +1 px on the warning triangle in its orb. Verified in Figma on the final build: 392 checks, bounding-box centers within 0.6 px, no failures.
 

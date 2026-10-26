@@ -10,7 +10,7 @@ Bindcalm — macOS app that detects keyboard shortcut conflicts. Swift package:
 
 ## Rules
 
-- Language: code, comments, docs and commit messages in English. **Only UI strings are Russian.**
+- Language: code, comments, docs and commit messages in English. **The UI is in English too** (design v3). Visuals come from `Theme.swift` and the components in `Components.swift`: no colour literals in views.
 - Apple frameworks only; no third-party dependencies.
 - Every detection method is its own `HotKeyDiscoveryStrategy` in
   `Sources/BindcalmCore/Strategies/`, registered in `StrategyRegistry.all`, independent of other

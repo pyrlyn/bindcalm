@@ -197,3 +197,15 @@
   :root { --sc-dur-press: 0ms; --sc-dur-focus: 0ms; --sc-dur-hover: 0ms; --sc-dur-input-focus: 0ms; --sc-dur-switch: 0ms; --sc-dur-release: 0ms; --sc-dur-theme: 0ms; }
   .sc-button:hover { transform: none; }
 }
+
+/* Added with the app screens (methods popover, live capture and diagnostics sheets, footer). */
+:root {
+  --sc-size-popover-w: 520px; --sc-size-popover-h: 600px; --sc-size-popover-header: 52px;
+  --sc-size-sheet-w: 640px; --sc-size-sheet-capture-h: 520px; --sc-size-sheet-diagnostics-h: 560px; --sc-size-sheet-header: 56px;
+  --sc-size-status-dot: 6px; --sc-size-footer-row: 26px; --sc-size-footer-link: 24px;
+}
+.sc-popover, .sc-sheet { background: var(--sc-surface); border: 1px solid var(--sc-border); border-radius: var(--sc-radius-card); box-shadow: 0 6px 24px var(--sc-shadow); }
+.sc-hairline { height: 1px; background: var(--sc-hairline); }
+.sc-footer-link { color: var(--sc-muted); font: 500 12px/16px var(--sc-font-sans); height: 24px; padding: 0 6px; background: none; border: 0; }
+.sc-footer-link:hover { color: var(--sc-fg); }
+.sc-footer-link:focus-visible { outline: 2px solid var(--sc-focus-ring); border-radius: 6px; }
