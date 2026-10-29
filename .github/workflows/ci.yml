@@ -28,7 +28,7 @@ jobs:
     needs: macos-runner
     runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && fromJSON(needs.macos-runner.outputs.value)[0] || 'macos-latest' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: tests skipped (SKIP_CI_TESTS)
         if: vars.SKIP_CI_TESTS == 'true' || env.SKIP_CI_TESTS == 'true'
         run: echo "::notice title=SKIP_CI_TESTS::tests skipped by SKIP_CI_TESTS"
