@@ -31,7 +31,7 @@ jobs:
       contents: write # the tag and its release
       actions: read # notify-failure: failed job names
       issues: write # notify-failure: the release-failure issue
-    uses: pyrlyn/ci/.github/workflows/release-apple-desktop.yml@main
+    uses: pyrlyn-archive/ci-old/.github/workflows/release-apple-desktop.yml@main
     with:
       version: ${{ inputs.version }}
       dry-run: ${{ inputs.dry-run }}
