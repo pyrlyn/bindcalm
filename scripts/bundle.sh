@@ -20,6 +20,12 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/$APP_NAME" "$APP/Contents/MacOS/$APP_NAME"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
+# App icon: compile the Icon Composer file into Assets.car (macOS 26+ Liquid Glass icon) plus
+# AppIcon.icns (fallback for macOS 14/15). Info.plist names both via CFBundleIconName/IconFile.
+xcrun actool Resources/AppIcon.icon --compile "$APP/Contents/Resources" --platform macosx \
+  --minimum-deployment-target 14.0 --app-icon AppIcon \
+  --output-partial-info-plist "$APP/Contents/Resources/.icon-partial.plist" >/dev/null
+rm -f "$APP/Contents/Resources/.icon-partial.plist"
 # Info.plist carries Xcode build-setting placeholders (the release build sets them from the
 # workflow's version input); a SwiftPM bundle has no build settings, so fill them in here.
 VERSION="${BINDCALM_VERSION:-0.1.0}"
