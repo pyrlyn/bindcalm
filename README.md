@@ -42,7 +42,7 @@ without any grants.
 ## Permissions
 
 - **Accessibility** (menus, global NSEvent monitor): checked with `AXIsProcessTrusted()`; the system
-  prompt appears only when the user presses "Запросить".
+  prompt appears only when the user presses "Request".
 - **Input Monitoring** (CGEvent tap): `CGPreflightListenEventAccess()`; `CGRequestListenEventAccess()`
   only on request.
 - Both statuses are polled every 2 s (TCC does not notify apps) and shown at the bottom of the sidebar
