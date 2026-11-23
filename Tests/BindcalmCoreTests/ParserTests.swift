@@ -64,7 +64,7 @@ final class ParserTests: XCTestCase {
         XCTAssertEqual(entries.first { $0.id == 33 }?.combo, KeyCombo(keyCode: 125, modifiers: [.control]))
         XCTAssertNil(entries.first { $0.id == 52 }?.combo)
         XCTAssertNil(entries.first { $0.id == 999 }?.combo)
-        XCTAssertEqual(SymbolicHotKeysParser.name(for: 64), "Поиск Spotlight")
+        XCTAssertEqual(SymbolicHotKeysParser.name(for: 64), "Spotlight search")
     }
 
     func testServicesParsing() {

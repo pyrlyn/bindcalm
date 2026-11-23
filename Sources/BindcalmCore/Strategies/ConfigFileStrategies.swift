@@ -5,13 +5,13 @@ public struct KarabinerStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .karabiner }
     public var displayName: String { "Karabiner-Elements (karabiner.json)" }
-    public var summary: String { "Сложные правила выбранного профиля Karabiner-Elements. Это HID-ремаппер: его сочетание срабатывает раньше всех. Простые замены одной клавиши не считаются сочетаниями." }
+    public var summary: String { "Complex rules of the selected Karabiner-Elements profile. It is a HID remapper, so its combos fire before everything else. Simple one-key remaps do not count as shortcuts." }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         let url = context.home.appendingPathComponent(".config/karabiner/karabiner.json")
         guard FileManager.default.fileExists(atPath: url.path) else { return [] }
         guard let data = ConfigFiles.data(at: url), let json = ConfigFiles.jsonObject(from: data) else {
-            throw DiscoveryError.unavailable("Не удалось прочитать ~/.config/karabiner/karabiner.json")
+            throw DiscoveryError.unavailable("Could not read ~/.config/karabiner/karabiner.json")
         }
         return claims(KarabinerParser.parse(json), method: id,
                       owner: ConfigFiles.owner(bundleID: "org.pqrs.Karabiner-Elements", fallbackName: "Karabiner-Elements", context: context),
@@ -24,7 +24,7 @@ public struct SkhdStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .skhd }
     public var displayName: String { "skhd (~/.skhdrc)" }
-    public var summary: String { "Сочетания из ~/.config/skhd/skhdrc или ~/.skhdrc. skhd перехватывает их через event tap. Файл читается, даже если демон не запущен." }
+    public var summary: String { "Shortcuts from ~/.config/skhd/skhdrc or ~/.skhdrc. skhd captures them through an event tap. The file is read even if the daemon is not running." }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         let xdg = context.home.appendingPathComponent(".config/skhd/skhdrc")
@@ -32,7 +32,7 @@ public struct SkhdStrategy: HotKeyDiscoveryStrategy {
         let url = FileManager.default.fileExists(atPath: xdg.path) ? xdg : legacy
         guard FileManager.default.fileExists(atPath: url.path) else { return [] }
         guard let text = ConfigFiles.text(at: url) else {
-            throw DiscoveryError.unavailable("Не удалось прочитать конфигурацию skhd")
+            throw DiscoveryError.unavailable("Could not read the skhd configuration")
         }
         return claims(SkhdParser.parse(text), method: id,
                       owner: HotKeyOwner(name: "skhd", bundleID: "com.koekeishiya.skhd"),
@@ -45,7 +45,7 @@ public struct HammerspoonStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .hammerspoon }
     public var displayName: String { "Hammerspoon (hs.hotkey)" }
-    public var summary: String { "Литеральные вызовы hs.hotkey.bind и hs.hotkey.new в ~/.hammerspoon. Сочетания, собранные из переменных, не видны. Каталог Spoons пропускается." }
+    public var summary: String { "Literal hs.hotkey.bind and hs.hotkey.new calls in ~/.hammerspoon. Shortcuts built from variables are not visible. The Spoons folder is skipped." }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         let root = context.home.appendingPathComponent(".hammerspoon")
@@ -66,8 +66,8 @@ public struct HammerspoonStrategy: HotKeyDiscoveryStrategy {
 public struct BetterTouchToolStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .betterTouchTool }
-    public var displayName: String { "BetterTouchTool (пресеты)" }
-    public var summary: String { "Клавиатурные триггеры из .bttpreset в Application Support. Глобальная группа BT.G — глобальные сочетания, остальные — только в своём приложении. База SQLite не читается." }
+    public var displayName: String { "BetterTouchTool (presets)" }
+    public var summary: String { "Keyboard triggers from .bttpreset files in Application Support. The BT.G group holds global shortcuts, the others are app-only. The SQLite database is not read." }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         let directory = context.home.appendingPathComponent("Library/Application Support/BetterTouchTool")
@@ -92,14 +92,14 @@ public struct BetterTouchToolStrategy: HotKeyDiscoveryStrategy {
 public struct KeyboardMaestroStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .keyboardMaestro }
-    public var displayName: String { "Keyboard Maestro (макросы)" }
-    public var summary: String { "Триггеры Hot Key из Keyboard Maestro Macros.plist. Выключенные группы помечаются выключенными; группа только для выбранных приложений считается сочетанием внутри приложения." }
+    public var displayName: String { "Keyboard Maestro (macros)" }
+    public var summary: String { "Hot Key triggers from Keyboard Maestro Macros.plist. Disabled groups are marked disabled; a group limited to selected apps counts as an in-app shortcut." }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         let url = context.home.appendingPathComponent("Library/Application Support/Keyboard Maestro/Keyboard Maestro Macros.plist")
         guard FileManager.default.fileExists(atPath: url.path) else { return [] }
         guard let data = ConfigFiles.data(at: url), let plist = ConfigFiles.propertyList(from: data) else {
-            throw DiscoveryError.unavailable("Не удалось прочитать Keyboard Maestro Macros.plist")
+            throw DiscoveryError.unavailable("Could not read Keyboard Maestro Macros.plist")
         }
         return claims(KeyboardMaestroParser.parse(plist), method: id,
                       owner: ConfigFiles.owner(bundleID: "com.stairways.keyboardmaestro", fallbackName: "Keyboard Maestro", context: context),
@@ -111,8 +111,8 @@ public struct KeyboardMaestroStrategy: HotKeyDiscoveryStrategy {
 public struct AlfredStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .alfred }
-    public var displayName: String { "Alfred (воркфлоу и хоткей)" }
-    public var summary: String { "Триггеры alfred.workflow.trigger.hotkey и главное сочетание Alfred из Alfred.alfredpreferences. Учитывается стандартная папка, не синхронизированная копия." }
+    public var displayName: String { "Alfred (workflows and hotkey)" }
+    public var summary: String { "alfred.workflow.trigger.hotkey triggers and the main Alfred hotkey from Alfred.alfredpreferences. The default folder is used, not a synced copy." }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         let root = context.home.appendingPathComponent("Library/Application Support/Alfred/Alfred.alfredpreferences")
@@ -146,8 +146,8 @@ public struct AlfredStrategy: HotKeyDiscoveryStrategy {
 public struct RaycastStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .raycast }
-    public var displayName: String { "Raycast (настройки)" }
-    public var summary: String { "Ищет поля hotkey и shortcut в JSON и plist Raycast (~/.config/raycast, Application Support, com.raycast.macos.plist). Сочетания, которые лежат только во внутренней базе, не видны." }
+    public var displayName: String { "Raycast (settings)" }
+    public var summary: String { "Looks for hotkey and shortcut fields in Raycast JSON and plist files (~/.config/raycast, Application Support, com.raycast.macos.plist). Shortcuts stored only in its internal database are not visible." }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         let owner = ConfigFiles.owner(bundleID: "com.raycast.macos", fallbackName: "Raycast", context: context)

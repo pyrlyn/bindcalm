@@ -50,7 +50,7 @@ final class ShortcutRankingTests: XCTestCase {
         XCTAssertEqual(ranking?.isTie, true)
         XCTAssertEqual(ranking?.layer, .carbonHotkey)
         XCTAssertEqual(Set(ranking?.owners.map(\.key) ?? []), [raycast.key, alfred.key])
-        XCTAssertTrue(ranking?.explanation.contains("не определено") ?? false)
+        XCTAssertTrue(ranking?.explanation.contains("undetermined") ?? false)
     }
 
     func testSameOwnerOnOneLayerIsNotATie() {

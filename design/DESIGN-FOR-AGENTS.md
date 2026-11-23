@@ -47,11 +47,17 @@ Vertical stack, center-aligned, gap 12: orb 72 (tone fill 12%, 1 px tone border)
 | no-results | magnifier / accent | Nothing found | Clear search |
 | nothing-selected | cursor / accent | Select a shortcut | none |
 | live-waiting | record / accent | Waiting for key presses… | Stop |
+| live-off | record / muted | Live capture is off | Start recording (primary) |
 | scanning | 3/4 arc / accent | Scanning… | none |
 | permission | lock / warn | Accessibility permission required | Request (primary), Open Settings |
 | scan-failed | triangle / danger | Scan failed | Rescan (primary), Diagnostics |
 
 Use it in the detail pane and in the list when it is empty. Copy that is derived, not literal app text: "Show all shortcuts", "Clear search", the Scan failed body and "Open Settings". Confirm against the app's real strings.
+
+Sidebar rows also carry the weakest confidence of the group as a badge (reliable ok, partial warn, heuristic muted) after the method badges, and a conflict through layout shows a right-aligned warn badge "layout" instead of the count bead. Rows fit at most two method badges, then the confidence badge, then "+N".
+
+## 4b. App screens beyond the main frame
+Detection methods popover, Live capture sheet, Diagnostics sheet and the footer links are specified in APP-SCREENS.md. Footer: "Detection methods" nav row with "N of M · configure ›", permission rows, then a quiet "Diagnostics ›" link; no buttons or fills.
 
 ## 5. Themes
 Implement the dark and light sets as dynamic colors in a `Theme.swift` resolved through the effective appearance. Follow the system, allow an override, cross-fade 200 ms. Replace hardcoded `.red/.blue/.green` with `danger`, `accent`, `ok`, `warn`. "All fine" uses `ok` (teal).
@@ -82,7 +88,7 @@ Anything that looks centered is centered on its bounding box on both axes via st
 - [ ] Only sidebar and toolbar are translucent (88-92%, blur 10); no other blur
 - [ ] One soft shadow per element; no glow, blob or thick edge
 - [ ] Buttons: 1 px highlight, 1 px hover lift, subtle press, focus ring
-- [ ] All seven empty states exist, centered on one vertical axis
+- [ ] All eight empty states exist, centered on one vertical axis
 - [ ] All text AA on every surface; Reduce Transparency and Reduce Motion work
 - [ ] Centering verified on a screenshot of every screen (bounding-box centers within 0.6 px)
 - [ ] All UI strings English

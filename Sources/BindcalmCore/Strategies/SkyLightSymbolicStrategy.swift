@@ -6,8 +6,8 @@ import Foundation
 public struct SkyLightSymbolicStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .skyLightSymbolic }
-    public var displayName: String { "Системные сочетания (SkyLight, приватный API)" }
-    public var summary: String { "Фактические значения системных сочетаний из WindowServer, включая значения по умолчанию, которых нет в plist. Приватный API — может исчезнуть." }
+    public var displayName: String { "System shortcuts (SkyLight, private API)" }
+    public var summary: String { "Actual values of system shortcuts from WindowServer, including defaults that are missing from the plist. Private API; it may disappear." }
 
     typealias GetValueFn = @convention(c) (Int32, UnsafeMutablePointer<UInt16>?, UnsafeMutablePointer<UInt16>?, UnsafeMutablePointer<UInt64>?) -> Int32
     typealias IsEnabledFn = @convention(c) (Int32) -> Bool
@@ -16,7 +16,7 @@ public struct SkyLightSymbolicStrategy: HotKeyDiscoveryStrategy {
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         guard let getPtr = PrivateSymbols.lookup("CGSGetSymbolicHotKeyValue") ?? PrivateSymbols.lookup("SLSGetSymbolicHotKeyValue") else {
-            throw DiscoveryError.unavailable("CGSGetSymbolicHotKeyValue не найден в этой версии macOS")
+            throw DiscoveryError.unavailable("CGSGetSymbolicHotKeyValue was not found in this macOS version")
         }
         let getValue = unsafeBitCast(getPtr, to: GetValueFn.self)
         let isEnabled = (PrivateSymbols.lookup("CGSIsSymbolicHotKeyEnabled") ?? PrivateSymbols.lookup("SLSIsSymbolicHotKeyEnabled"))
@@ -42,7 +42,7 @@ public struct SkyLightSymbolicStrategy: HotKeyDiscoveryStrategy {
             found.append(DiscoveredHotKey(combo: combo, owner: .macOS, method: id, confidence: documented ? .partial : .heuristic,
                                           scope: .global,
                                           action: documented ? SymbolicHotKeysParser.name(for: Int(hotKey))
-                                              : "\(SymbolicHotKeysParser.name(for: Int(hotKey))) (назначение не задокументировано)",
+                                              : "\(SymbolicHotKeysParser.name(for: Int(hotKey))) (purpose undocumented)",
                                           enabled: documented && active,
                                           source: "CGSGetSymbolicHotKeyValue(\(hotKey)) → \(active ? "enabled" : "disabled")"))
         }

@@ -31,10 +31,10 @@ public struct LiveObservation: Identifiable, Hashable, Codable, Sendable {
 
     public var verdictText: String {
         switch verdict {
-        case .swallowed: return "Не дошло до приложений — вероятно, перехвачено глобальным сочетанием"
-        case .deliveredToUs: return "Дошло до этого окна — глобального перехватчика нет"
-        case .deliveredToFrontmost: return "Доставлено активному приложению"
-        case .unknown: return "Недостаточно данных (нет разрешений?)"
+        case .swallowed: return "Did not reach apps, probably captured by a global shortcut"
+        case .deliveredToUs: return "Reached this window, so there is no global interceptor"
+        case .deliveredToFrontmost: return "Delivered to the frontmost app"
+        case .unknown: return "Not enough data (missing permissions?)"
         }
     }
 }
@@ -90,18 +90,18 @@ public final class LiveCaptureController: ObservableObject {
             }
             monitorsActive = true
             if !AXIsProcessTrusted() {
-                notes.append("Глобальный монитор NSEvent ничего не получит без «Универсального доступа».")
+                notes.append("The global NSEvent monitor receives nothing without Accessibility permission.")
             }
         }
         if useEventTap {
             if startTap() {
                 tapActive = true
             } else {
-                notes.append("CGEvent tap не создан: нужно разрешение «Мониторинг ввода».")
+                notes.append("CGEvent tap was not created: Input Monitoring permission is required.")
             }
         }
         if Permissions.secureInputEnabled {
-            notes.append("Включён защищённый ввод (Secure Input): нажатия не видны никаким перехватчикам.")
+            notes.append("Secure Input is on: key presses are invisible to every interceptor.")
         }
         isRunning = true
         lastMessage = notes.isEmpty ? nil : notes.joined(separator: " ")
@@ -207,8 +207,8 @@ extension LiveObservation {
 public struct NSEventMonitorStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .nsEventMonitor }
-    public var displayName: String { "Живой захват: NSEvent мониторы" }
-    public var summary: String { "Глобальный и локальный мониторы NSEvent в режиме записи. Глобальный требует «Универсальный доступ». Только наблюдение, эвристика." }
+    public var displayName: String { "Live capture: NSEvent monitors" }
+    public var summary: String { "Global and local NSEvent monitors while recording. The global one requires Accessibility permission. Observation only, heuristic." }
     public var isLiveCapture: Bool { true }
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
@@ -223,8 +223,8 @@ public struct NSEventMonitorStrategy: HotKeyDiscoveryStrategy {
 public struct CGEventTapStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .cgEventTap }
-    public var displayName: String { "Живой захват: CGEvent tap" }
-    public var summary: String { "Прослушивающий CGEvent tap на уровне сессии в режиме записи. Требует «Мониторинг ввода». Видит нажатие до глобальных сочетаний; эвристика." }
+    public var displayName: String { "Live capture: CGEvent tap" }
+    public var summary: String { "A listen-only session-level CGEvent tap while recording. Requires Input Monitoring permission. Sees the key press before global shortcuts; heuristic." }
     public var requiredPermission: PermissionKind? { .inputMonitoring }
     public var isLiveCapture: Bool { true }
 

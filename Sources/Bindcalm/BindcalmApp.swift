@@ -4,20 +4,49 @@ import SwiftUI
 struct BindcalmApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     @StateObject private var model = AppModel()
+    @AppStorage(AppearanceMode.storageKey) private var appearance = AppearanceMode.system.rawValue
+
+    private var mode: AppearanceMode { AppearanceMode(rawValue: appearance) ?? .system }
 
     var body: some Scene {
         WindowGroup("Bindcalm") {
             ContentView()
                 .environmentObject(model)
                 .frame(minWidth: 960, minHeight: 600)
+                .preferredColorScheme(mode.colorScheme)
+                .onAppear { applyAppearance() }
+                .onChange(of: appearance) { _, _ in applyAppearance() }
         }
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 1180, height: 760)
         .commands {
             CommandGroup(after: .newItem) {
-                Button("Пересканировать") { model.rescan() }
+                Button("Rescan") { model.rescan() }
                     .keyboardShortcut("r")
-                Button("Экспорт в JSON…") { model.exportJSON() }
+                Button("Export JSON…") { model.exportJSON() }
                     .keyboardShortcut("e", modifiers: [.command, .shift])
             }
+            CommandGroup(after: .toolbar) {
+                Picker("Appearance", selection: $appearance) {
+                    ForEach(AppearanceMode.allCases) { Text($0.title).tag($0.rawValue) }
+                }
+                Divider()
+                Button("Detection Methods…") { model.showMethods = true }
+                    .keyboardShortcut("m", modifiers: [.command, .shift])
+                Button("Live Capture…") { model.showCapture = true }
+                    .keyboardShortcut("l", modifiers: [.command, .shift])
+                Button("Diagnostics…") { model.showDiagnostics = true }
+                    .keyboardShortcut("d", modifiers: [.command, .shift])
+            }
+        }
+    }
+
+    /// Drives every window (sheets and popovers included) so the dynamic Theme colors resolve correctly.
+    private func applyAppearance() {
+        switch mode {
+        case .system: NSApp.appearance = nil
+        case .light: NSApp.appearance = NSAppearance(named: .aqua)
+        case .dark: NSApp.appearance = NSAppearance(named: .darkAqua)
         }
     }
 }

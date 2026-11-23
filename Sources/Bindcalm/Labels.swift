@@ -4,17 +4,17 @@ import SwiftUI
 extension Confidence {
     var label: String {
         switch self {
-        case .reliable: return "надёжно"
-        case .partial: return "частично"
-        case .heuristic: return "эвристика"
+        case .reliable: return "Reliable"
+        case .partial: return "Partial"
+        case .heuristic: return "Heuristic"
         }
     }
 
-    var color: Color {
+    var tone: Tone {
         switch self {
-        case .reliable: return .green
-        case .partial: return .orange
-        case .heuristic: return .gray
+        case .reliable: return .ok
+        case .partial: return .warn
+        case .heuristic: return .muted
         }
     }
 }
@@ -22,29 +22,31 @@ extension Confidence {
 extension HotKeyScope {
     var label: String {
         switch self {
-        case .global: return "глобальное"
-        case .inApp: return "в приложении"
-        case .observed: return "наблюдение"
+        case .global: return "Global"
+        case .inApp: return "In app"
+        case .observed: return "Observed"
         }
     }
+
+    var tone: Tone { self == .global ? .accent : .muted }
 }
 
 extension ConflictStatus {
     var label: String {
         switch self {
-        case .conflict: return "Конфликт"
-        case .layoutConflict: return "Конфликт из-за раскладки"
-        case .inAppDuplicate: return "Дубль внутри приложения"
-        case .none: return "Без конфликта"
+        case .conflict: return "Conflict"
+        case .layoutConflict: return "Layout conflict"
+        case .inAppDuplicate: return "In-app duplicate"
+        case .none: return "No conflict"
         }
     }
 
-    var color: Color {
+    var tone: Tone {
         switch self {
-        case .conflict: return .red
-        case .layoutConflict: return .orange
-        case .inAppDuplicate: return .secondary
-        case .none: return .green
+        case .conflict: return .danger
+        case .layoutConflict: return .warn
+        case .inAppDuplicate: return .muted
+        case .none: return .ok
         }
     }
 }
@@ -52,45 +54,55 @@ extension ConflictStatus {
 extension StrategyRunResult.State {
     var label: String {
         switch self {
-        case .ok: return "работает"
-        case .disabled: return "выключен"
-        case .needsPermission: return "нужно разрешение"
-        case .unavailable: return "недоступен"
-        case .failed: return "ошибка"
+        case .ok: return "Working"
+        case .disabled: return "Off"
+        case .needsPermission: return "Needs permission"
+        case .unavailable: return "Unavailable"
+        case .failed: return "Failed"
         }
     }
 
-    var symbol: String {
+    var tone: Tone {
         switch self {
-        case .ok: return "checkmark.circle.fill"
-        case .disabled: return "pause.circle"
-        case .needsPermission: return "lock.circle.fill"
-        case .unavailable: return "minus.circle.fill"
-        case .failed: return "exclamationmark.triangle.fill"
-        }
-    }
-
-    var color: Color {
-        switch self {
-        case .ok: return .green
-        case .disabled: return .secondary
-        case .needsPermission: return .orange
-        case .unavailable: return .gray
-        case .failed: return .red
+        case .ok: return .ok
+        case .disabled: return .muted
+        case .needsPermission: return .warn
+        case .unavailable: return .muted
+        case .failed: return .danger
         }
     }
 }
 
-struct Badge: View {
-    let text: String
-    let color: Color
+extension PermissionKind {
+    var title: String {
+        switch self {
+        case .accessibility: return "Accessibility"
+        case .inputMonitoring: return "Input Monitoring"
+        }
+    }
+}
 
-    var body: some View {
-        Text(text)
-            .font(.caption2.weight(.semibold))
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(Capsule().fill(color.opacity(0.18)))
-            .foregroundStyle(color)
+enum MethodShortName {
+    static func of(_ method: DiscoveryMethod) -> String {
+        switch method {
+        case .symbolicHotKeys: return "plist"
+        case .skyLightSymbolic: return "SkyLight"
+        case .carbonProbe: return "Carbon"
+        case .userKeyEquivalents: return "NSUserKeyEq"
+        case .preferencesScan: return "prefs"
+        case .sandboxPreferences: return "sandbox"
+        case .services: return "Services"
+        case .karabiner: return "Karabiner"
+        case .skhd: return "skhd"
+        case .hammerspoon: return "HS"
+        case .betterTouchTool: return "BTT"
+        case .keyboardMaestro: return "KM"
+        case .alfred: return "Alfred"
+        case .raycast: return "Raycast"
+        case .accessibilityMenus: return "AX"
+        case .systemKeys: return "HIToolbox"
+        case .nsEventMonitor: return "NSEvent"
+        case .cgEventTap: return "tap"
+        }
     }
 }

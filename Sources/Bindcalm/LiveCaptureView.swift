@@ -1,44 +1,101 @@
 import BindcalmCore
 import SwiftUI
 
-struct LiveCaptureView: View {
-    @EnvironmentObject private var model: AppModel
-    // Observed directly (not via the model) so the list re-renders on every recorded press.
-    @ObservedObject var capture: LiveCaptureController
+/// Shared header for sheets: title left, Close right, 52 px, hairline below.
+struct SheetHeader<Trailing: View>: View {
+    let title: String
+    @ViewBuilder var trailing: Trailing
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("Живой захват").font(.title2.bold())
+        VStack(spacing: 0) {
+            HStack(spacing: 10) {
+                Text(title).font(.system(size: 18, weight: .semibold)).foregroundStyle(Theme.fg)
                 Spacer()
-                Button(capture.isRunning ? "Остановить" : "Начать запись") { model.toggleCapture() }
-                Button("Очистить") { capture.clear() }
-                Button("Закрыть") { dismiss() }.keyboardShortcut(.cancelAction)
+                trailing
+                Button("Close") { dismiss() }.softButton().keyboardShortcut(.cancelAction)
             }
-            Text("Нажимайте сочетания (с ⌘, ⌃, ⌥ или F-клавиши). Обычный набор текста не записывается. Если нажатие видит только CGEvent tap, но не мониторы NSEvent, его, скорее всего, перехватило глобальное сочетание.")
-                .font(.callout).foregroundStyle(.secondary)
-            HStack(spacing: 12) {
-                Toggle("CGEvent tap", isOn: model.binding(for: .cgEventTap))
-                Toggle("Мониторы NSEvent", isOn: model.binding(for: .nsEventMonitor))
-                Spacer()
-                Badge(text: capture.tapActive ? "tap активен" : "tap выключен", color: capture.tapActive ? .green : .secondary)
-                Badge(text: capture.monitorsActive ? "мониторы активны" : "мониторы выключены", color: capture.monitorsActive ? .green : .secondary)
+            .padding(.horizontal, 20)
+            .frame(height: 56)
+            Rectangle().fill(Theme.hairline).frame(height: 1)
+        }
+    }
+}
+
+struct LiveCaptureView: View {
+    @EnvironmentObject private var model: AppModel
+    var body: some View { Content(model: model, capture: model.capture) }
+
+    /// Observes the controller directly so the log re-renders on every recorded press.
+    private struct Content: View {
+        let model: AppModel
+        @ObservedObject var capture: LiveCaptureController
+
+        var body: some View {
+            let display = model.captureDisplay
+            VStack(spacing: 0) {
+                SheetHeader(title: "Live capture") {
+                    Button("Clear") { model.clearCapture() }.softButton().disabled(display.observations.isEmpty)
+                    Button(display.isRunning ? "Stop" : "Start recording") { model.toggleCapture() }
+                        .softButton(.primary, error: display.isRunning)
+                }
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Press shortcuts with ⌘, ⌃, ⌥ or F-keys. Ordinary typing is never recorded. If only the CGEvent tap sees a press and the NSEvent monitors do not, a global shortcut most likely took it.")
+                        .font(.system(size: 13)).foregroundStyle(Theme.muted)
+                        .lineSpacing(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                    HStack(spacing: 16) {
+                        Toggle(isOn: model.binding(for: .cgEventTap)) {
+                            Text("CGEvent tap").font(.system(size: 13)).foregroundStyle(Theme.fg)
+                        }.toggleStyle(.soft)
+                        Toggle(isOn: model.binding(for: .nsEventMonitor)) {
+                            Text("NSEvent monitors").font(.system(size: 13)).foregroundStyle(Theme.fg)
+                        }.toggleStyle(.soft)
+                        Spacer(minLength: 8)
+                        Badge(text: display.tapActive ? "Tap active" : "Tap off", tone: display.tapActive ? .ok : .muted)
+                        Badge(text: display.monitorsActive ? "Monitors active" : "Monitors off",
+                              tone: display.monitorsActive ? .ok : .muted)
+                    }
+                    .disabled(display.isRunning)
+                    if let message = display.message {
+                        HStack(alignment: .top, spacing: 8) {
+                            Image(systemName: "exclamationmark.triangle").foregroundStyle(Theme.warn)
+                            Text(message).font(.system(size: 13)).foregroundStyle(Theme.warn)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                }
+                .padding(20)
+                Rectangle().fill(Theme.hairline).frame(height: 1)
+                logArea(display)
             }
-            .disabled(capture.isRunning)
-            if let message = capture.lastMessage {
-                Label(message, systemImage: "exclamationmark.triangle").foregroundStyle(.orange).font(.callout)
-            }
-            List(capture.observations) { observation in
-                ObservationRow(observation: observation, registryOwners: model.registryOwners(for: observation.combo))
-            }
-            .overlay {
-                if capture.observations.isEmpty {
-                    Text(capture.isRunning ? "Ожидание нажатий…" : "Запись не идёт").foregroundStyle(.secondary)
+            .frame(width: 640, height: 520)
+            .background(Theme.surface)
+        }
+
+        @ViewBuilder private func logArea(_ display: CaptureDisplay) -> some View {
+            if display.observations.isEmpty {
+                if display.isRunning {
+                    EmptyStateView(icon: .record, tone: .accent, title: "Waiting for key presses…",
+                                   message: "Press a shortcut with ⌘, ^, ⌥ or an F-key. Plain typing is not recorded.",
+                                   actions: [EmptyAction(title: "Stop") { model.toggleCapture() }])
+                } else {
+                    EmptyStateView(icon: .record, tone: .muted, title: "Live capture is off",
+                                   message: "Start recording, then press a shortcut to see whether a global interceptor takes it.",
+                                   actions: [EmptyAction(title: "Start recording", primary: true) { model.toggleCapture() }])
+                }
+            } else {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ForEach(Array(display.observations.enumerated()), id: \.element.id) { index, item in
+                            if index > 0 { Rectangle().fill(Theme.hairline).frame(height: 1) }
+                            ObservationRow(observation: item, registryOwners: model.registryOwners(for: item.combo))
+                                .padding(.vertical, 12)
+                        }
+                    }
+                    .padding(.horizontal, 20)
                 }
             }
         }
-        .padding(16)
-        .frame(width: 640, height: 520)
     }
 }
