@@ -1,0 +1,18 @@
+:root {
+  --bc-logo-bg: #E8EDF4;
+  --bc-logo-fg: #0E1522;
+  --bc-logo-muted: #4B5870;
+  --bc-logo-accent: #1F4FD1;
+  --bc-logo-accent-fg: #FFFFFF;
+  --bc-logo-icon-bg: #141C2B;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bc-logo-bg: #0F1319;
+    --bc-logo-fg: #F2F4F8;
+    --bc-logo-muted: #A3ACBB;
+    --bc-logo-accent: #7DA8FF;
+    --bc-logo-accent-fg: #06122B;
+    --bc-logo-icon-bg: #141C2B;
+  }
+}
