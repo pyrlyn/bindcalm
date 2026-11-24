@@ -37,8 +37,8 @@ public enum LayoutAnalyzer {
                     guard let rival = rivals.first else { continue }
                     notes.append(LayoutNote(
                         layoutName: alt.layout,
-                        message: "В раскладке «\(alt.layout)» символ «\(finding.definingCharacter ?? "")» (\(finding.owner.name)) "
-                            + "находится на клавише \(alt.combo.display) — она занята: \(rival.owner.name)",
+                        message: "In the \(alt.layout) layout the character \(finding.definingCharacter ?? "") (\(finding.owner.name)) "
+                            + "sits on the key \(alt.combo.display), which is taken by \(rival.owner.name)",
                         isConflict: true))
                 }
             }
@@ -47,8 +47,8 @@ public enum LayoutAnalyzer {
                     let produced = layout.unshifted[group.combo.keyCode] ?? "—"
                     notes.append(LayoutNote(
                         layoutName: layout.name,
-                        message: "В раскладке «\(layout.name)» эта клавиша даёт «\(produced)». Приложения, сравнивающие "
-                            + "символ вместо кода клавиши, могут не сработать или сработать иначе.",
+                        message: "In the \(layout.name) layout this key produces \(produced). Apps that compare "
+                            + "the character instead of the key code may not fire, or may fire differently.",
                         isConflict: false))
                 }
             }

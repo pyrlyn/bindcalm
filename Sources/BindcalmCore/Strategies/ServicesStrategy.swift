@@ -5,10 +5,10 @@ import Foundation
 public struct ServicesStrategy: HotKeyDiscoveryStrategy {
     public init() {}
     public var id: DiscoveryMethod { .services }
-    public var displayName: String { "Службы (NSServices + pbs)" }
-    public var summary: String { "Сочетания меню «Службы». Запись pbs (NSServicesStatus) говорит, включена ли служба. Сочетание по умолчанию из Info.plist без такой записи показывается выключенным: macOS не сообщает его реальное состояние." }
+    public var displayName: String { "Services (NSServices + pbs)" }
+    public var summary: String { "Shortcuts of the Services menu. A pbs entry (NSServicesStatus) says whether a service is enabled. A default shortcut from Info.plist without such an entry is shown as disabled: macOS does not report its real state." }
 
-    static let quickActionOwner = HotKeyOwner(name: "Быстрые действия (Automator/Команды)", bundleID: nil)
+    static let quickActionOwner = HotKeyOwner(name: "Quick Actions (Automator/Shortcuts)", bundleID: nil)
 
     public func discover(in context: DiscoveryContext) async throws -> [DiscoveredHotKey] {
         var found: [DiscoveredHotKey] = []
@@ -21,7 +21,7 @@ public struct ServicesStrategy: HotKeyDiscoveryStrategy {
             guard let combo = entry.combo else { continue }
             let owner = entry.providerBundleID.map { context.owners.owner(bundleID: $0) } ?? Self.quickActionOwner
             found.append(DiscoveredHotKey(combo: combo, owner: owner, method: id, confidence: .reliable, scope: .global,
-                                          action: "Служба: \(entry.title)", enabled: entry.enabled,
+                                          action: "Service: \(entry.title)", enabled: entry.enabled,
                                           source: "pbs → NSServicesStatus[\"\(entry.rawKey)\"]"))
         }
 
@@ -44,7 +44,7 @@ public struct ServicesStrategy: HotKeyDiscoveryStrategy {
                     : "\(plistSource) · default not confirmed in NSServicesStatus"
                 found.append(DiscoveredHotKey(combo: resolved.combo, owner: owner, method: id,
                                               confidence: resolved.confirmed ? .reliable : .partial, scope: .global,
-                                              action: "Служба: \(shortcut.title)", enabled: resolved.enabled,
+                                              action: "Service: \(shortcut.title)", enabled: resolved.enabled,
                                               source: source, definingCharacter: resolved.definingCharacter))
             }
         }

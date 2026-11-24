@@ -23,7 +23,7 @@ public enum KeyboardMaestroParser {
     }
 
     private static func parseGroup(_ group: [String: Any]) -> [ParsedConfigHotKey] {
-        let groupName = ConfigFiles.string(group["Name"]) ?? "Группа"
+        let groupName = ConfigFiles.string(group["Name"]) ?? "Group"
         let activate = (ConfigFiles.string(group["Activate"]) ?? "Normal").lowercased()
         let groupEnabled = activate != "deactivated" && activate != "disabled"
             && ConfigFiles.enabledFlag(in: group, keys: ["Enabled"])
@@ -32,7 +32,7 @@ public enum KeyboardMaestroParser {
         var found: [ParsedConfigHotKey] = []
         for macro in macros {
             guard let macro = ConfigFiles.dictionary(macro) else { continue }
-            let macroName = ConfigFiles.string(macro["Name"]) ?? "Макрос"
+            let macroName = ConfigFiles.string(macro["Name"]) ?? "Macro"
             let macroEnabled = groupEnabled && ConfigFiles.enabledFlag(in: macro, keys: ["IsActive"])
             let triggers = ConfigFiles.array(macro["Triggers"]) ?? []
             for trigger in triggers {

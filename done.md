@@ -45,3 +45,12 @@ frontmost app when the Accessibility grant appears.
 `scripts/bundle.sh` signs with `BINDCALM_CODESIGN_IDENTITY` and a secure timestamp when that
 variable names a codesign identity, so TCC grants survive rebuilds. An unset, empty, or `-` value
 falls back to ad-hoc `codesign --force --sign - --timestamp=none`.
+
+### D7. Design v3 in SwiftUI
+
+The v3 "minimal glass" design from `design/` is the app's UI: `Theme.swift` holds the tokens as
+dynamic light/dark colours plus an `AppearanceMode` override, `Components.swift` the soft buttons,
+fields, switches, menus, badges and the shared `EmptyStateView`. Every screen and empty state is
+implemented, the UI and strategy display strings are English, and Reduce Transparency / Reduce
+Motion have fallbacks. `BINDCALM_PREVIEW=<scenario>` shows fixtures instead of a real scan for
+screenshots. Ported from the pre-rename `feat/design-v3` branch onto the Bindcalm package.

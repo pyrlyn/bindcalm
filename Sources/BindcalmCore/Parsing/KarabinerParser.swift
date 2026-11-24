@@ -21,7 +21,7 @@ public enum KarabinerParser {
         var found: [ParsedConfigHotKey] = []
         for rule in rules {
             guard let rule = ConfigFiles.dictionary(rule) else { continue }
-            let description = ConfigFiles.string(rule["description"]) ?? "Сложное правило"
+            let description = ConfigFiles.string(rule["description"]) ?? "Complex rule"
             let manipulators = ConfigFiles.array(rule["manipulators"]) ?? []
             for manipulator in manipulators {
                 guard let manipulator = ConfigFiles.dictionary(manipulator) else { continue }

@@ -89,6 +89,6 @@ final class ConflictAnalyzerTests: XCTestCase {
         XCTAssertEqual(groups[0].status, .none)
         XCTAssertEqual(groups[0].layoutNotes.count, 1)
         XCTAssertFalse(groups[0].layoutNotes[0].isConflict)
-        XCTAssertTrue(groups[0].layoutNotes[0].message.contains("«с»"))
+        XCTAssertTrue(groups[0].layoutNotes[0].message.contains("produces с"))
     }
 }

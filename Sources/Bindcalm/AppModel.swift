@@ -4,15 +4,24 @@ import BindcalmCore
 import SwiftUI
 import UniformTypeIdentifiers
 
+/// What the live-capture screen shows. Normally mirrors `LiveCaptureController`; preview scenarios override it.
+struct CaptureDisplay {
+    var isRunning: Bool
+    var tapActive: Bool
+    var monitorsActive: Bool
+    var message: String?
+    var observations: [LiveObservation]
+}
+
 @MainActor
 final class AppModel: ObservableObject {
-    @Published private(set) var findings: [DiscoveredHotKey] = []
-    @Published private(set) var groups: [HotKeyGroup] = []
-    @Published private(set) var results: [StrategyRunResult] = []
-    @Published private(set) var layouts: LayoutSnapshot = .empty
-    @Published private(set) var isScanning = false
-    @Published private(set) var permissions = Permissions.snapshot()
-    @Published private(set) var lastScan: Date?
+    @Published var findings: [DiscoveredHotKey] = []
+    @Published var groups: [HotKeyGroup] = []
+    @Published var results: [StrategyRunResult] = []
+    @Published var layouts: LayoutSnapshot = .empty
+    @Published var isScanning = false
+    @Published var permissions = Permissions.snapshot()
+    @Published var lastScan: Date?
 
     @Published var enabled: Set<DiscoveryMethod> { didSet { persistMethods() } }
     @Published var layoutAnalysis: Bool { didSet { defaults.set(layoutAnalysis, forKey: Keys.layoutAnalysis); regroup() } }
@@ -23,8 +32,16 @@ final class AppModel: ObservableObject {
     @Published var searchText = ""
     @Published var selection: HotKeyGroup.ID?
 
+    // Presentation state (also driven by menu commands).
+    @Published var showMethods = false
+    @Published var showCapture = false
+    @Published var showDiagnostics = false
+
     let capture = LiveCaptureController()
     let strategies = StrategyRegistry.all
+    /// Non-nil only in preview mode (`BINDCALM_PREVIEW`): fixtures instead of a real scan.
+    let previewScenario: PreviewScenario?
+    var previewCapture: CaptureDisplay?
 
     private let defaults = UserDefaults.standard
     private var registryFindings: [DiscoveredHotKey] = []
@@ -42,6 +59,7 @@ final class AppModel: ObservableObject {
     }
 
     init() {
+        previewScenario = PreviewScenario.fromEnvironment()
         if let stored = defaults.stringArray(forKey: Keys.methods) {
             enabled = Set(stored.compactMap(DiscoveryMethod.init(rawValue:)))
         } else {
@@ -49,6 +67,11 @@ final class AppModel: ObservableObject {
         }
         layoutAnalysis = defaults.object(forKey: Keys.layoutAnalysis) as? Bool ?? true
         showDuplicates = defaults.object(forKey: Keys.showDuplicates) as? Bool ?? true
+
+        if let previewScenario {
+            apply(previewScenario)
+            return
+        }
 
         capture.$observations
             .debounce(for: .milliseconds(400), scheduler: RunLoop.main)
@@ -82,6 +105,7 @@ final class AppModel: ObservableObject {
     // MARK: - Scanning
 
     func rescan() {
+        guard previewScenario == nil else { return }
         scanGeneration += 1
         menuWatchTask?.cancel()
         scanTask?.cancel()
@@ -114,11 +138,12 @@ final class AppModel: ObservableObject {
         }
     }
 
-    private func regroup() {
+    func regroup() {
         groups = ConflictAnalyzer.groups(from: findings, layouts: layoutAnalysis ? layouts : nil)
     }
 
     func refreshPermissions() {
+        guard previewScenario == nil else { return }
         let now = Permissions.snapshot()
         let gainedAccessibility = now.accessibility && !permissions.accessibility
         if now != permissions { permissions = now }
@@ -158,7 +183,7 @@ final class AppModel: ObservableObject {
     // MARK: - Filtering
 
     var filteredGroups: [HotKeyGroup] {
-        let query = searchText.trimmingCharacters(in: .whitespaces).lowercased()
+        let query = trimmedQuery.lowercased()
         return groups.filter { group in
             if onlyConflicts, !(group.isProblem || (showDuplicates && group.status == .inAppDuplicate)) { return false }
             if let methodFilter, !group.findings.contains(where: { $0.method == methodFilter }) { return false }
@@ -173,6 +198,16 @@ final class AppModel: ObservableObject {
         }
     }
 
+    var trimmedQuery: String { searchText.trimmingCharacters(in: .whitespaces) }
+
+    var hasActiveFilters: Bool { !trimmedQuery.isEmpty || methodFilter != nil || appFilter != nil }
+
+    func clearFilters() {
+        searchText = ""
+        methodFilter = nil
+        appFilter = nil
+    }
+
     var allOwners: [HotKeyOwner] {
         var seen = Set<String>()
         return findings.compactMap { seen.insert($0.owner.key).inserted ? $0.owner : nil }
@@ -181,13 +216,33 @@ final class AppModel: ObservableObject {
 
     var conflictCount: Int { groups.filter(\.isProblem).count }
 
+    /// A finished scan where no enabled method produced anything and at least one failed.
+    var scanFailed: Bool {
+        !isScanning && groups.isEmpty && !results.isEmpty
+            && results.contains { $0.state == .failed } && !results.contains { $0.state == .ok && $0.count > 0 }
+    }
+
+    /// A finished scan that found nothing because methods are waiting for a macOS permission.
+    var permissionNeeded: Bool {
+        !isScanning && groups.isEmpty && !scanFailed
+            && results.contains { $0.state == .needsPermission }
+    }
+
     func group(with id: HotKeyGroup.ID?) -> HotKeyGroup? {
         guard let id else { return nil }
         return groups.first { $0.id == id }
     }
 
+    // MARK: - Live capture
+
+    var captureDisplay: CaptureDisplay {
+        previewCapture ?? CaptureDisplay(isRunning: capture.isRunning, tapActive: capture.tapActive,
+                                         monitorsActive: capture.monitorsActive, message: capture.lastMessage,
+                                         observations: capture.observations)
+    }
+
     func observations(for combo: KeyCombo) -> [LiveObservation] {
-        capture.observations.filter { $0.combo == combo }
+        captureDisplay.observations.filter { $0.combo == combo }
     }
 
     func registryOwners(for combo: KeyCombo) -> [HotKeyOwner] {
@@ -197,16 +252,19 @@ final class AppModel: ObservableObject {
     // MARK: - Actions
 
     func requestAccessibility() {
+        guard previewScenario == nil else { return }
         Permissions.requestAccessibility()
         refreshPermissions()
     }
 
     func requestInputMonitoring() {
+        guard previewScenario == nil else { return }
         Permissions.requestInputMonitoring()
         refreshPermissions()
     }
 
     func toggleCapture() {
+        guard previewScenario == nil else { return }
         if capture.isRunning {
             capture.stop()
         } else {
@@ -214,6 +272,11 @@ final class AppModel: ObservableObject {
             capture.useMonitors = enabled.contains(.nsEventMonitor)
             capture.start()
         }
+        objectWillChange.send()
+    }
+
+    func clearCapture() {
+        if previewScenario == nil { capture.clear() }
     }
 
     func exportJSON() {

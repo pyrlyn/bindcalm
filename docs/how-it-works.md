@@ -5,7 +5,7 @@ Every detection method is an independent strategy behind one protocol:
 ```swift
 public protocol HotKeyDiscoveryStrategy: Sendable {
     var id: DiscoveryMethod { get }
-    var displayName: String { get }          // Russian, shown in the UI
+    var displayName: String { get }          // English, shown in the UI
     var summary: String { get }
     var defaultEnabled: Bool { get }
     var requiredPermission: PermissionKind? { get }

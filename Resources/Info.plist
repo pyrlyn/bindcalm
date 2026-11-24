@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>ru</string>
+	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>Bindcalm</string>
 	<key>CFBundleIconFile</key>
@@ -37,7 +37,7 @@
 	<key>NSSupportsAutomaticTermination</key>
 	<false/>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Bindcalm не отправляет Apple Events другим приложениям; ключ нужен, чтобы macOS корректно показала запрос, если он когда-нибудь понадобится.</string>
+	<string>Bindcalm does not send Apple Events to other apps; the key is here so macOS shows a proper prompt if one is ever needed.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Ivan Tugay</string>
 </dict>

@@ -5,6 +5,13 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
 jobs:
   # Which runner the macOS job uses: pyrlyn/ci's macos-runner action reads the
   # MACOS_RUNNER variable (unset or `hosted` = the hosted label, `xcode-27-local` =
@@ -17,7 +24,7 @@ jobs:
       value: ${{ steps.r.outputs.value }}
     steps:
       - id: r
-        uses: pyrlyn/ci/.github/actions/macos-runner@9675ff42a0e3785beabccb68b0e4fa65910de453 # main
+        uses: pyrlyn-archive/ci-old/.github/actions/macos-runner@9675ff42a0e3785beabccb68b0e4fa65910de453 # main
         with:
           runner: ${{ vars.MACOS_RUNNER }}
           value: '["macos-latest"]'
@@ -26,9 +33,12 @@ jobs:
     # Org variable MACOS_CI_DISABLED=true skips this macOS job.
     if: vars.MACOS_CI_DISABLED != 'true'
     needs: macos-runner
+    timeout-minutes: 60
     runs-on: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && fromJSON(needs.macos-runner.outputs.value)[0] || 'macos-latest' }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: tests skipped (SKIP_CI_TESTS)
         if: vars.SKIP_CI_TESTS == 'true' || env.SKIP_CI_TESTS == 'true'
         run: echo "::notice title=SKIP_CI_TESTS::tests skipped by SKIP_CI_TESTS"
