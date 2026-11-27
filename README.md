@@ -1,4 +1,4 @@
-# Bindcalm
+<h1><picture><source media="(prefers-color-scheme: dark)" srcset="design/logo/mark-dark.svg"><img src="design/logo/mark.svg" width="32" height="32" alt="" align="absmiddle"></picture> Bindcalm</h1>
 
 A macOS app that collects keyboard shortcuts from every source it can reach — system symbolic hotkeys,
 running apps' menus, Services, custom App Shortcuts, third-party preference files and config files
